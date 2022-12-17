@@ -2,7 +2,8 @@
 -- uses sublist to give order to cap/cup
 
 import tactic.basic
-import tactic.omega
+import tactic.ring
+import tactic.linarith
 import logic.nontrivial
 import .list
 
@@ -83,21 +84,22 @@ begin
       from ih _ _ hc hn2 hq hp } }
 end
 
-theorem binom_eq {a b : ℕ} (ha : 2 ≤ a) (hb : 2 ≤ b) : 
+lemma binom_eq' (a' b' : ℕ) :
+  (a' + b' + 1).choose a' + 
+  (a' + b' + 1).choose (a' + 1) = 
+  (a' + b' + 2).choose (a' + 1) :=
+rfl
+
+lemma binom_eq {a b : ℕ} (ha : 2 ≤ a) (hb : 2 ≤ b) : 
   (a + (b + 1) - 4).choose (a - 2) + 
   (a + 1 + b - 4).choose (a + 1 - 2) = 
   (a + 1 + (b + 1) - 4).choose (a + 1 - 2) :=
 begin
-  have sub2: ∀ (x : ℕ) (hx : 2 ≤ x), ∃y, x = y + 2,
-  intros, existsi x - 2, omega,
-
-  cases (sub2 a ha) with a' a_eq, rw a_eq,
-  cases (sub2 b hb) with b' b_eq, rw b_eq,
-  repeat {rw ←add_assoc}, simp,
-  have eq1: a' + 2 + 1 + b' - 2 = a' + b' + 1 := by omega, rw eq1, 
-  have eq2: a' + 1 + b' = a' + b' + 1 := by omega, rw eq2,
-  have eq3: a' + 2 + b' = a' + b' + 2 := by omega, rw eq3,
-  from rfl,
+  rw le_iff_exists_add at ha hb,
+  rcases ha with ⟨a', rfl⟩,
+  rcases hb with ⟨b', rfl⟩,
+  convert binom_eq' a' b';
+  ring_nf,
 end
 
 lemma find_size2_chain3' {r : α → α → α → Prop} {l: list α} (h: 2 ≤ l.length) : 
@@ -130,9 +132,11 @@ begin
   -- main induction 
   { intros a b ha hb,
     have hsum := binom_eq ha hb,
+    -- put back all the long numbers into symbols
     set n_a_sb: ℕ := (a + (b + 1) - 4).choose (a - 2),
     set n_sa_b: ℕ := (a + 1 + b - 4).choose (a + 1 - 2),
     set n_sa_sb: ℕ := (a + 1 + (b + 1) - 4).choose (a + 1 - 2),
+
     assume ih_a_sb ih_sa_b s s_nodup s_size,
     -- criterion for dividing the set `s` into two
     -- I want to make this decidable
@@ -149,7 +153,7 @@ begin
     set sb := s.filter start_of_capᶜ with eq_sb,
     rw [←eq_sa, ←eq_sb] at sa_sb_length,
     have size_cases: n_sa_b + 1 ≤ sa.length ∨ 
-      n_a_sb + 1 ≤ sb.length := by omega,
+      n_a_sb + 1 ≤ sb.length := by by_contra'; linarith,
 
     -- before dividing into cases, some utility lemmas
     have sa_nodup: sa.nodup, 
@@ -185,6 +189,7 @@ begin
       -- (b+1)-cup in sb
       { right, use cup', 
         have h := lift_in_sb cup'_in_sb, tauto } },
+
     -- case when sa is large
     -- find (a+1)-cap or b-cup
     have h_sa_cap_cup := ih_sa_b sa sa_nodup sa_large,
@@ -196,11 +201,14 @@ begin
       have h := lift_in_sa cap'_in_sa, tauto },
     -- main case b-cup in sa
     clear ih_a_sb ih_sa_b,
-    have cup_not_nil : cup ≠ [],
-    from list.size2_not_nil (nat.le_trans hb cup_len),
+    -- rudimentary facts
+    have cup_not_nil : cup ≠ [] :=
+      list.size2_not_nil (nat.le_trans hb cup_len),
     have cup_in_s : cup <+ s := lift_in_sa cup_in_sa,
     have p_in_cup := list.last_mem cup_not_nil,
+    -- take the last point `p` of `cup`
     set p := cup.last cup_not_nil with eq_p_cap_last,
+    -- ...and as it is in `sa` it is the start of another `cap`
     have p_in_sa := list.sublist.subset cup_in_sa p_in_cup,
     rw [eq_sa, list.mem_filter] at p_in_sa,
     cases p_in_sa with _ hp,
@@ -208,15 +216,17 @@ begin
     rcases hp with ⟨cap, cap_not_nil, 
       ⟨cap_in_s, cap_len, cap_chain, eq_p⟩⟩,
     rw eq_p_cap_last at eq_p,
+    -- invoke the main lemma that enlarges a cap or a cup sharing the endpoints
     have cap_cup_ext :=
       cap_cup_extension 
         s_nodup cap_in_s cap_chain (nat.le_trans ha cap_len)
           cup_in_s cup_chain (nat.le_trans hb cup_len)
           eq_p,
+    -- clean up and match the goal
     cases cap_cup_ext with cap_ext cup_ext,
     { rcases cap_ext with ⟨cape, ⟨cape_in_s, cape_chain, cape_len⟩⟩,
-      left, use cape, refine ⟨_, _, _⟩; try { tauto }, omega },
+      left, use cape, refine ⟨_, _, _⟩; try { tauto }, linarith },
     { rcases cup_ext with ⟨cupe, ⟨cupe_in_s, cupe_chain, cupe_len⟩⟩,
-      right, use cupe, refine ⟨_, _, _⟩; try { tauto }, omega },
+      right, use cupe, refine ⟨_, _, _⟩; try { tauto }, linarith },
   }
 end

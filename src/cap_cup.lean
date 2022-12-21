@@ -5,7 +5,7 @@ import tactic.basic
 import tactic.ring
 import tactic.linarith
 import logic.nontrivial
-import .list
+import list
 
 open_locale classical
 noncomputable theory

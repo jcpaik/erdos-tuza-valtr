@@ -1,5 +1,6 @@
 -- lemmas about 3-chain of lists, taking first/last two elements, etc.
 
+import tactic.basic
 import data.list
 
 variables {α : Type*}
@@ -125,4 +126,24 @@ begin
   apply ih; try { tauto },
   apply list.sublist.cons2,
   apply ih; try { tauto },
+end
+
+@[protected]
+def nat.find_max_x (p : ℕ → Prop) [decidable_pred p]
+  (exist : ∃ n : ℕ, p n)
+  (bounded : ∃ N : ℕ, ∀ x : ℕ, p x → x ≤ N) :
+  ∃ m : ℕ, p m ∧ ∀ x : ℕ, p x → x ≤ m :=
+begin
+  cases exist with n hn,
+  cases bounded with N hN,
+  have ineq : n ≤ N := hN n hn,
+  revert N ineq hN,
+  refine nat.le_induction _ _,
+  { assume h, use n, tauto },
+  { assume N hN ih hsN,
+    by_cases psn : p (N+1),
+    { use (N+1), tauto },
+    { apply ih, assume x px, 
+      have xsN : x ≤ N + 1 := hsN x px,
+      cases xsN ; tauto} }
 end

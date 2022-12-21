@@ -1,10 +1,11 @@
 import tactic.basic
 
 import list
+import decidable
 
 structure configuration (α : Type*) [linear_order α] :=
 (is_3cup : α → α → α → Prop)
-(decidable_3cup : Π (a b c : α), decidable (is_3cup a b c))
+(decidable_3cup : decidable_trel is_3cup)
 
 namespace configuration
 
@@ -16,8 +17,8 @@ local attribute [instance] configuration.decidable_3cup
 
 def is_3cap (a b c : α) : Prop := ¬(C.is_3cup a b c)
 
-def decidable_3cap (a b c : α) : decidable (C.is_3cap a b c) :=
-  @not.decidable _ (C.decidable_3cup a b c)
+def decidable_3cap : decidable_trel C.is_3cap :=
+  λ a b c, @not.decidable _ (C.decidable_3cup a b c)
 
 local attribute [instance] configuration.decidable_3cap
 
@@ -29,7 +30,5 @@ def is_cup (l : list α) : Prop := l.chain' (<) ∧ l.chain3' C.is_3cup
 
 def cap : Type* := {l : list α // C.is_cap l}
 def cup : Type* := {l : list α // C.is_cup l}
-
-
 
 end configuration

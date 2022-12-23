@@ -1,18 +1,23 @@
 -- main erdos-szekeres theorem file
 -- uses sublist to give order to cap/cup
 
+import data.finset
 import tactic.basic
 import tactic.ring
 import tactic.linarith
 import logic.nontrivial
-import .list
 
-open_locale classical
-noncomputable theory
+import lib.list
+import configuration
 
-variables {α : Type*}
+variables {α : Type*} [linear_order α] {C : configuration α}
 
-theorem cap_cup_extension
+theorem joint_cap_cup_extension (S : finset α) 
+  (cap : {x : list α // C.is_cap x}) 
+  (cap_in_S : (↑cap : list α).to_finset ⊆ S)
+
+-- finset.filter_not
+/-
   {s : list α} (s_nodup : s.nodup)
   {c : α → α → α → Prop}
   {cap : list α} (cap_sublist : cap <+ s) 
@@ -230,3 +235,4 @@ begin
       right, use cupe, refine ⟨_, _, _⟩; try { tauto }, linarith },
   }
 end
+-/

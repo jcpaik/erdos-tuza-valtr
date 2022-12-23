@@ -1,3 +1,5 @@
+-- Decidability of ternary relation
+
 universe u
 
 @[reducible]

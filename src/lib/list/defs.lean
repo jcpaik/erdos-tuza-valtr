@@ -1,8 +1,32 @@
-import tactic.basic
-import logic.basic
+import data.finset
+
 import lib.core.decidable
 
 variable {α : Type*}
+
+section list_in
+
+-- Local notation for a list contained in a finset
+protected def list.in [decidable_eq α] (l : list α) (S : finset α) : Prop :=
+  l.to_finset ⊆ S
+
+protected def list.in_superset [decidable_eq α] {l : list α}
+  {S T : finset α} (h : S ⊆ T) : l.in S → l.in T := 
+λ l_in_S, finset.subset.trans l_in_S h
+
+@[simp]
+theorem list.nil_in [decidable_eq α] (S : finset α) : [].in S := by rw list.in; simp
+
+@[simp]
+theorem list.cons_in [decidable_eq α] (a : α) (l : list α) (S : finset α) : 
+  (a :: l).in S ↔ a ∈ S ∧ l.in S := 
+begin
+  rw list.in, rw list.in, simp, exact finset.insert_subset,
+end
+
+end list_in
+
+section chain3
 
 namespace list
 
@@ -35,3 +59,5 @@ instance decidable_chain3' [decidable_trel R] (l : list α) : decidable (chain3'
 by cases l with _ l; try {cases l with _ l}; dunfold chain3'; apply_instance
 
 end list
+
+end chain3

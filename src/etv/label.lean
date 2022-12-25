@@ -2,9 +2,7 @@ import config
 
 variables {α : Type*} [linear_order α] (C : config α)
 
-namespace config
-
-structure label (S : finset α) :=
+structure config.label (S : finset α) :=
 (slope : α → α → Prop)
 (decidable_slope : decidable_rel slope)
 -- The direction looks odd, but it is written in perspective of
@@ -18,12 +16,14 @@ def cap4_free_slope {S : finset α} (h : ¬C.has_ncap 4 S) (a b : α) : Prop :=
   ∀ c : S, ↑c < a → C.cup3 c a b
 
 instance decidable_cap4_free_slope {S : finset α} (h : ¬C.has_ncap 4 S) :
-  decidable_rel (C.cap4_free_slope h) := 
+  decidable_rel (cap4_free_slope C h) := 
 λ a b, by rw cap4_free_slope; simp; apply_instance
+
+variable {C}
 
 def cap4_free_label {S : finset α} (h : ¬C.has_ncap 4 S) : C.label S :=
 begin
-  use C.cap4_free_slope h,
+  use cap4_free_slope C h,
   apply_instance,
   { intros a b ha hb hab hn c hc hbc, 
     by_contra h', apply hn, intros d hd, 
@@ -32,16 +32,11 @@ begin
     exact hy ⟨c, hc⟩ hca },
 end
 
-namespace label
+variables {C} {S : finset α} {label : C.label S}
 
-variables {C} {S : finset α} (label : C.label S)
-
-section extend_cup
-
--- Best used as : apply l.extend_left_cup a b
--- Explicitly mention two points
-theorem extend_left_cup 
-  {a b : α} (s_ab : ¬label.slope a b) {l : list α} (l_cup : C.cup l)
+protected theorem config.cup.extend_left
+  {l : list α} (l_cup : C.cup l)
+  {a b : α} (s_ab : ¬label.slope a b) 
   (ha : a ∈ S) (hab : a < b) (l_in_S : l.in S)
   (b_head_l : b ∈ l.head') : C.cup (a :: l) :=
 begin
@@ -56,8 +51,9 @@ begin
   apply label.extend_left; tauto,
 end 
 
-theorem extend_right_cup 
-  {a b : α} (s_ab : label.slope a b) {l : list α} (l_cup : C.cup l)
+protected theorem config.cup.extend_right
+  {l : list α} (l_cup : C.cup l)
+  {a b : α} (s_ab : label.slope a b) 
   (hab : a < b) (hb : b ∈ S) (l_in_S : l.in S)
   (a_last_l : a ∈ l.last') : C.cup (l ++ [b]) :=
 begin
@@ -74,9 +70,3 @@ begin
   cases l with q l, simp at *, subst a_last_l; tauto,
   exfalso, apply hl, exact le_add_self,
 end
-
-end extend_cup
-
-end label
-
-end config

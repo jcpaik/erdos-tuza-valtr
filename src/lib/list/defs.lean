@@ -15,14 +15,20 @@ protected def list.in_superset [decidable_eq α] {l : list α}
 λ l_in_S, finset.subset.trans l_in_S h
 
 @[simp]
-theorem list.nil_in [decidable_eq α] (S : finset α) : [].in S := by rw list.in; simp
+theorem list.nil_in [decidable_eq α] {S : finset α} : [].in S := 
+  by rw list.in; simp
 
 @[simp]
-theorem list.cons_in [decidable_eq α] (a : α) (l : list α) (S : finset α) : 
+theorem list.cons_in [decidable_eq α] 
+  {a : α} {l : list α} {S : finset α} : 
   (a :: l).in S ↔ a ∈ S ∧ l.in S := 
-begin
-  rw list.in, rw list.in, simp, exact finset.insert_subset,
-end
+  by simp [list.in]; exact finset.insert_subset
+
+@[simp]
+theorem list.in_append [decidable_eq α]
+  {l1 l2 : list α} {S : finset α} : 
+  (l1 ++ l2).in S ↔ l1.in S ∧ l2.in S :=
+  by simp [list.in]; exact finset.forall_mem_union
 
 end list_in
 

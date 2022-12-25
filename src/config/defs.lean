@@ -16,7 +16,7 @@ attribute [instance] config.decidable_cup3
 
 -- Notion of 3-caps
 
-def cap3 (a b c : α) : Prop := ¬(C.cup3 a b c)
+@[simp] def cap3 (a b c : α) : Prop := ¬(C.cup3 a b c)
 
 def decidable_cap3 : decidable_trel C.cap3 :=
   λ a b c, @not.decidable _ (C.decidable_cup3 a b c)
@@ -29,7 +29,7 @@ def cap (l : list α) : Prop :=
   l.chain' (<) ∧ l.chain3' C.cap3
 def cup (l : list α) : Prop := 
   l.chain' (<) ∧ l.chain3' C.cup3
-def gon (l1 l2 : list α) : Prop :=
+@[simp] def gon (l1 l2 : list α) : Prop :=
   2 ≤ l1.length ∧ C.cap l1 ∧
   2 ≤ l2.length ∧ C.cup l2 ∧
   l1.head' = l2.head' ∧ l1.last' = l2.last'

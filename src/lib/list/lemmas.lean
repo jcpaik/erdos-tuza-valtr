@@ -1,6 +1,14 @@
-import tactic.basic
+import data.list
 
 variable {α : Type*}
+
+@[simp]
+theorem list.init_singleton (a : α) : [a].init = [] := by rw list.init
+
+@[simp]
+theorem list.last'_cons_append_cons (a b : α) (l1 l2 : list α) : 
+  (a :: (l1 ++ b :: l2)).last' = (b :: l2).last' := 
+by revert a; induction l1 with c l1 ih; simp; intro; exact ih c
 
 def list.take_head : ∀ {l : list α}, l ≠ [] → 
   Σ' (h1 : α) (t : list α), l = h1 :: t

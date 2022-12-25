@@ -34,11 +34,11 @@ def cup (l : list α) : Prop :=
   2 ≤ l2.length ∧ C.cup l2 ∧
   l1.head' = l2.head' ∧ l1.last' = l2.last'
 
-@[simp] def ncap (n : ℕ) (l : list α) : Prop := 
+def ncap (n : ℕ) (l : list α) : Prop := 
   C.cap l ∧ l.length = n
-@[simp] def ncup (n : ℕ) (l : list α) : Prop := 
+def ncup (n : ℕ) (l : list α) : Prop := 
   C.cup l ∧ l.length = n
-@[simp] def ngon (n : ℕ) (l1 l2 : list α) : Prop :=
+def ngon (n : ℕ) (l1 l2 : list α) : Prop :=
   C.gon l1 l2 ∧ l1.length + l2.length = n + 2
 
 def has_ncap (n : ℕ) (S : finset α) : Prop :=

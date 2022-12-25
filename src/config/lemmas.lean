@@ -59,6 +59,22 @@ begin
   simp [list.init] at *, tauto,
 end
 
+theorem ncap_init {n : ℕ} {l : list α} (h : C.ncap (n+1) l) : C.ncap n l.init :=
+begin
+  cases l with a l,
+  { simp [config.ncap, config.cap] at h, cases h },
+  simp [config.ncap] at *, cases h with hc hl,
+  split, exact C.cap_init hc, assumption,
+end
+
+theorem ncap_tail {n : ℕ} {l : list α} (h : C.ncap (n+1) l) : C.ncap n l.tail :=
+begin
+  cases l with a l,
+  { simp [config.ncap, config.cap] at h, cases h },
+  simp [config.ncap] at *, cases h with hc hl,
+  split, exact C.cap_tail hc, assumption,
+end
+
 def cap_take_head2 : ∀ {l : list α}, 2 ≤ l.length →
   Σ' (h1 h2 : α) (t : list α), l = h1 :: h2 :: t
 | [] h := absurd h (of_to_bool_ff rfl)
@@ -99,6 +115,20 @@ begin
   simp, simp at l1_ih, rw l1_ih, tauto,
 end 
 
+@[simp] theorem ncup_nil : C.ncup 0 [] := 
+  by rw [config.ncup, config.cup]; tauto
+
+@[simp] theorem ncup_singleton (a : α) : C.ncup 1 [a] := 
+  by rw [config.ncup, config.cup]; simp
+
+@[simp] theorem ncup_pair {a b : α} : C.ncup 2 [a, b] ↔ a < b := 
+  by rw [config.ncup, config.cup]; simp; tauto
+
+@[simp] theorem ncup_cons3 {n : ℕ} {a b c : α} {l : list α} : 
+  C.ncup (n + 1) (a :: b :: c :: l) ↔ 
+  a < b ∧ C.cup3 a b c ∧ C.ncup n (b :: c :: l) := 
+by repeat {rw [config.ncup, config.cup]}; simp; tauto
+
 theorem cup_init {l : list α} (h : C.cup l) : C.cup l.init :=
 begin
   induction l with a l,
@@ -125,6 +155,22 @@ begin
   simp [list.init] at *, tauto,
 end
 
+theorem ncup_init {n : ℕ} {l : list α} (h : C.ncup (n+1) l) : C.ncup n l.init :=
+begin
+  cases l with a l,
+  { simp [config.ncup, config.cup] at h, cases h },
+  simp [config.ncup] at *, cases h with hc hl,
+  split, exact C.cup_init hc, assumption,
+end
+
+theorem ncup_tail {n : ℕ} {l : list α} (h : C.ncup (n+1) l) : C.ncup n l.tail :=
+begin
+  cases l with a l,
+  { simp [config.ncup, config.cup] at h, cases h },
+  simp at *, cases h with hc hl,
+  split, exact C.cup_tail hc, simp at hl, assumption,
+end
+
 theorem cup_head'_lt_last' (p q : α) {l : list α} (l_cup : C.cup l) 
   (hl : 2 ≤ l.length) (hp : p ∈ l.head') (hq : q ∈ l.last') : p < q :=
 begin
@@ -139,6 +185,14 @@ begin
   cases l_cup with l_sorted _,
   rw list.chain'_iff_pairwise at l_sorted, simp at l_sorted,
   have h' := l_sorted.left q, tauto,
+end
+
+theorem ncup_head'_lt_last' (p q : α) {n : ℕ} {l : list α} 
+  (l_ncup : C.ncup n l) 
+  (hl : 2 ≤ l.length) (hp : p ∈ l.head') (hq : q ∈ l.last') : p < q :=
+begin
+  cases l_ncup with l_cup _,
+  apply C.cup_head'_lt_last' p q l_cup; assumption,
 end
 
 theorem ncup_is_ngon {n : ℕ} {S : finset α} 

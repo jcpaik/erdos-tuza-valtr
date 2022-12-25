@@ -2,25 +2,27 @@ import tactic.linarith
 
 import config.defs
 
+variables {α : Type*} [linear_order α] {C : config α}
+
 namespace config
 
-variables {α : Type*} [linear_order α] (C : config α)
+namespace cap
 
-@[simp] theorem cap_nil : C.cap [] := 
+@[simp] protected theorem nil : C.cap [] := 
   by rw config.cap; tauto
 
-@[simp] theorem cap_singleton (a : α) : C.cap [a] := 
+@[simp] protected theorem singleton (a : α) : C.cap [a] := 
   by rw config.cap; simp
 
-@[simp] theorem cap_pair {a b : α} : C.cap [a, b] ↔ a < b := 
+@[simp] protected theorem pair {a b : α} : C.cap [a, b] ↔ a < b := 
   by rw config.cap; simp; tauto
 
-@[simp] theorem cap_cons3 {a b c : α} {l : list α} : 
+@[simp] protected theorem cons3 {a b c : α} {l : list α} : 
   C.cap (a :: b :: c :: l) ↔ 
   a < b ∧ C.cap3 a b c ∧ C.cap (b :: c :: l) := 
 by repeat {rw config.cap}; simp; tauto
 
-@[simp] theorem cap_append_cons3 {a b c : α} {l1 l2 : list α} :
+@[simp] protected theorem append_cons3 {a b c : α} {l1 l2 : list α} :
   C.cap (l1 ++ a :: b :: c :: l2) ↔ 
     C.cap (l1 ++ [a, b]) ∧ C.cap3 a b c ∧ C.cap (b :: c :: l2) :=
 begin
@@ -33,7 +35,7 @@ begin
   simp, simp at l1_ih, rw l1_ih, tauto,
 end
 
-theorem cap_init {l : list α} (h : C.cap l) : C.cap l.init :=
+protected theorem init {l : list α} (h : C.cap l) : C.cap l.init :=
 begin
   induction l with a l,
   {simp [config.cap]; tauto},
@@ -46,7 +48,7 @@ begin
   simp [list.init] at *, tauto,
 end
 
-theorem cap_tail {l : list α} (h : C.cap l) : C.cap l.tail :=
+protected theorem tail {l : list α} (h : C.cap l) : C.cap l.tail :=
 begin
   induction l with a l,
   {simp [config.cap]; tauto},
@@ -59,50 +61,45 @@ begin
   simp [list.init] at *, tauto,
 end
 
-theorem ncap_init {n : ℕ} {l : list α} (h : C.ncap (n+1) l) : C.ncap n l.init :=
+end cap
+
+namespace ncap
+
+protected theorem init {n : ℕ} {l : list α} (h : C.ncap (n+1) l) : C.ncap n l.init :=
 begin
   cases l with a l,
   { simp [config.ncap, config.cap] at h, cases h },
   simp [config.ncap] at *, cases h with hc hl,
-  split, exact C.cap_init hc, assumption,
+  split, exact hc.init, assumption,
 end
 
-theorem ncap_tail {n : ℕ} {l : list α} (h : C.ncap (n+1) l) : C.ncap n l.tail :=
+protected theorem tail {n : ℕ} {l : list α} (h : C.ncap (n+1) l) : C.ncap n l.tail :=
 begin
   cases l with a l,
   { simp [config.ncap, config.cap] at h, cases h },
   simp [config.ncap] at *, cases h with hc hl,
-  split, exact C.cap_tail hc, assumption,
+  split, exact hc.tail, assumption,
 end
 
-def cap_take_head2 : ∀ {l : list α}, 2 ≤ l.length →
-  Σ' (h1 h2 : α) (t : list α), l = h1 :: h2 :: t
-| [] h := absurd h (of_to_bool_ff rfl)
-| [a] h := absurd h (of_to_bool_ff rfl)
-| (a :: b :: t) _ := ⟨a, b, t, rfl⟩
+end ncap
 
-def cap_take_head3 : ∀ {l : list α}, 3 ≤ l.length →
-  Σ' (h1 h2 h3 : α) (t : list α), l = h1 :: h2 :: h3 :: t
-| [] h := absurd h (of_to_bool_ff rfl) 
-| [a] h := absurd h (of_to_bool_ff rfl)
-| [a, b] h := absurd h (of_to_bool_ff rfl)
-| (a :: b :: c :: t) _ := ⟨a, b, c, t, rfl⟩
+namespace cup
 
-@[simp] theorem cup_nil : C.cup [] := 
+@[simp] protected theorem nil : C.cup [] := 
   by rw config.cup; tauto
 
-@[simp] theorem cup_singleton (a : α) : C.cup [a] := 
+@[simp] protected theorem singleton (a : α) : C.cup [a] := 
   by rw config.cup; simp
 
-@[simp] theorem cup_pair {a b : α} : C.cup [a, b] ↔ a < b := 
+@[simp] protected theorem pair {a b : α} : C.cup [a, b] ↔ a < b := 
   by rw config.cup; simp; tauto
 
-@[simp] theorem cup_cons3 {a b c : α} {l : list α} : 
+@[simp] protected theorem cons3 {a b c : α} {l : list α} : 
   C.cup (a :: b :: c :: l) ↔ 
   a < b ∧ C.cup3 a b c ∧ C.cup (b :: c :: l) := 
 by repeat {rw config.cup}; simp; tauto
 
-@[simp] theorem cup_append_cons3 {a b c : α} {l1 l2 : list α} :
+@[simp] protected theorem append_cons3 {a b c : α} {l1 l2 : list α} :
   C.cup (l1 ++ a :: b :: c :: l2) ↔ 
     C.cup (l1 ++ [a, b]) ∧ C.cup3 a b c ∧ C.cup (b :: c :: l2) :=
 begin
@@ -115,21 +112,7 @@ begin
   simp, simp at l1_ih, rw l1_ih, tauto,
 end 
 
-@[simp] theorem ncup_nil : C.ncup 0 [] := 
-  by rw [config.ncup, config.cup]; tauto
-
-@[simp] theorem ncup_singleton (a : α) : C.ncup 1 [a] := 
-  by rw [config.ncup, config.cup]; simp
-
-@[simp] theorem ncup_pair {a b : α} : C.ncup 2 [a, b] ↔ a < b := 
-  by rw [config.ncup, config.cup]; simp; tauto
-
-@[simp] theorem ncup_cons3 {n : ℕ} {a b c : α} {l : list α} : 
-  C.ncup (n + 1) (a :: b :: c :: l) ↔ 
-  a < b ∧ C.cup3 a b c ∧ C.ncup n (b :: c :: l) := 
-by repeat {rw [config.ncup, config.cup]}; simp; tauto
-
-theorem cup_init {l : list α} (h : C.cup l) : C.cup l.init :=
+protected theorem init {l : list α} (h : C.cup l) : C.cup l.init :=
 begin
   induction l with a l,
   {simp [config.cup]; tauto},
@@ -142,7 +125,7 @@ begin
   simp [list.init] at *, tauto,
 end
 
-theorem cup_tail {l : list α} (h : C.cup l) : C.cup l.tail :=
+protected theorem tail {l : list α} (h : C.cup l) : C.cup l.tail :=
 begin
   cases l with a l,
   {simp [config.cup]; tauto},
@@ -155,23 +138,8 @@ begin
   simp [list.init] at *, tauto,
 end
 
-theorem ncup_init {n : ℕ} {l : list α} (h : C.ncup (n+1) l) : C.ncup n l.init :=
-begin
-  cases l with a l,
-  { simp [config.ncup, config.cup] at h, cases h },
-  simp [config.ncup] at *, cases h with hc hl,
-  split, exact C.cup_init hc, assumption,
-end
-
-theorem ncup_tail {n : ℕ} {l : list α} (h : C.ncup (n+1) l) : C.ncup n l.tail :=
-begin
-  cases l with a l,
-  { simp [config.ncup, config.cup] at h, cases h },
-  simp at *, cases h with hc hl,
-  split, exact C.cup_tail hc, simp at hl, assumption,
-end
-
-theorem cup_head'_lt_last' (p q : α) {l : list α} (l_cup : C.cup l) 
+theorem head'_lt_last' 
+  {l : list α} (l_cup : C.cup l) (p q : α) 
   (hl : 2 ≤ l.length) (hp : p ∈ l.head') (hq : q ∈ l.last') : p < q :=
 begin
   cases l with p l,
@@ -187,13 +155,53 @@ begin
   have h' := l_sorted.left q, tauto,
 end
 
-theorem ncup_head'_lt_last' (p q : α) {n : ℕ} {l : list α} 
+end cup
+
+namespace ncup
+
+@[simp] protected theorem nil : C.ncup 0 [] := 
+  by rw [config.ncup, config.cup]; tauto
+
+@[simp] protected theorem singleton (a : α) : C.ncup 1 [a] := 
+  by rw [config.ncup, config.cup]; simp
+
+@[simp] protected theorem pair {a b : α} : C.ncup 2 [a, b] ↔ a < b := 
+  by rw [config.ncup, config.cup]; simp; tauto
+
+@[simp] protected theorem cons3 {n : ℕ} {a b c : α} {l : list α} : 
+  C.ncup (n + 1) (a :: b :: c :: l) ↔ 
+  a < b ∧ C.cup3 a b c ∧ C.ncup n (b :: c :: l) := 
+by repeat {rw [config.ncup, config.cup]}; simp; tauto
+
+protected theorem init {n : ℕ} {l : list α}
+  (h : C.ncup (n+1) l) : C.ncup n l.init :=
+begin
+  cases l with a l,
+  { simp [config.ncup, config.cup] at h, cases h },
+  simp [config.ncup] at *, cases h with hc hl,
+  split, exact hc.init, assumption,
+end
+
+protected theorem tail {n : ℕ} {l : list α}
+  (h : C.ncup (n+1) l) : C.ncup n l.tail :=
+begin
+  cases l with a l,
+  { simp [config.ncup, config.cup] at h, cases h },
+  simp at *, cases h with hc hl,
+  split, exact hc.tail, simp at hl, assumption,
+end
+
+theorem head'_lt_last' (p q : α) {n : ℕ} {l : list α} 
   (l_ncup : C.ncup n l) 
   (hl : 2 ≤ l.length) (hp : p ∈ l.head') (hq : q ∈ l.last') : p < q :=
 begin
   cases l_ncup with l_cup _,
-  apply C.cup_head'_lt_last' p q l_cup; assumption,
+  apply l_cup.head'_lt_last' p q; assumption,
 end
+
+end ncup
+
+end config
 
 theorem ncup_is_ngon {n : ℕ} {S : finset α} 
   (hn : 2 ≤ n) (h : C.has_ncup n S) : C.has_ngon n S :=
@@ -211,10 +219,8 @@ begin
   refine ⟨_, _, _⟩; try {simp; simp at c_in_S; tauto},
   rw [config.ngon, config.gon], simp,
   have hxy : x < y := begin
-    apply C.cup_head'_lt_last' x y c_cup,
+    apply c_cup.head'_lt_last' x y,
     simp, exact inf_eq_left.mp rfl, simp, simp,
   end,
   simp at c_length, rw c_length, split, tauto, linarith,
 end
-
-end config

@@ -27,7 +27,7 @@ begin
   apply_instance,
   { intros a b ha hb hab hn c hc hbc, 
     by_contra h', apply hn, intros d hd, 
-    by_contra h'', apply h, use [[d, a, b, c]], simp, tauto },
+    by_contra h'', apply h, use [[d, a, b, c]], simp [config.ncap], tauto },
   { intros a b ha hb hab hy c hc hca,
     exact hy ⟨c, hc⟩ hca },
 end

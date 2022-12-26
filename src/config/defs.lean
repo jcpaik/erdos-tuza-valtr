@@ -12,12 +12,16 @@ namespace config
 
 variables {α : Type*} [ord : linear_order α] (C : config α)
 
+attribute [instance] config.decidable_cup3
+
 -- Notion of 3-caps
 
 def cap3 (a b c : α) : Prop := ¬(C.cup3 a b c)
 
 def decidable_cap3 : decidable_trel C.cap3 :=
   λ a b c, @not.decidable _ (C.decidable_cup3 a b c)
+
+attribute [instance] config.decidable_cap3
 
 -- Notion of caps and cups
 

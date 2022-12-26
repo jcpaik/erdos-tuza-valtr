@@ -1,6 +1,114 @@
 import data.list
+import data.finset
+import order
+import lib.list.defs
 
 variable {α : Type*}
+
+section list_in
+
+variable [decidable_eq α]
+
+protected def list.in_superset {l : list α}
+  {S T : finset α} (h : S ⊆ T) : l.in S → l.in T := 
+λ l_in_S, finset.subset.trans l_in_S h
+
+@[simp]
+theorem list.nil_in {S : finset α} : [].in S := 
+  by rw list.in; simp
+
+@[simp]
+theorem list.cons_in 
+  {a : α} {l : list α} {S : finset α} : 
+  (a :: l).in S ↔ a ∈ S ∧ l.in S := 
+  by simp [list.in]; exact finset.insert_subset
+
+@[simp]
+theorem list.in_append
+  {l1 l2 : list α} {S : finset α} : 
+  (l1 ++ l2).in S ↔ l1.in S ∧ l2.in S :=
+  by simp [list.in]; exact finset.forall_mem_union
+
+@[simp]
+theorem list.reverse_in
+  {l : list α} {S : finset α} : l.reverse.in S ↔ l.in S :=
+by simp [list.in] 
+
+end list_in
+
+@[simp]
+theorem list.reverse_last' {l : list α} : 
+  l.reverse.last' = l.head' := 
+by cases l; simp
+
+@[simp]
+theorem list.reverse_head' {l : list α} :
+  l.reverse.head' = l.last' := 
+begin convert (list.reverse_last').symm, simp end
+
+section mirror
+
+variable [linear_order α]
+
+open order_dual
+
+@[simp] theorem list.nil_mirror : ([] : list α).mirror = [] := rfl
+
+@[simp] theorem list.nil_of_mirror : ([] : list αᵒᵈ).of_mirror = [] := rfl
+
+@[simp] theorem list.of_mirror_mirror {l : list αᵒᵈ} :
+  l.of_mirror.mirror = l :=
+begin
+  induction l with a l ih, simp,
+  rw [list.of_mirror, list.mirror]; simp,
+  rw [list.of_mirror, list.mirror] at ih; simp at ih,
+  exact ih
+end
+
+@[simp] theorem list.mirror_length {l : list α} :
+  l.mirror.length = l.length := by rw [list.mirror]; simp
+
+theorem list.chain'_mirror {l : list α} :
+  list.chain' (<) l ↔ list.chain' (<) l.mirror :=
+begin
+  rw [list.mirror, list.chain'_reverse, list.chain'_map, flip],
+  simp,
+end
+
+@[simp]
+theorem list.mirror_last' {l : list α} : 
+  l.mirror.last' = option.map to_dual l.head' := 
+by rw [list.mirror]; cases l; simp; tauto
+
+@[simp]
+theorem list.mirror_head' {l : list α} : 
+  l.mirror.head' = option.map to_dual l.last' := 
+begin 
+  rw [list.mirror, list.reverse_head'], 
+  -- quick-and-dirty proof
+  induction l with a l ih, simp,
+  simp, cases l with b l, simp,
+  simp, simp at ih, exact ih,
+end
+
+@[simp]
+theorem list.mirror_in {l : list α} {S : finset α} :
+  l.mirror.in (finset.image to_dual S) ↔ l.in S :=
+begin
+  rw list.mirror, simp, split,
+  { simp [list.in, has_subset.subset] },
+  { simp [list.in], intro h, exact (λ a : αᵒᵈ,
+    begin -- Why do we need to go through all this? 
+      intro h', -- Typecheck fails miserably because (αᵒᵈ) is really α
+      rw @list.mem_to_finset (αᵒᵈ) at h',
+      rw @finset.mem_image α (αᵒᵈ),
+      simp at h', cases h' with a' ha', 
+      use a', rw ←list.mem_to_finset at ha',
+      tauto,
+    end ) } 
+end
+
+end mirror
 
 @[simp]
 theorem list.init_singleton (a : α) : [a].init = [] := by rw list.init
@@ -9,15 +117,6 @@ theorem list.init_singleton (a : α) : [a].init = [] := by rw list.init
 theorem list.last'_cons_append_cons (a b : α) (l1 l2 : list α) : 
   (a :: (l1 ++ b :: l2)).last' = (b :: l2).last' := 
 by revert a; induction l1 with c l1 ih; simp; intro; exact ih c
-
-@[simp]
-theorem list.reverse_last' {l : list α} : 
-  l.reverse.last' = l.head' := by cases l; simp
-
-@[simp]
-theorem list.reverse_head' {l : list α} :
-  l.reverse.head' = l.last' := 
-begin convert (list.reverse_last').symm, simp end
 
 def list.take_head : ∀ {l : list α}, l ≠ [] → 
   Σ' (h1 : α) (t : list α), l = h1 :: t

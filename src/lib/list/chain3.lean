@@ -39,13 +39,16 @@ theorem chain3'_split {a b : α}: ∀ {l1 l2 : list α},
   chain3' R (b :: c :: l2) :=
 by rw [chain3'_split, chain3'_cons]
 
-theorem chain3'_reverse {l : list α} : 
-  chain3' R (reverse l) ↔ chain3' (flip3 R) l :=
+theorem chain3'_mirror [linear_order α] {l : list α} : 
+  chain3' R l ↔ chain3' (mirror3 R) l.mirror :=
 begin
   induction l with a l ih, simp,
   cases l with b l, simp,
-  cases l with c l, simp,
-  simp, simp at ih, tauto,
+  cases l with c l, 
+  rw list.mirror, simp, 
+  rw list.mirror, simp, 
+  simp [list.mirror] at ih, rw ←ih,
+  rw mirror3, simp, exact and.comm
 end
 
 end list

@@ -1,13 +1,18 @@
-universes u u1 u2 u3
+import order
 
-def flip3 {α : Sort u1} {β : Sort u2} {φ : Sort u3} {γ : Sort u} 
-  (f : α → β → φ → γ) : φ → β → α → γ :=
-λ c b a, f a b c
+universes u v
 
-theorem flip3_flip3 {α : Sort u1} {β : Sort u2} {φ : Sort u3} {γ : Sort u} 
-  (f : α → β → φ → γ) : flip3 (flip3 f) = f :=
-  funext (λ a, funext (λ b, funext(λ c, rfl)))
+open order_dual
+
+def mirror3 {α : Type u} [linear_order α] {β : Sort v}  
+  (f : α → α → α → β) : αᵒᵈ → αᵒᵈ → αᵒᵈ → β :=
+λ a b c, f (of_dual c) (of_dual b) (of_dual a)
 
 @[reducible]
 def decidable_trel {α : Sort u} (r : α → α → α → Prop) :=
 Π (a b c : α), decidable (r a b c)
+
+def decidable_trel.mirror3
+  {α : Type u} [linear_order α] {r : α → α → α → Prop} 
+  (dec : decidable_trel r) : decidable_trel (mirror3 r) :=
+λ a b c, dec (of_dual c) (of_dual b) (of_dual a)

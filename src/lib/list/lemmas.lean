@@ -69,7 +69,7 @@ end
   l.mirror.length = l.length := by rw [list.mirror]; simp
 
 theorem list.chain'_mirror {l : list α} :
-  list.chain' (<) l ↔ list.chain' (<) l.mirror :=
+  list.chain' (<) l.mirror ↔ list.chain' (<) l :=
 begin
   rw [list.mirror, list.chain'_reverse, list.chain'_map, flip],
   simp,
@@ -108,6 +108,10 @@ begin
     end ) } 
 end
 
+@[simp]
+theorem finset.mem_mirror {a : α} {S : finset α} :
+  to_dual a ∈ (finset.image to_dual S) ↔ a ∈ S := by simp
+  
 end mirror
 
 @[simp]

@@ -10,6 +10,15 @@ theorem list.last'_cons_append_cons (a b : α) (l1 l2 : list α) :
   (a :: (l1 ++ b :: l2)).last' = (b :: l2).last' := 
 by revert a; induction l1 with c l1 ih; simp; intro; exact ih c
 
+@[simp]
+theorem list.reverse_last' {l : list α} : 
+  l.reverse.last' = l.head' := by cases l; simp
+
+@[simp]
+theorem list.reverse_head' {l : list α} :
+  l.reverse.head' = l.last' := 
+begin convert (list.reverse_last').symm, simp end
+
 def list.take_head : ∀ {l : list α}, l ≠ [] → 
   Σ' (h1 : α) (t : list α), l = h1 :: t
 | [] h := absurd rfl h

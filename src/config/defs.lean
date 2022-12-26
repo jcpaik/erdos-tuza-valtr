@@ -2,7 +2,7 @@ import data.list
 import data.finset
 
 import lib.list
-import lib.core.decidable
+import lib.core.trel
 
 structure config (α : Type*) [linear_order α] :=
 (cup3 : α → α → α → Prop)
@@ -10,25 +10,21 @@ structure config (α : Type*) [linear_order α] :=
 
 namespace config
 
-variables {α : Type*} [linear_order α] (C : config α)
-
-attribute [instance] config.decidable_cup3
+variables {α : Type*} [ord : linear_order α] (C : config α)
 
 -- Notion of 3-caps
 
-@[simp] def cap3 (a b c : α) : Prop := ¬(C.cup3 a b c)
+def cap3 (a b c : α) : Prop := ¬(C.cup3 a b c)
 
 def decidable_cap3 : decidable_trel C.cap3 :=
   λ a b c, @not.decidable _ (C.decidable_cup3 a b c)
 
-attribute [instance] config.decidable_cap3
-
 -- Notion of caps and cups
 
 def cap (l : list α) : Prop := 
-  l.chain' (<) ∧ l.chain3' C.cap3
+  l.chain' ord.lt ∧ l.chain3' C.cap3
 def cup (l : list α) : Prop := 
-  l.chain' (<) ∧ l.chain3' C.cup3
+  l.chain' ord.lt ∧ l.chain3' C.cup3
 @[simp] def gon (l1 l2 : list α) : Prop :=
   2 ≤ l1.length ∧ C.cap l1 ∧
   2 ≤ l2.length ∧ C.cup l2 ∧

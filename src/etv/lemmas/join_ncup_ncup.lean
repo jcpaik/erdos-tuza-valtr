@@ -72,7 +72,7 @@ begin
   rcases list.take_head2 c2_size2 with ⟨x, b, c2', eq_c2⟩,
   subst eq_c2, simp at hx2, subst hx2,
 
-  have lab := C.cap4_free_label cap4_free,
+  have lab := cap4_free_label cap4_free,
   by_cases hl : lab.slope a b,
   { apply C.join_ncup_ncap_case_tt S n a x b c1' c2' lab;
     simp at c1_in_S c2_in_S; tauto },

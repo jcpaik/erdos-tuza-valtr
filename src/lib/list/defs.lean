@@ -1,6 +1,6 @@
 import data.finset
 
-import lib.core.decidable
+import lib.core.trel
 
 variable {α : Type*}
 
@@ -29,6 +29,11 @@ theorem list.in_append [decidable_eq α]
   {l1 l2 : list α} {S : finset α} : 
   (l1 ++ l2).in S ↔ l1.in S ∧ l2.in S :=
   by simp [list.in]; exact finset.forall_mem_union
+
+@[simp]
+theorem list.reverse_in [decidable_eq α]
+  {l : list α} {S : finset α} : l.reverse.in S ↔ l.in S :=
+by simp [list.in] 
 
 end list_in
 

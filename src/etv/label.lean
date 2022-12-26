@@ -1,3 +1,6 @@
+import data.finset
+
+import lib.core.trel
 import config
 
 variables {α : Type*} [linear_order α] (C : config α)
@@ -70,3 +73,44 @@ begin
   cases l with q l, simp at *, subst a_last_l; tauto,
   exfalso, apply hl, exact le_add_self,
 end
+
+variable (label)
+
+open order_dual
+
+protected def config.label.mirror : 
+  C.mirror.label (finset.image order_dual.to_dual S) :=
+⟨ λ a b, ¬(mirror2 label.slope a b), 
+  λ a b, @not.decidable _ (label.decidable_slope.mirror2 a b),
+  begin 
+    intros a b a_in_S b_in_S hab hslope c c_in_S hbc,
+    simp [mirror2] at hslope,
+    simp [config.mirror, mirror3],
+    simp at a_in_S b_in_S c_in_S,
+    rcases a_in_S with ⟨oa, ⟨oa_in_S, oa_eq⟩⟩,
+    rcases b_in_S with ⟨ob, ⟨ob_in_S, ob_eq⟩⟩,
+    rcases c_in_S with ⟨oc, ⟨oc_in_S, oc_eq⟩⟩,
+    rw ←oa_eq at hab,
+    rw ←ob_eq at hab hbc,
+    rw ←oc_eq at hbc,
+    simp at hab hbc,
+    rw [←oa_eq, ←ob_eq, ←oc_eq], simp,
+    rw [←oa_eq, ←ob_eq] at hslope, simp at hslope,
+    apply label.extend_right; tauto,
+  end,
+  begin
+    intros a b a_in_S b_in_S hab hslope c c_in_S hca,
+    simp [mirror2] at hslope,
+    simp [config.mirror, mirror3],
+    simp at a_in_S b_in_S c_in_S,
+    rcases a_in_S with ⟨oa, ⟨oa_in_S, oa_eq⟩⟩,
+    rcases b_in_S with ⟨ob, ⟨ob_in_S, ob_eq⟩⟩,
+    rcases c_in_S with ⟨oc, ⟨oc_in_S, oc_eq⟩⟩,
+    rw ←oa_eq at hab hca,
+    rw ←ob_eq at hab,
+    rw ←oc_eq at hca,
+    simp at hab hca,
+    rw [←oa_eq, ←ob_eq, ←oc_eq], simp,
+    rw [←oa_eq, ←ob_eq] at hslope, simp at hslope,
+    apply label.extend_left; tauto,
+  end⟩

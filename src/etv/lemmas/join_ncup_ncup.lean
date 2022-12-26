@@ -52,7 +52,7 @@ lemma config.join_ncup_ncap_case_tt
   (hab : lab.slope a b) : 
   C.has_ngon (n+3) S :=
 begin
-  sorry,
+  
 end
 
 lemma config.join_ncup_ncup (S : finset α)

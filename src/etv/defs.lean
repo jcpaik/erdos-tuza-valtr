@@ -7,7 +7,8 @@ namespace config
 def has_laced (n : ℕ) (S : finset α) (p q : α) : Prop :=
   ∃ {a b : ℕ} {cp c cq : list α} 
     (hcp : C.ncup a cp) (hc : C.ncup n c) (hcQ : C.ncup b cq),
-    a + b = n ∧ (p ∈ cp.last' ∧ p ∈ c.head' ∧ q ∈ c.last' ∧ q ∈ cq.head')
+    (cp.in S ∧ c.in S ∧ cq.in S) ∧ a + b = n ∧ 
+    (p ∈ cp.last' ∧ p ∈ c.head' ∧ q ∈ c.last' ∧ q ∈ cq.head')
 
 def has_interweaved_laced
   (n : ℕ) (S : finset α) (p q r s : α) : Prop :=

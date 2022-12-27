@@ -46,7 +46,11 @@ begin
   rcases list.take_last R_nnil with ⟨z, R', eq_R⟩,
   have xy_laced : C.has_laced (n+2) S x y := begin
     have hy : C.ncup 1 [y] := by simp,
-    existsi [_, _, _, _, _, hPx, hxQy, hy], simp,
+    existsi [_, _, _, _, _, hPx, hxQy, hy], 
+    refine ⟨_, _, _⟩,
+    split, assumption, split, assumption, 
+    simp, simp at xQy_in_S, tauto,
+    simp, simp,
   end,
   have xz_laced : C.has_laced (n+2) S x z := begin
     have hxyR : C.ncup (n+2) (x :: y :: R) := begin
@@ -54,7 +58,11 @@ begin
     end,
     rw eq_R at hxyR,
     have hz : C.ncup 1 [z] := by simp,
-    existsi [_, _, _, _, _, hPx, hxyR, hz], simp,
+    existsi [_, _, _, _, _, hPx, hxyR, hz],
+    refine ⟨_, _, _⟩,
+    split, assumption, rw eq_R at yR_in_S,
+    simp, simp at yR_in_S, tauto,
+    simp, simp,
   end,
 
   have a_lt_x : a < x := 
@@ -76,7 +84,9 @@ begin
     have ha : C.ncup 1 [a] := by simp,
     have ay_laced : C.has_laced (n+2) S a y := begin
       existsi [_, _, _, _, _, ha, haQy, hyR],
-      simp, rw nat.add_comm,
+      refine ⟨_, _, _⟩, 
+      simp, simp at xQy_in_S yR_in_S, tauto,
+      rw nat.add_comm, simp,
     end,
     use [a, x, y, z], split,
     { split, assumption, split, 
@@ -99,7 +109,10 @@ begin
         apply hyR.extend_left sby; try {assumption}, simp,
       end,
       have hz : C.ncup 1 [z] := by simp,
-      existsi [_, _, _, _, _, hPb, hbyR, hz], rw eq_R, simp,
+      existsi [_, _, _, _, _, hPb, hbyR, hz], rw eq_R,
+      refine ⟨_, _, _⟩, 
+      rw eq_R at yR_in_S, simp at Px_in_S yR_in_S, simp, tauto,
+      simp, simp,
     end,
     use [x, b, y, z], split, 
     split, assumption, split, apply le_of_lt, assumption, assumption,
@@ -113,7 +126,10 @@ begin
     rw eq_P_ at hPby,
     have wy_laced : C.has_laced (n+2) S w y := begin
       have hw : C.ncup 1 [w] := by simp,
-      existsi [_, _, _, _, _, hw, hPby, hyR], simp, rw nat.add_comm,
+      existsi [_, _, _, _, _, hw, hPby, hyR], 
+      refine ⟨_, _, _⟩,
+      rw eq_P_ at Px_in_S, simp at yR_in_S Px_in_S, simp, tauto,
+      rw nat.add_comm, simp,
     end,
     use [w, x, y, z], split, split,
     rw eq_P_ at hPx, apply hPx.head'_lt_last' w x; simp, dec_trivial,

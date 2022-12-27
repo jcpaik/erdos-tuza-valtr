@@ -22,7 +22,7 @@ begin
     set cq := cqm.of_mirror with eq_cq, 
     rw mirror.ncup at hcqm,
     use [a, b, cp, c, cq, hcpm, hcm, hcqm],
-    simp at h, 
+    repeat { rw list.mirror_in at h }, simp at h, 
     rw [nat.add_comm a b, eq_cp, eq_c, eq_cq], simp, tauto, },
   { intro h, rcases h with ⟨a, b, cp, c, cq, hcp, hc, hcq, h⟩,
     use [b, a, cq.mirror, c.mirror, cp.mirror],

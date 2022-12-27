@@ -25,6 +25,8 @@ begin
   { apply ncup_is_ngon, linarith,
     have hpc2 : C.ncup (n+1) (p :: c2) := begin
       apply hc2.extend_left spq; try {assumption},
+      sorry, sorry,
     end,
-    apply hc2.extend_left spq, }
+    sorry, },
+  sorry,
 end

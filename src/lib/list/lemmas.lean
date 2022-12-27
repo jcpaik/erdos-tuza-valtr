@@ -24,7 +24,7 @@ theorem list.cons_in
   by simp [list.in]; exact finset.insert_subset
 
 @[simp]
-theorem list.in_append
+theorem list.append_in
   {l1 l2 : list α} {S : finset α} : 
   (l1 ++ l2).in S ↔ l1.in S ∧ l2.in S :=
   by simp [list.in]; exact finset.forall_mem_union

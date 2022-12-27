@@ -121,6 +121,36 @@ begin
     split, exact le_of_lt x_lt_y, assumption, tauto },
 end
 
+lemma config.join_ncup_n1cup_ncup_tt
+  (S : finset α) (cap4_free : ¬C.has_ncap 4 S)
+  {n : ℕ} (hn : 1 ≤ n) (x y : α)
+  {P : list α} (hPx : C.ncup (n+1) (P ++ [x])) (Px_in_S : (P ++ [x]).in S)
+  {Q : list α} (hxQy : C.ncup (n+2) (x :: Q ++ [y])) 
+  (xQy_in_S : (x :: Q ++ [y]).in S)
+  {R : list α} (hyR : C.ncup (n+1) (y :: R)) (yR_in_S : (y :: R).in S)
+  (label : C.label S) (sxy : label.slope x y) :
+  ∃ p q r s, C.has_interweaved_laced (n+2) S p q r s :=
+begin
+  /- TODO: 
+    1. lift all the cups and points to mirror
+    2. have the technology to flip interweaved laced cups back and forth
+  -/
+  have mirrored_goal : ∃ s r q p, 
+    C.mirror.has_interweaved_laced (n+2) 
+      (finset.image to_dual S) s r q p :=
+  begin
+    rw ←mirror.ncup at hPx hxQy hyR, simp at hPx hxQy hyR,
+    rw ←list.mirror_in at Px_in_S xQy_in_S yR_in_S,
+    simp [-list.cons_in, -list.append_in] at Px_in_S xQy_in_S yR_in_S,
+    have syx := sxy, rw ←mirror_slope at syx,
+    apply C.mirror.join_ncup_n1cup_ncup_ff 
+      _ _ _ (to_dual y) (to_dual x)
+      hyR _ hxQy _ hPx _ label.mirror _; try {assumption},
+    sorry,
+  end,
+  sorry,
+end
+
 lemma config.join_ncup_n1cup_ncup (S : finset α)
   {n : ℕ} (hn : 2 ≤ n)
   (cap4_free : ¬C.has_ncap 4 S) (cup_free : ¬C.has_ncup (n+2) S)

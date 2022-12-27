@@ -1,7 +1,11 @@
+import order
+
 import lib.list
 
 import etv.defs
 import etv.label
+
+open order_dual
 
 variables {α : Type*} [linear_order α] (C : config α)
 
@@ -52,7 +56,20 @@ lemma config.join_ncup_ncap_case_tt
   (hab : lab.slope a b) : 
   C.has_ngon (n+3) S :=
 begin
+  rw ←finset.mem_mirror at a_in_S x_in_S b_in_S,
+  rw ←mirror.ncup at hc1 hc2,
+  rw ←list.mirror_in at c1_in_S c2_in_S,
+  simp at hc1 hc2,
+  have hba := hab, rw ←mirror_slope at hba,
   
+  have mirrored_goal :=
+    (C.mirror).join_ncup_ncap_case_ff 
+      (finset.image to_dual S) n 
+      (to_dual b) (to_dual x) (to_dual a)
+      c2.mirror c1.mirror lab.mirror
+      b_in_S x_in_S a_in_S hc2 c2_in_S hc1 c1_in_S hba,
+  rw mirror.has_ngon at mirrored_goal,
+  tauto
 end
 
 lemma config.join_ncup_ncup (S : finset α)

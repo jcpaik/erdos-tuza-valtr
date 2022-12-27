@@ -52,9 +52,20 @@ variable [linear_order α]
 
 open order_dual
 
-@[simp] theorem list.nil_mirror : ([] : list α).mirror = [] := rfl
+@[simp] theorem list.mirror_nil : ([] : list α).mirror = [] := rfl
 
-@[simp] theorem list.nil_of_mirror : ([] : list αᵒᵈ).of_mirror = [] := rfl
+@[simp] theorem list.mirror_singleton {a : α} : 
+  [a].mirror = [to_dual a] := rfl
+
+@[simp] theorem list.mirror_cons {a : α} {l : list α} :
+  (a :: l).mirror = l.mirror ++ [to_dual a] := 
+by simp [list.mirror]
+
+@[simp] theorem list.mirror_append {l1 l2 : list α} :
+  (l1 ++ l2).mirror = l2.mirror ++ l1.mirror := 
+by simp [list.mirror]
+
+@[simp] theorem list.of_mirror_nil : ([] : list αᵒᵈ).of_mirror = [] := rfl
 
 @[simp] theorem list.of_mirror_mirror {l : list αᵒᵈ} :
   l.of_mirror.mirror = l :=

@@ -114,3 +114,12 @@ protected def config.label.mirror :
     rw [←oa_eq, ←ob_eq] at hslope, simp at hslope,
     apply label.extend_left; tauto,
   end⟩
+
+variable {label}
+
+def mirror_slope {a b : α} :
+  ¬label.mirror.slope (to_dual b) (to_dual a) ↔ label.slope a b :=
+begin
+  rw config.label.mirror, simp,
+  rw mirror2, simp,
+end

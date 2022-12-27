@@ -40,7 +40,7 @@ theorem chain3'_split {a b : α}: ∀ {l1 l2 : list α},
 by rw [chain3'_split, chain3'_cons]
 
 theorem chain3'_mirror [linear_order α] {l : list α} : 
-  chain3' R l ↔ chain3' (mirror3 R) l.mirror :=
+  chain3' (mirror3 R) l.mirror ↔ chain3' R l :=
 begin
   induction l with a l ih, simp,
   cases l with b l, simp,

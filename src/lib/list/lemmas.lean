@@ -103,6 +103,22 @@ begin
 end
 
 @[simp]
+theorem list.of_mirror_last' {l : list αᵒᵈ} : 
+  l.of_mirror.last' = option.map of_dual l.head' := 
+by rw [list.of_mirror]; cases l; simp; tauto
+
+@[simp]
+theorem list.of_mirror_head' {l : list αᵒᵈ} : 
+  l.of_mirror.head' = option.map of_dual l.last' := 
+begin 
+  rw [list.of_mirror, list.reverse_head'], 
+  -- quick-and-dirty proof
+  induction l with a l ih, simp,
+  simp, cases l with b l, simp,
+  simp, simp at ih, exact ih,
+end
+
+@[simp]
 theorem list.mirror_in {l : list α} {S : finset α} :
   l.mirror.in (finset.image to_dual S) ↔ l.in S :=
 begin

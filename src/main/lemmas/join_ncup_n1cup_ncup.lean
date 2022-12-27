@@ -2,8 +2,7 @@ import order
 
 import lib.list
 
-import etv.defs
-import etv.label
+import etv
 
 open order_dual
 
@@ -140,15 +139,18 @@ begin
       (finset.image to_dual S) s r q p :=
   begin
     rw ←mirror.ncup at hPx hxQy hyR, simp at hPx hxQy hyR,
+    rw ←mirror.has_ncap at cap4_free,
     rw ←list.mirror_in at Px_in_S xQy_in_S yR_in_S,
     simp [-list.cons_in, -list.append_in] at Px_in_S xQy_in_S yR_in_S,
     have syx := sxy, rw ←mirror_slope at syx,
     apply C.mirror.join_ncup_n1cup_ncup_ff 
       _ _ _ (to_dual y) (to_dual x)
-      hyR _ hxQy _ hPx _ label.mirror _; try {assumption},
-    sorry,
+      hyR _ hxQy _ hPx _ label.mirror _; assumption,
   end,
-  sorry,
+  simp at mirrored_goal,
+  rcases mirrored_goal with ⟨s, r, q, p, h⟩,
+  rw mirror.has_interweaved_laced at h,
+  use [p, q, r, s], exact h,
 end
 
 lemma config.join_ncup_n1cup_ncup (S : finset α)
@@ -156,11 +158,39 @@ lemma config.join_ncup_n1cup_ncup (S : finset α)
   (cap4_free : ¬C.has_ncap 4 S) (cup_free : ¬C.has_ncup (n+2) S)
   {cx : list α} (hcx : C.ncup n cx) (cx_in_S : cx.in S)
   {c : list α} (hc : C.ncup (n+1) c) (c_in_S : c.in S)
-  {cy : list α} (hcy : C.ncup n cx) (cy_in_S : cy.in S)
+  {cy : list α} (hcy : C.ncup n cy) (cy_in_S : cy.in S)
   (x : α) (hxcx : x ∈ cx.last') (hxc : x ∈ c.head')
   (y : α) (hyc : y ∈ c.last') (hycy : y ∈ cy.head') : 
   ∃ p q r s, C.has_interweaved_laced (n+1) S p q r s :=
 begin
+  have cx_nnil : cx ≠ [] := begin
+    intro h, subst h, simp at hxcx, assumption,
+  end,
+  rcases list.take_last cx_nnil with ⟨x, P, eq_P⟩, subst eq_P,
+  have c_nnil : c ≠ [] := begin
+    intro h, subst h, simp at hxc, assumption,
+  end,
+  rcases list.take_head c_nnil with ⟨x, Q', eq_Q'⟩, subst eq_Q',
+  simp at hxc, subst hxc, simp at hxcx, subst hxcx,
+  clear cx_nnil c_nnil,
+
+  have Q'_nnil : Q' ≠ [] := begin
+    intro h, subst h, cases hc with _ l, simp at l,
+    subst l, exact nat.not_succ_le_zero 1 hn,
+  end,
+  rcases list.take_last Q'_nnil with ⟨y, Q, eq_Q⟩, subst eq_Q,
+  have cy_nnil : cy ≠ [] := begin
+    intro h, subst h, simp at hycy, assumption,
+  end,
+  rcases list.take_head cy_nnil with ⟨y, R, eq_R⟩, subst eq_R, 
+  simp at hyc, subst hyc, simp at hycy, subst hycy,
+  clear Q'_nnil cy_nnil,
+
+  cases n, simp at hn, tauto,
   have label := cap4_free_label cap4_free,
-  sorry
+  by_cases sxy : label.slope x y,
+  { apply C.join_ncup_n1cup_ncup_tt S; try {assumption},
+    cases hn with _ hn, simp, exact le_of_lt hn, },
+  { apply C.join_ncup_n1cup_ncup_ff S; try {assumption},
+    cases hn with _ hn, simp, exact le_of_lt hn, },
 end

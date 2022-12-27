@@ -130,10 +130,6 @@ lemma config.join_ncup_n1cup_ncup_tt
   (label : C.label S) (sxy : label.slope x y) :
   ∃ p q r s, C.has_interweaved_laced (n+2) S p q r s :=
 begin
-  /- TODO: 
-    1. lift all the cups and points to mirror
-    2. have the technology to flip interweaved laced cups back and forth
-  -/
   have mirrored_goal : ∃ s r q p, 
     C.mirror.has_interweaved_laced (n+2) 
       (finset.image to_dual S) s r q p :=

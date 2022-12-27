@@ -74,6 +74,28 @@ begin
   exfalso, apply hl, exact le_add_self,
 end
 
+protected theorem config.ncup.extend_left
+  {n : ℕ} {l : list α} (l_ncup : C.ncup n l)
+  {a b : α} (s_ab : ¬label.slope a b) 
+  (ha : a ∈ S) (hab : a < b) (l_in_S : l.in S)
+  (b_head_l : b ∈ l.head') : C.ncup (n+1) (a :: l) :=
+begin
+  cases l_ncup with l_cup l_len, split,
+  apply l_cup.extend_left s_ab; try {assumption},
+  simp, assumption,
+end 
+
+protected theorem config.ncup.extend_right
+  {n : ℕ} {l : list α} (l_ncup : C.ncup n l)
+  {a b : α} (s_ab : label.slope a b) 
+  (hab : a < b) (hb : b ∈ S) (l_in_S : l.in S)
+  (a_last_l : a ∈ l.last') : C.ncup (n+1) (l ++ [b]) :=
+begin
+  cases l_ncup with l_cup l_len, split,
+  apply l_cup.extend_right s_ab; try {assumption},
+  simp, assumption,
+end
+
 variable (label)
 
 open order_dual

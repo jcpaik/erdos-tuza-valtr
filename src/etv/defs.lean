@@ -5,10 +5,9 @@ variables {α : Type*} [linear_order α] (C : config α)
 namespace config
 
 def has_laced (n : ℕ) (S : finset α) (p q : α) : Prop :=
-  ∃ (cp c cq : list α), 
-    (C.cup cp ∧ C.cup c ∧ C.cup cq) ∧
-    (p ∈ cp.last' ∧ p ∈ c.head' ∧ q ∈ c.last' ∧ q ∈ cq.head') ∧
-    (cp.length + cq.length = n ∧ c.length = n)
+  ∃ {a b : ℕ} {cp c cq : list α} 
+    (hcp : C.ncup a cp) (hc : C.ncup n c) (hcQ : C.ncup b cq),
+    a + b = n ∧ (p ∈ cp.last' ∧ p ∈ c.head' ∧ q ∈ c.last' ∧ q ∈ cq.head')
 
 def has_interweaved_laced
   (n : ℕ) (S : finset α) (p q r s : α) : Prop :=

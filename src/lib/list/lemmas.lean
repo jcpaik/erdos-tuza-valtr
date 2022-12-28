@@ -34,6 +34,10 @@ theorem list.reverse_in
   {l : list α} {S : finset α} : l.reverse.in S ↔ l.in S :=
 by simp [list.in] 
 
+theorem list.mem_in {a : α} {l : list α} {S : finset α} 
+  (h : l.in S) (ha : a ∈ l) : a ∈ S :=
+by simp [list.in] at h; rw ←list.mem_to_finset at ha; exact h ha
+
 end list_in
 
 @[simp]

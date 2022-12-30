@@ -90,9 +90,9 @@ lemma config.has_interweaved_laced_has_ngon_tt
   C.has_interweaved_laced n S p q r s → C.has_ngon (n+1) S :=
 begin
   rw [←mirror.has_interweaved_laced, ←mirror.has_ngon],
-  have label_m := label.mirror,
-  -- idea: implement slope.mirror 
-  sorry
+  have srq := sqr, rw ←mirror_slope at srq,
+  rw ←mirror.has_ncap at cap4_free,
+  apply C.mirror.has_interweaved_laced_has_ngon_ff; assumption
 end
 
 lemma config.has_interweaved_laced_has_ngon 

@@ -31,21 +31,18 @@ begin
   end,
   by_cases haxc : C.cup3 a x c,
   { apply ncup_is_ngon, dec_trivial,
-    use c1 ++ [a, x, c], split, split,
-    simp, rw config.ncup at hc1, tauto,
-    simp, simp [config.ncup] at hc1, tauto,
-    simp, tauto },
-  { use [[a, x, c], a :: (c3 ++ [c])],
-    refine ⟨⟨_, _⟩, _, _⟩; try {simp}; try {tauto},
-    split, tauto, split, dec_trivial,
+    use c1 ++ [a, x, c], split, simp, tauto,
+    rw config.ncup, simp, simp [config.ncup] at hc1, tauto, },
+  { existsi [[a, x, c], _, a :: (c3 ++ [c]), _],
+    refine ⟨⟨_, _, _, _, _, _⟩, _⟩; 
+    try {simp}; try {tauto}, dec_trivial,
     rw ←eq_c2, rw ←eq_c2 at hc2,
     have hbc2 := hc2.tail.left, simp at hbc2,
     apply hbc2.extend_left sab; try {tauto},
     simp, tauto, simp [config.ncup] at hc2, 
     ring_nf, ring_nf at hc2, simp, simp at hc2, 
-    exact hc2.right, split, assumption,
-    have hh : (b :: c2).in S := by simp; tauto,
-    rw eq_c2 at hh, simp at hh, exact hh },
+    exact hc2.right,
+    rw ← eq_c2, simp, tauto, simp, tauto },
 end
 
 lemma config.join_ncup_ncap_case_tt

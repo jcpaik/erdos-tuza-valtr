@@ -82,16 +82,17 @@ def mirror.has_ncap {n : ℕ} {S : finset α} :
   C.has_ncap n S :=
 begin
   split,
-  { intro h, rcases h with ⟨c, ⟨c_ncap, c_in⟩⟩,
+  { intro h, rcases h with ⟨c, c_in, c_ncap⟩,
     use c.of_mirror,
-    split, rw ←mirror.ncap, convert c_ncap, simp,
+    split, 
     rw ←(@list.of_mirror_mirror α _ c) at c_in c_ncap,
     set co := c.of_mirror,
-    rw ←list.mirror_in, assumption, },
-  { intro h, rcases h with ⟨c, ⟨c_ncap, c_in⟩⟩,
+    rw ←list.mirror_in, assumption,
+    rw ←mirror.ncap, convert c_ncap, simp, },
+  { intro h, rcases h with ⟨c, c_in, c_ncap⟩,
     use c.mirror,
-    split, rw mirror.ncap, tauto,
-    rw list.mirror_in, assumption, },
+    split, rw list.mirror_in, assumption,
+    rw mirror.ncap, tauto, },
 end
 
 @[simp]
@@ -100,16 +101,16 @@ def mirror.has_ncup {n : ℕ} {S : finset α} :
   C.has_ncup n S :=
 begin
   split,
-  { intro h, rcases h with ⟨c, ⟨c_ncup, c_in⟩⟩,
+  { intro h, rcases h with ⟨c, c_in, c_ncup⟩,
     use c.of_mirror,
     rw ←(@list.of_mirror_mirror α _ c) at c_in c_ncup,
     set co := c.of_mirror,
     rw list.mirror_in at c_in, 
     rw mirror.ncup at c_ncup, tauto, },
-  { intro h, rcases h with ⟨c, ⟨c_ncup, c_in⟩⟩,
+  { intro h, rcases h with ⟨c, c_in, c_ncup⟩,
     use c.mirror,
-    split, rw mirror.ncup, tauto,
-    rw list.mirror_in, assumption, },
+    split, rw list.mirror_in, assumption,
+    rw mirror.ncup, tauto, },
 end
 
 def mirror.has_ngon {n : ℕ} {S : finset α} : 
@@ -117,15 +118,17 @@ def mirror.has_ngon {n : ℕ} {S : finset α} :
   C.has_ngon n S :=
 begin
   split,
-  { intro h, rcases h with ⟨c1, c2, ⟨c_ngon, c1_in, c2_in⟩⟩,
-    use [c1.of_mirror, c2.of_mirror],
+  { intro h, rcases h with ⟨c1, c1_in, c2, c2_in, c_ngon⟩,
     rw ←(@list.of_mirror_mirror α _ c1) at c1_in c_ngon,
     rw ←(@list.of_mirror_mirror α _ c2) at c2_in c_ngon,
-    set c1o := c1.of_mirror, set c2o := c2.of_mirror,
-    rw list.mirror_in at c1_in c2_in,
-    rw ←mirror.ngon at c_ngon, tauto },
-  { intro h, rcases h with ⟨c1, c2, ⟨c_ngon, c1_in, c2_in⟩⟩,
-    use [c1.mirror, c2.mirror], 
-    split, rw ←mirror.ngon, tauto,
-    simp [list.mirror_in], tauto },
+    set c1o := c1.of_mirror; set c2o := c2.of_mirror,
+    existsi [c1.of_mirror, _, c2.of_mirror, _],
+    rw ←mirror.ngon at c_ngon, assumption,
+    rw list.mirror_in at c2_in, assumption,
+    rw list.mirror_in at c1_in, assumption, },
+  { intro h, rcases h with ⟨c1, c1_in, c2, c2_in, c2_in⟩,
+    existsi [c1.mirror, _, c2.mirror, _], 
+    rw ←mirror.ngon, tauto,
+    simp [list.mirror_in], tauto,
+    simp [list.mirror_in], tauto, },
 end

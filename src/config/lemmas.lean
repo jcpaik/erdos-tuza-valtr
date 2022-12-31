@@ -206,7 +206,7 @@ end config
 theorem ncup_is_ngon {n : ℕ} {S : finset α} 
   (hn : 2 ≤ n) (h : C.has_ncup n S) : C.has_ngon n S :=
 begin
-  rcases h with ⟨c, ⟨⟨c_cup, c_length⟩, c_in_S⟩⟩,
+  rcases h with ⟨c, c_in_S, ⟨c_cup, c_length⟩⟩,
   have hc : c ≠ [] := 
     by cases c; subst c_length; simp at hn; tauto,
   rcases list.take_last hc with ⟨y, c, eq_c⟩, subst eq_c,
@@ -215,12 +215,11 @@ begin
   rcases list.take_head hc with ⟨x, c, eq_c⟩, subst eq_c,
   clear hc hc,
 
-  use [[x, y], x :: c ++ [y]],
-  refine ⟨_, _, _⟩; try {simp; simp at c_in_S; tauto},
+  existsi [[x, y], _, x :: c ++ [y], _],
   rw [config.ngon, config.gon], simp,
-  have hxy : x < y := begin
-    apply c_cup.head'_lt_last' x y,
-    simp, exact inf_eq_left.mp rfl, simp, simp,
-  end,
+  have hxy : x < y :=
+    by apply c_cup.head'_lt_last' x y; simp; dec_trivial,
   simp at c_length, rw c_length, split, tauto, linarith,
+
+  assumption, simp, simp at c_in_S, tauto,
 end

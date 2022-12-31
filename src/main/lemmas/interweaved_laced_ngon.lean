@@ -46,12 +46,12 @@ begin
   by_cases spq : label.slope p q, swap,
   { apply ncup_is_ngon, linarith,
     use (p :: c2), split,
-    apply hc2.extend_left spq; assumption,
-    simp, tauto },
+    simp, tauto,
+    apply hc2.extend_left spq; assumption, },
   -- (spq : ¬label.slope p q) from now on
   by_cases cpqr : C.cup3 p q r,
   { apply ncup_is_ngon, linarith,
-    use (cp ++ q :: cr), split, swap, simp, tauto,
+    use (cp ++ q :: cr), split, simp, tauto,
     have cp_nnil : cp ≠ [] := begin
       intro h, subst h, simp at cp_last, exact cp_last,
     end,
@@ -75,12 +75,13 @@ begin
     rw eq_cr, simp,
     simp, rw [hcp.right, hcr.right], rw ←eq_ab, 
     rw nat.add_assoc },
-  { use [[p, q, r], c1], split, swap, simp, tauto,
+  { existsi [[p, q, r], _, c1, _],
     split, swap, rw hc1.right, simp, linarith,
     rw config.gon, simp,
     cases hc1 with c1_cup c1_length, rw c1_length,
     simp at c1_head c1_last, 
-    have h2n : 2 ≤ n := by linarith, tauto, },
+    have h2n : 2 ≤ n := by linarith, tauto,
+    tauto, simp, tauto, },
 end
 
 lemma config.has_interweaved_laced_has_ngon_tt

@@ -15,6 +15,8 @@ structure config.label (S : finset α) :=
 (extend_right : ∀ {a b : α}, a ∈ S → b ∈ S → a < b → slope a b →
   ∀ {c : α}, c ∈ S → c < a → C.cup3 c a b)
 
+attribute [instance] config.label.decidable_slope
+
 def cap4_free_slope {S : finset α} (h : ¬C.has_ncap 4 S) (a b : α) : Prop :=
   ∀ c : S, ↑c < a → C.cup3 c a b
 

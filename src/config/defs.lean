@@ -34,6 +34,9 @@ def cup (l : list α) : Prop :=
   2 ≤ l2.length ∧ C.cup l2 ∧
   l1.head' = l2.head' ∧ l1.last' = l2.last'
 
+instance decidable_cup {l : list α} : decidable (C.cup l) :=
+  by rw cup; apply_instance
+
 def ncap (n : ℕ) (l : list α) : Prop := 
   C.cap l ∧ l.length = n
 def ncup (n : ℕ) (l : list α) : Prop := 

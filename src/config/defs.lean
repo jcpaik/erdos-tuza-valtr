@@ -34,8 +34,12 @@ def cup (l : list α) : Prop :=
   2 ≤ l2.length ∧ C.cup l2 ∧
   l1.head' = l2.head' ∧ l1.last' = l2.last'
 
+instance decidable_cap {l : list α} : decidable (C.cap l) :=
+  by rw cap; apply_instance
 instance decidable_cup {l : list α} : decidable (C.cup l) :=
   by rw cup; apply_instance
+instance decidable_gon {l1 l2 : list α} : decidable (C.gon l1 l2) :=
+  by rw gon; apply_instance
 
 def ncap (n : ℕ) (l : list α) : Prop := 
   C.cap l ∧ l.length = n
@@ -44,11 +48,22 @@ def ncup (n : ℕ) (l : list α) : Prop :=
 def ngon (n : ℕ) (l1 l2 : list α) : Prop :=
   C.gon l1 l2 ∧ l1.length + l2.length = n + 2
 
+instance decidable_ncap {n : ℕ} {l : list α} : 
+  decidable (C.ncap n l) :=
+  by rw ncap; apply_instance
+instance decidable_ncup {n : ℕ} {l : list α} : 
+  decidable (C.ncup n l) :=
+  by rw ncup; apply_instance
+instance decidable_ngon {n : ℕ} {l1 l2 : list α} : 
+  decidable (C.ngon n l1 l2) :=
+  by rw ngon; apply_instance
+
 def has_ncap (n : ℕ) (S : finset α) : Prop :=
-  ∃ (l : list α), C.ncap n l ∧ l.in S
+  ∃ (l : list α) (l_in_S : l.in S), C.ncap n l
 def has_ncup (n : ℕ) (S : finset α) : Prop :=
-  ∃ (l : list α), C.ncup n l ∧ l.in S
+  ∃ (l : list α) (l_in_S : l.in S), C.ncup n l
 def has_ngon (n : ℕ) (S : finset α) : Prop :=
-  ∃ (l1 l2 : list α), C.ngon n l1 l2 ∧ l1.in S ∧ l2.in S
+  ∃ (l1 : list α) (l1_in_S : l1.in S), 
+  ∃ (l2 : list α) (l2_in_S : l2.in S), C.ngon n l1 l2
 
 end config

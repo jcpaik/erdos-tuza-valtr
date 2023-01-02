@@ -11,7 +11,7 @@ variable [decidable_eq α]
 
 protected def list.in_superset {l : list α}
   {S T : finset α} (h : S ⊆ T) : l.in S → l.in T := 
-λ l_in_S a al, h (l_in_S al)
+λ l_in_S a al, h (l_in_S _ al)
 
 @[simp]
 theorem list.nil_in {S : finset α} : [].in S := 
@@ -34,7 +34,7 @@ begin
     intros a al2, apply h, exact list.mem_append_right l1 al2 },
   { intros h a al12, cases h with h1 h2, 
     simp at al12, cases al12 with al1 al2,
-    exact h1 al1, exact h2 al2, },
+    exact h1 _ al1, exact h2 _ al2, },
 end
 
 @[simp]

@@ -6,7 +6,7 @@ variable {α : Type*}
 
 -- Local notion for a list contained in a finset
 protected def list.in (l : list α) (S : finset α) : Prop :=
-  ∀ {a : α}, a ∈ l → a ∈ S
+  ∀ a : α, a ∈ l → a ∈ S
 
 namespace list
 

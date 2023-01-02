@@ -26,19 +26,19 @@ begin
       cq_last, c2_head, c2_last, cs_head⟩⟩,
 
   have p_in_S : p ∈ S := begin
-    apply list.mem_in c1_in_S,
+    apply c1_in_S,
     exact list.mem_of_mem_head' c1_head,
   end,
   have q_in_S : q ∈ S := begin
-    apply list.mem_in c2_in_S,
+    apply c2_in_S,
     exact list.mem_of_mem_head' c2_head,
   end,
   have r_in_S : r ∈ S := begin
-    apply list.mem_in c1_in_S,
+    apply c1_in_S,
     exact list.mem_of_mem_last' c1_last,
   end,
   have s_in_S : s ∈ S := begin
-    apply list.mem_in c2_in_S,
+    apply c2_in_S,
     exact list.mem_of_mem_last' c2_last,
   end,
   

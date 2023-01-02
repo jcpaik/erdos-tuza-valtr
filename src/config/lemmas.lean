@@ -153,7 +153,7 @@ begin
   cases l_cup with l_sorted _,
   rw list.chain'_iff_pairwise at l_sorted, simp at l_sorted,
   have h' := l_sorted.left q, tauto,
-end
+end 
 
 end cup
 
@@ -223,4 +223,29 @@ begin
     simp, exact inf_eq_left.mp rfl, simp, simp,
   end,
   simp at c_length, rw c_length, split, tauto, linarith,
+end
+
+theorem has_ncap_supset {n : ℕ} {S1 S2 : finset α} (h : S1 ⊆ S2)
+  (h1 : C.has_ncap n S1) : C.has_ncap n S2 :=
+begin
+  cases h1 with c1 h1,
+  use c1, split, exact h1.left, 
+  intros a a_c1, exact h (h1.right a a_c1),
+end
+
+theorem has_ncup_supset {n : ℕ} {S1 S2 : finset α} (h : S1 ⊆ S2)
+  (h1 : C.has_ncup n S1) : C.has_ncup n S2 :=
+begin
+  cases h1 with c1 h1,
+  use c1, split, exact h1.left, 
+  intros a a_c1, exact h (h1.right a a_c1),
+end
+
+theorem has_ngon_supset {n : ℕ} {S1 S2 : finset α} (h : S1 ⊆ S2)
+  (h1 : C.has_ngon n S1) : C.has_ngon n S2 :=
+begin
+  rcases h1 with ⟨c1, c2, ⟨gon, c1_in, c2_in⟩⟩,
+  existsi [c1, c2], refine ⟨gon, _, _⟩,
+  intros a a_c1, apply h, exact c1_in a a_c1,
+  intros a a_c2, apply h, exact c2_in a a_c2,
 end

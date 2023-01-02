@@ -11,7 +11,7 @@ variable [decidable_eq α]
 
 protected def list.in_superset {l : list α}
   {S T : finset α} (h : S ⊆ T) : l.in S → l.in T := 
-λ l_in_S, finset.subset.trans l_in_S h
+λ l_in_S a al, h (l_in_S al)
 
 @[simp]
 theorem list.nil_in {S : finset α} : [].in S := 
@@ -27,16 +27,20 @@ theorem list.cons_in
 theorem list.append_in
   {l1 l2 : list α} {S : finset α} : 
   (l1 ++ l2).in S ↔ l1.in S ∧ l2.in S :=
-  by simp [list.in]; exact finset.forall_mem_union
+begin
+  split,
+  { intro h, split,
+    intros a al1, apply h, exact list.mem_append_left l2 al1,
+    intros a al2, apply h, exact list.mem_append_right l1 al2 },
+  { intros h a al12, cases h with h1 h2, 
+    simp at al12, cases al12 with al1 al2,
+    exact h1 al1, exact h2 al2, },
+end
 
 @[simp]
 theorem list.reverse_in
   {l : list α} {S : finset α} : l.reverse.in S ↔ l.in S :=
 by simp [list.in] 
-
-theorem list.mem_in {a : α} {l : list α} {S : finset α} 
-  (h : l.in S) (ha : a ∈ l) : a ∈ S :=
-by simp [list.in] at h; rw ←list.mem_to_finset at ha; exact h ha
 
 end list_in
 
@@ -128,15 +132,7 @@ theorem list.mirror_in {l : list α} {S : finset α} :
 begin
   rw list.mirror, simp, split,
   { simp [list.in, has_subset.subset] },
-  { simp [list.in], intro h, exact (λ a : αᵒᵈ,
-    begin -- Why do we need to go through all this? 
-      intro h', -- Typecheck fails miserably because (αᵒᵈ) is really α
-      rw @list.mem_to_finset (αᵒᵈ) at h',
-      rw @finset.mem_image α (αᵒᵈ),
-      simp at h', cases h' with a' ha', 
-      use a', rw ←list.mem_to_finset at ha',
-      tauto,
-    end ) } 
+  { simp [list.in] }
 end
 
 @[simp]

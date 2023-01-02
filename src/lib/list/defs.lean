@@ -5,8 +5,8 @@ import lib.core.trel
 variable {α : Type*}
 
 -- Local notion for a list contained in a finset
-protected def list.in [decidable_eq α] (l : list α) (S : finset α) : Prop :=
-  l.to_finset ⊆ S
+protected def list.in (l : list α) (S : finset α) : Prop :=
+  ∀ {a : α}, a ∈ l → a ∈ S
 
 namespace list
 

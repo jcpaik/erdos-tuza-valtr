@@ -3,7 +3,7 @@ import order
 import lib.list
 
 import etv
-import main.lemmas.join_ncup_ncup
+import main.lemmas.join_n_n
 
 open order_dual
 

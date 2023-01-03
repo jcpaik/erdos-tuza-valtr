@@ -182,6 +182,18 @@ begin
   split, exact hc.init, assumption,
 end
 
+protected theorem init_append_last {n : ℕ} {l : list α}
+  (h : C.ncup (n+1) l) : 
+  ∃ (l' : list α) (a : α), l = l' ++ [a] ∧ C.ncup n l' :=
+begin
+  cases l with a l,
+  { simp [config.ncup, config.cup] at h, cases h },
+  have nnil : a :: l ≠ [] := by simp,
+  use [(a :: l).init, (a :: l).last nnil], split,
+  apply symm, exact list.init_append_last nnil,
+  exact h.init,
+end
+
 protected theorem tail {n : ℕ} {l : list α}
   (h : C.ncup (n+1) l) : C.ncup n l.tail :=
 begin
@@ -189,6 +201,26 @@ begin
   { simp [config.ncup, config.cup] at h, cases h },
   simp at *, cases h with hc hl,
   split, exact hc.tail, simp at hl, assumption,
+end
+
+protected theorem cons_head_tail {n : ℕ} {l : list α}
+  (h : C.ncup (n+1) l) : 
+  ∃ (a : α) (l' : list α), l = a :: l' ∧ C.ncup n l' :=
+begin
+  cases l with a l,
+  { simp [config.ncup, config.cup] at h, cases h },
+  simp [config.ncup] at *, cases h with hc hl,
+  use [a, l], have hc' := hc.tail, simp at hc', tauto,
+end
+
+protected theorem take_head_last {n : ℕ} {l : list α}
+  (h : C.ncup (n+2) l) :
+  ∃ (a : α) (l' : list α) (b : α), l = a :: l' ++ [b] ∧ C.ncup n l' :=
+begin
+  rcases h.cons_head_tail with ⟨a, l', eq_l, cup_l'⟩,
+  rcases cup_l'.init_append_last with ⟨l'', b, eq_l', cup_l''⟩,
+  use [a, l'', b], split,
+  rw [eq_l, eq_l'], simp, assumption,
 end
 
 theorem head'_lt_last' (p q : α) {n : ℕ} {l : list α} 

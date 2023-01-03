@@ -9,12 +9,16 @@ open order_dual
 variables {α : Type*} [linear_order α] (C : config α)
 
 lemma config.join_n_n_interweaved (S : finset α) (n : ℕ)
-  {c1 : list α} (c1_cup : C.ncup (n+1) c1) (c1_in_S : c1.in S)
-  {c2 : list α} (c2_cup : C.ncup (n+1) c2) (c2_in_S : c2.in S)
+  {c1 : list α} (c1_cup : C.ncup (n+2) c1) (c1_in_S : c1.in S)
+  {c2 : list α} (c2_cup : C.ncup (n+2) c2) (c2_in_S : c2.in S)
   (h : c1.last' = c2.head') :
-  ∃ p q r s, C.has_interweaved_laced (n+1) S p q r s :=
+  ∃ p q r s, C.has_interweaved_laced (n+2) S p q r s :=
 begin
-  sorry
+  rcases c1_cup.take_head_last with ⟨p, c1', q, eq_c1, c1'_cup⟩,
+  rcases c2_cup.take_head_last with ⟨q, c2', r, eq_c2, c2'_cup⟩,
+  rw [eq_c1, eq_c2] at h, simp at h, subst h,
+  use [p, q, q, r], refine ⟨_, _, _⟩,
+  sorry, sorry, sorry,
 end
 
 lemma config.join_n_n1_join_n1_n (S : finset α) (n : ℕ)

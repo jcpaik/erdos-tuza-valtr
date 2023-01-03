@@ -1,2 +1,2 @@
-import .join_ncup_ncup
-import .join_ncup_n1cup_ncup
+import .join_n_n
+import .join_n_n1_n

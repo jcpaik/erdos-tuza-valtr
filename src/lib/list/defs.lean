@@ -8,6 +8,10 @@ variable {α : Type*}
 protected def list.in (l : list α) (S : finset α) : Prop :=
   ∀ a : α, a ∈ l → a ∈ S
 
+protected def finset.mirror
+  [linear_order α] (S : finset α) : finset αᵒᵈ := 
+  (finset.image order_dual.to_dual S)
+
 namespace list
 
 -- Local notion for flipping a list of elements, together with its order

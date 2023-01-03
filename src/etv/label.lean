@@ -103,14 +103,14 @@ variable (label)
 open order_dual
 
 protected def config.label.mirror : 
-  C.mirror.label (finset.image order_dual.to_dual S) :=
+  C.mirror.label S.mirror :=
 ⟨ λ a b, ¬(mirror2 label.slope a b), 
   λ a b, @not.decidable _ (label.decidable_slope.mirror2 a b),
   begin 
     intros a b a_in_S b_in_S hab hslope c c_in_S hbc,
     simp [mirror2] at hslope,
     simp [config.mirror, mirror3],
-    simp at a_in_S b_in_S c_in_S,
+    simp [finset.mirror] at a_in_S b_in_S c_in_S,
     rcases a_in_S with ⟨oa, ⟨oa_in_S, oa_eq⟩⟩,
     rcases b_in_S with ⟨ob, ⟨ob_in_S, ob_eq⟩⟩,
     rcases c_in_S with ⟨oc, ⟨oc_in_S, oc_eq⟩⟩,
@@ -126,7 +126,7 @@ protected def config.label.mirror :
     intros a b a_in_S b_in_S hab hslope c c_in_S hca,
     simp [mirror2] at hslope,
     simp [config.mirror, mirror3],
-    simp at a_in_S b_in_S c_in_S,
+    simp [finset.mirror] at a_in_S b_in_S c_in_S,
     rcases a_in_S with ⟨oa, ⟨oa_in_S, oa_eq⟩⟩,
     rcases b_in_S with ⟨ob, ⟨ob_in_S, ob_eq⟩⟩,
     rcases c_in_S with ⟨oc, ⟨oc_in_S, oc_eq⟩⟩,

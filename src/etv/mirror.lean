@@ -6,7 +6,7 @@ open order_dual
 variables {α : Type*} [linear_order α] {C : config α}
 
 def mirror.has_laced {n : ℕ} {S : finset α} (p q : α) :
-  C.mirror.has_laced n (finset.image to_dual S) 
+  C.mirror.has_laced n S.mirror 
     (to_dual q) (to_dual p) ↔
   C.has_laced n S p q :=
 begin
@@ -31,7 +31,7 @@ begin
 end
 
 def mirror.has_interweaved_laced {n : ℕ} {S : finset α} (p q r s : α) :
-  C.mirror.has_interweaved_laced n (finset.image to_dual S) 
+  C.mirror.has_interweaved_laced n S.mirror 
     (to_dual s) (to_dual r) (to_dual q) (to_dual p) ↔
   C.has_interweaved_laced n S p q r s :=
 begin

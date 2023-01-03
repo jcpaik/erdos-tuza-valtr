@@ -78,7 +78,7 @@ end
 
 @[simp]
 def mirror.has_ncap {n : ℕ} {S : finset α} : 
-  (C.mirror).has_ncap n (finset.image to_dual S) ↔
+  (C.mirror).has_ncap n S.mirror ↔
   C.has_ncap n S :=
 begin
   split,
@@ -96,7 +96,7 @@ end
 
 @[simp]
 def mirror.has_ncup {n : ℕ} {S : finset α} : 
-  (C.mirror).has_ncup n (finset.image to_dual S) ↔
+  (C.mirror).has_ncup n S.mirror ↔
   C.has_ncup n S :=
 begin
   split,
@@ -113,7 +113,7 @@ begin
 end
 
 def mirror.has_ngon {n : ℕ} {S : finset α} : 
-  (C.mirror).has_ngon n (finset.image to_dual S) ↔
+  (C.mirror).has_ngon n S.mirror ↔
   C.has_ngon n S :=
 begin
   split,

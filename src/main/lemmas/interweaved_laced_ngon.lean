@@ -111,7 +111,7 @@ begin
     rcases qs_laced with ⟨-, -, -, c2, -, -, hc2, -,
       ⟨-, c2_in_S, -⟩, -,
       ⟨-, c2_head, c2_last, -⟩⟩,
-    apply C.join_ncup_ncup S _ cap4_free 
+    apply C.join_n_n S _ cap4_free 
       hc1 c1_in_S hc2 c2_in_S q c1_last c2_head,
     linarith },
   rename q_le_r → q_lt_r,

@@ -8,7 +8,7 @@ open order_dual
 
 variables {α : Type*} [linear_order α] (C : config α)
 
-lemma config.join_ncup_n1cup_ncup_ff 
+lemma config.join_n_n1_n_ff 
   (S : finset α) (cap4_free : ¬C.has_ncap 4 S)
   {n : ℕ} (hn : 1 ≤ n) (x y : α)
   {P : list α} (hPx : C.ncup (n+1) (P ++ [x])) (Px_in_S : (P ++ [x]).in S)
@@ -136,7 +136,7 @@ begin
     split, exact le_of_lt x_lt_y, assumption, tauto },
 end
 
-lemma config.join_ncup_n1cup_ncup_tt
+lemma config.join_n_n1_n_tt
   (S : finset α) (cap4_free : ¬C.has_ncap 4 S)
   {n : ℕ} (hn : 1 ≤ n) (x y : α)
   {P : list α} (hPx : C.ncup (n+1) (P ++ [x])) (Px_in_S : (P ++ [x]).in S)
@@ -154,7 +154,7 @@ begin
     rw ←list.mirror_in at Px_in_S xQy_in_S yR_in_S,
     simp [-list.cons_in, -list.append_in] at Px_in_S xQy_in_S yR_in_S,
     have syx := sxy, rw ←mirror_slope at syx,
-    apply C.mirror.join_ncup_n1cup_ncup_ff 
+    apply C.mirror.join_n_n1_n_ff 
       _ _ _ (to_dual y) (to_dual x)
       hyR _ hxQy _ hPx _ label.mirror _; assumption,
   end,
@@ -164,7 +164,7 @@ begin
   use [p, q, r, s], exact h,
 end
 
-lemma config.join_ncup_n1cup_ncup (S : finset α)
+lemma config.join_n_n1_n (S : finset α)
   {n : ℕ} (hn : 2 ≤ n)
   (cap4_free : ¬C.has_ncap 4 S) (cup_free : ¬C.has_ncup (n+2) S)
   {cx : list α} (hcx : C.ncup n cx) (cx_in_S : cx.in S)
@@ -200,8 +200,8 @@ begin
   cases n, simp at hn, tauto,
   have label := cap4_free_label cap4_free,
   by_cases sxy : label.slope x y,
-  { apply C.join_ncup_n1cup_ncup_tt S; try {assumption},
+  { apply C.join_n_n1_n_tt S; try {assumption},
     cases hn with _ hn, simp, exact le_of_lt hn, },
-  { apply C.join_ncup_n1cup_ncup_ff S; try {assumption},
+  { apply C.join_n_n1_n_ff S; try {assumption},
     cases hn with _ hn, simp, exact le_of_lt hn, },
 end

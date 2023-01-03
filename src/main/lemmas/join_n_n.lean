@@ -9,7 +9,7 @@ open order_dual
 
 variables {α : Type*} [linear_order α] (C : config α)
 
-lemma config.join_ncup_ncap_case_ff
+lemma config.join_n_n_case_ff
   (S : finset α) (n : ℕ) (a x b : α) (c1 c2 : list α) (lab : C.label S)
   (a_in_S : a ∈ S) (x_in_S : x ∈ S) (b_in_S : b ∈ S)
   (hc1 : C.ncup (n+2) (c1 ++ [a, x])) (c1_in_S : c1.in S)
@@ -48,7 +48,7 @@ begin
     rw eq_c2 at hh, simp at hh, exact hh },
 end
 
-lemma config.join_ncup_ncap_case_tt
+lemma config.join_n_n_case_tt
   (S : finset α) (n : ℕ) (a x b : α) (c1 c2 : list α) (lab : C.label S)
   (a_in_S : a ∈ S) (x_in_S : x ∈ S) (b_in_S : b ∈ S)
   (hc1 : C.ncup (n+2) (c1 ++ [a, x])) (c1_in_S : c1.in S)
@@ -63,7 +63,7 @@ begin
   have hba := hab, rw ←mirror_slope at hba,
   
   have mirrored_goal :=
-    (C.mirror).join_ncup_ncap_case_ff 
+    (C.mirror).join_n_n_case_ff 
       S.mirror n 
       (to_dual b) (to_dual x) (to_dual a)
       c2.mirror c1.mirror lab.mirror
@@ -72,7 +72,7 @@ begin
   tauto
 end
 
-lemma config.join_ncup_ncup (S : finset α)
+lemma config.join_n_n (S : finset α)
   {n : ℕ} (hn : 2 ≤ n)
   (cap4_free : ¬C.has_ncap 4 S)
   {c1 : list α} (hc1 : C.ncup n c1) (c1_in_S : c1.in S)
@@ -91,8 +91,8 @@ begin
 
   have lab := cap4_free_label cap4_free,
   by_cases hl : lab.slope a b,
-  { apply C.join_ncup_ncap_case_tt S n a x b c1' c2' lab;
+  { apply C.join_n_n_case_tt S n a x b c1' c2' lab;
     simp at c1_in_S c2_in_S; tauto },
-  { apply C.join_ncup_ncap_case_ff S n a x b c1' c2' lab;
+  { apply C.join_n_n_case_ff S n a x b c1' c2' lab;
     simp at c1_in_S c2_in_S; tauto }, 
 end 

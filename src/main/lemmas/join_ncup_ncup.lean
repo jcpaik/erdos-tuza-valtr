@@ -64,7 +64,7 @@ begin
   
   have mirrored_goal :=
     (C.mirror).join_ncup_ncap_case_ff 
-      (finset.image to_dual S) n 
+      S.mirror n 
       (to_dual b) (to_dual x) (to_dual a)
       c2.mirror c1.mirror lab.mirror
       b_in_S x_in_S a_in_S hc2 c2_in_S hc1 c1_in_S hba,

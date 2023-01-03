@@ -148,24 +148,6 @@ begin
   intros a b, simp,
 end
 
-@[simp]
-theorem finset.mirror_min' {S : finset α} 
-  {h : S.nonempty} {hm : S.mirror.nonempty} :
-  S.mirror.min' hm = to_dual (S.max' h) :=
-begin
-  apply le_antisymm,
-  { apply finset.min'_le,
-    rw finset.mirror, simp, 
-    exact finset.max'_mem S h, },
-  { rw order_dual.to_dual_le,
-    apply finset.le_max',
-    set a := S.mirror.min' hm with eq_a,
-    have h' : a ∈ S.mirror, rw eq_a, apply finset.min'_mem,
-    rw finset.mirror at h', simp at h',
-    rcases h' with ⟨b, h'', h'''⟩, rw ←h''',
-    simp, exact h'', },
-end
-
 end mirror
 
 @[simp]

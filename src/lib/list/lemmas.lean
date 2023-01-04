@@ -94,12 +94,10 @@ begin
   simp,
 end
 
-@[simp]
 theorem list.mirror_last' {l : list α} : 
   l.mirror.last' = option.map to_dual l.head' := 
 by rw [list.mirror]; cases l; simp; tauto
 
-@[simp]
 theorem list.mirror_head' {l : list α} : 
   l.mirror.head' = option.map to_dual l.last' := 
 begin 
@@ -110,16 +108,30 @@ begin
   simp, simp at ih, exact ih,
 end
 
-@[simp]
 theorem list.of_mirror_last' {l : list αᵒᵈ} : 
   l.of_mirror.last' = option.map of_dual l.head' := 
 by rw [list.of_mirror]; cases l; simp; tauto
 
-@[simp]
 theorem list.of_mirror_head' {l : list αᵒᵈ} : 
   l.of_mirror.head' = option.map of_dual l.last' := 
 begin 
   rw [list.of_mirror, list.reverse_head'], 
+  -- quick-and-dirty proof
+  induction l with a l ih, simp,
+  simp, cases l with b l, simp,
+  simp, simp at ih, exact ih,
+end
+
+@[simp]
+theorem list.mirror_mem_last' {a : α} {l : list α} : 
+  to_dual a ∈ l.mirror.last' ↔ a ∈ l.head' := 
+by rw [list.mirror]; cases l; simp
+
+@[simp]
+theorem list.mirror_mem_head' {a : α} {l : list α} : 
+  to_dual a ∈ l.mirror.head' ↔ a ∈ l.last'  := 
+begin 
+  rw [list.mirror, list.reverse_head'], 
   -- quick-and-dirty proof
   induction l with a l ih, simp,
   simp, cases l with b l, simp,

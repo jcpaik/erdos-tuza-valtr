@@ -46,7 +46,8 @@ end
 def mirror.gon {l1 l2 : list α} : 
   C.mirror.gon l1.mirror l2.mirror ↔ C.gon l1 l2 :=
 begin
-  rw config.gon, rw config.gon, simp,
+  rw config.gon, rw config.gon, 
+  simp [list.mirror_last', list.mirror_head'],
   have t_inj : function.injective to_dual :=
     λ a b, to_dual_inj.mp,
   have ot_inj := option.map_injective t_inj,

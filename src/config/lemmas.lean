@@ -1,3 +1,4 @@
+import algebra
 import tactic.linarith
 
 import config.defs
@@ -228,7 +229,8 @@ theorem head'_lt_last' {n : ℕ} {l : list α} (l_ncup : C.ncup (n+2) l)
 begin
   cases l_ncup with l_cup l_length,
   apply l_cup.head'_lt_last' p q,
-  rw l_length, suggest,
+  rw l_length, exact le_add_self,
+  assumption, assumption,
 end
 
 end ncup

@@ -9,7 +9,7 @@ open order_dual
 
 variables {α : Type*} [linear_order α] (C : config α)
 
-lemma config.join_n_n_case_ff
+lemma config.join_n2_n2_case_ff
   (S : finset α) (n : ℕ) (a x b : α) (c1 c2 : list α) (lab : C.label S)
   (a_in_S : a ∈ S) (x_in_S : x ∈ S) (b_in_S : b ∈ S)
   (hc1 : C.ncup (n+2) (c1 ++ [a, x])) (c1_in_S : c1.in S)
@@ -48,7 +48,7 @@ begin
     rw eq_c2 at hh, simp at hh, exact hh },
 end
 
-lemma config.join_n_n_case_tt
+lemma config.join_n2_n2_case_tt
   (S : finset α) (n : ℕ) (a x b : α) (c1 c2 : list α) (lab : C.label S)
   (a_in_S : a ∈ S) (x_in_S : x ∈ S) (b_in_S : b ∈ S)
   (hc1 : C.ncup (n+2) (c1 ++ [a, x])) (c1_in_S : c1.in S)
@@ -63,7 +63,7 @@ begin
   have hba := hab, rw ←mirror_slope at hba,
   
   have mirrored_goal :=
-    (C.mirror).join_n_n_case_ff 
+    (C.mirror).join_n2_n2_case_ff 
       S.mirror n 
       (to_dual b) (to_dual x) (to_dual a)
       c2.mirror c1.mirror lab.mirror
@@ -72,16 +72,14 @@ begin
   tauto
 end
 
-lemma config.join_n_n (S : finset α)
-  {n : ℕ} (hn : 2 ≤ n)
+lemma config.join_n2_n2 (S : finset α)
+  {n : ℕ} 
   (cap4_free : ¬C.has_ncap 4 S)
-  {c1 : list α} (hc1 : C.ncup n c1) (c1_in_S : c1.in S)
-  {c2 : list α} (hc2 : C.ncup n c2) (c2_in_S : c2.in S)
-  (x : α) (hx1 : x ∈ c1.last') (hx2 : x ∈ c2.head') : C.has_ngon (n+1) S :=
+  {c1 : list α} (hc1 : C.ncup (n+2) c1) (c1_in_S : c1.in S)
+  {c2 : list α} (hc2 : C.ncup (n+2) c2) (c2_in_S : c2.in S)
+  (x : α) (hx1 : x ∈ c1.last') (hx2 : x ∈ c2.head') : C.has_ngon (n+3) S :=
 begin
   -- Introduce variables
-  rw le_iff_exists_add' at hn, 
-  cases hn with n en, subst en, ring_nf,
   have c1_size2 : 2 ≤ c1.length := by cases hc1; linarith,
   rcases list.take_last2 c1_size2 with ⟨a, x, c1', eq_c1⟩, 
   subst eq_c1, simp at hx1, subst hx1,
@@ -91,8 +89,8 @@ begin
 
   have lab := cap4_free_label cap4_free,
   by_cases hl : lab.slope a b,
-  { apply C.join_n_n_case_tt S n a x b c1' c2' lab;
+  { apply C.join_n2_n2_case_tt S n a x b c1' c2' lab;
     simp at c1_in_S c2_in_S; tauto },
-  { apply C.join_n_n_case_ff S n a x b c1' c2' lab;
+  { apply C.join_n2_n2_case_ff S n a x b c1' c2' lab;
     simp at c1_in_S c2_in_S; tauto }, 
 end 

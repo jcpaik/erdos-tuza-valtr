@@ -223,12 +223,12 @@ begin
   rw [eq_l, eq_l'], simp, assumption,
 end
 
-theorem head'_lt_last' (p q : α) {n : ℕ} {l : list α} 
-  (l_ncup : C.ncup n l) 
-  (hl : 2 ≤ l.length) (hp : p ∈ l.head') (hq : q ∈ l.last') : p < q :=
+theorem head'_lt_last' {n : ℕ} {l : list α} (l_ncup : C.ncup (n+2) l)
+  (p q : α) (hp : p ∈ l.head') (hq : q ∈ l.last') : p < q :=
 begin
-  cases l_ncup with l_cup _,
-  apply l_cup.head'_lt_last' p q; assumption,
+  cases l_ncup with l_cup l_length,
+  apply l_cup.head'_lt_last' p q,
+  rw l_length, suggest,
 end
 
 end ncup

@@ -3,17 +3,17 @@ import order
 import lib.list
 
 import etv
-import main.lemmas.join_n_n
+import main.lemmas.join_n2_n2
 
 open order_dual
 
 variables {α : Type*} [linear_order α] (C : config α)
 
 lemma config.has_interweaved_laced_has_ngon_ff
-  {n : ℕ} (hn : 3 ≤ n) {S : finset α} 
+  {n : ℕ} {S : finset α} 
   (cap4_free : ¬C.has_ncap 4 S) {p q r s : α}
   (label : C.label S) (q_lt_r : q < r) (sqr : ¬label.slope q r) :
-  C.has_interweaved_laced n S p q r s → C.has_ngon (n+1) S :=
+  C.has_interweaved_laced (n+2) S p q r s → C.has_ngon (n+3) S :=
 begin
   intro h, rcases h with ⟨⟨p_lt_q, q_le_r, r_lt_s⟩, ⟨pr_laced, qs_laced⟩⟩,
   rcases pr_laced with 
@@ -73,21 +73,20 @@ begin
     rw ←eq_cr, 
     apply hcr.left.extend_left sqr; try {assumption},
     rw eq_cr, simp,
-    simp, rw [hcp.right, hcr.right], rw ←eq_ab, 
-    rw nat.add_assoc },
+    simp, rw [hcp.right, hcr.right], linarith },
   { use [[p, q, r], c1], split, swap, simp, tauto,
     split, swap, rw hc1.right, simp, linarith,
     rw config.gon, simp,
     cases hc1 with c1_cup c1_length, rw c1_length,
     simp at c1_head c1_last, 
-    have h2n : 2 ≤ n := by linarith, tauto, },
+    have h2n : 2 ≤ n + 2 := le_add_self, tauto, },
 end
 
 lemma config.has_interweaved_laced_has_ngon_tt
-  {n : ℕ} (hn : 3 ≤ n) {S : finset α} 
+  {n : ℕ} {S : finset α} 
   (cap4_free : ¬C.has_ncap 4 S) {p q r s : α}
   (label : C.label S) (q_lt_r : q < r) (sqr : label.slope q r) :
-  C.has_interweaved_laced n S p q r s → C.has_ngon (n+1) S :=
+  C.has_interweaved_laced (n+2) S p q r s → C.has_ngon (n+3) S :=
 begin
   rw [←mirror.has_interweaved_laced, ←mirror.has_ngon],
   have srq := sqr, rw ←mirror_slope at srq,
@@ -96,9 +95,9 @@ begin
 end
 
 lemma config.has_interweaved_laced_has_ngon 
-  {n : ℕ} (hn : 3 ≤ n) {S : finset α} 
+  {n : ℕ} {S : finset α} 
   (cap4_free : ¬C.has_ncap 4 S) {p q r s : α} :
-  C.has_interweaved_laced n S p q r s → C.has_ngon (n+1) S :=
+  C.has_interweaved_laced (n+2) S p q r s → C.has_ngon (n+3) S :=
 begin
   intro h, have q_le_r : q ≤ r := 
     by rw config.has_interweaved_laced at h; tauto,
@@ -111,9 +110,8 @@ begin
     rcases qs_laced with ⟨-, -, -, c2, -, -, hc2, -,
       ⟨-, c2_in_S, -⟩, -,
       ⟨-, c2_head, c2_last, -⟩⟩,
-    apply C.join_n_n S _ cap4_free 
-      hc1 c1_in_S hc2 c2_in_S q c1_last c2_head,
-    linarith },
+    apply C.join_n2_n2 S cap4_free 
+      hc1 c1_in_S hc2 c2_in_S q c1_last c2_head, },
   rename q_le_r → q_lt_r,
 
   have label := cap4_free_label cap4_free,

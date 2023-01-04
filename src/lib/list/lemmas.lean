@@ -122,12 +122,10 @@ begin
   simp, simp at ih, exact ih,
 end
 
-@[simp]
 theorem list.mirror_mem_last' {a : α} {l : list α} : 
   to_dual a ∈ l.mirror.last' ↔ a ∈ l.head' := 
 by rw [list.mirror]; cases l; simp
 
-@[simp]
 theorem list.mirror_mem_head' {a : α} {l : list α} : 
   to_dual a ∈ l.mirror.head' ↔ a ∈ l.last'  := 
 begin 

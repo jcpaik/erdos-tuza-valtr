@@ -15,4 +15,9 @@ def has_interweaved_laced
   (p < q ∧ q ≤ r ∧ r < s) ∧
   (C.has_laced n S p r ∧ C.has_laced n S q s)
 
+def has_join (a b : ℕ) (S : finset α) : Prop :=
+  ∃ (p : α) (cl cr : list α),
+    (C.ncup a cl ∧ cl.in S ∧ p ∈ cl.last') ∧ 
+    (C.ncup b cr ∧ cr.in S ∧ p ∈ cr.head')
+
 end config

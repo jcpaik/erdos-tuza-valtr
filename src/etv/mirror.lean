@@ -38,3 +38,23 @@ begin
   simp [config.has_interweaved_laced, mirror.has_laced],
   tauto,
 end
+
+def mirror.has_join {a b : ℕ} {S : finset α} :
+  C.mirror.has_join b a S.mirror ↔ C.has_join a b S :=
+begin
+  split,
+  { intro h, rcases h with ⟨pm, crm, clm, 
+      ⟨crm_cup, crm_in, crm_last⟩, ⟨clm_cup, clm_in, clm_head⟩⟩,
+    have eq_cl := @list.of_mirror_mirror _ _ clm,
+    have eq_cr := @list.of_mirror_mirror _ _ crm,
+    set cl := clm.of_mirror, set cr := crm.of_mirror,
+    use [pm.of_dual, cl, cr],
+    rw ←eq_cl at clm_cup clm_in clm_head,
+    rw ←eq_cr at crm_cup crm_in crm_last,
+    rw mirror.ncup at clm_cup crm_cup,
+    rw list.mirror_in at clm_in crm_in,
+    rw [list.mirror_head'] at clm_head, 
+    rw [list.mirror_last'] at crm_last, 
+    simp, sorry,
+     }, sorry,
+end

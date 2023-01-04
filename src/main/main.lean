@@ -4,8 +4,6 @@ import data.finset
 import config
 import etv
 
-import main.pq
-
 variables {α : Type*} [linear_order α]
   {C : config α} {S : finset α}
 

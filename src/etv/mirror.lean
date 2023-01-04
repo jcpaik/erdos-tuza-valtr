@@ -29,6 +29,7 @@ begin
   { intro h, rcases h with ⟨a, b, cp, c, cq, hcp, hc, hcq, h⟩,
     use [b, a, cq.mirror, c.mirror, cp.mirror],
     refine ⟨_, _, _, _⟩; try {rw mirror.ncup; tauto},
+    repeat {rw [list.mirror_mem_last', list.mirror_mem_head']},
     simp, simp at h, rw nat.add_comm b a, tauto, },
 end
 
@@ -59,5 +60,11 @@ begin
     rw mirror.ncup at clm_cup crm_cup,
     rw list.mirror_in at clm_in crm_in,
     rw list.mirror_mem_head' at clm_head, 
-    rw list.mirror_mem_last' at crm_last, tauto, }, sorry,
+    rw list.mirror_mem_last' at crm_last, tauto, },
+  { intro h, rcases h with ⟨p, cl, cr, ⟨cl_cup, cl_in, cl_head⟩, 
+      ⟨cr_cup, cr_in, cr_last⟩⟩,
+    use [to_dual p, cr.mirror, cl.mirror],
+    rw [list.mirror_mem_last', list.mirror_mem_head'],
+    simp only [list.mirror_in, mirror.ncup, option.mem_def],
+    tauto, },
 end

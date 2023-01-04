@@ -31,7 +31,7 @@ begin
     simp at ⊢ c1_in_S c2_in_S, tauto, },
 end
 
-lemma config.join_n2_n3_join_n3_n2 (S : finset α) (n : ℕ)
+lemma config.join_n2_n3_join_n3_n2_main (S : finset α) (n : ℕ)
   (cap4_free : ¬C.has_ncap 4 S) (cup_free : ¬C.has_ncup (n+4) S)
   {cx : list α} (cx_cup : C.ncup (n+2) cx) (cx_in_S : cx.in S)
   {cx1 : list α} (cx1_cup : C.ncup (n+3) cx1) (cx1_in_S : cx1.in S)
@@ -91,4 +91,19 @@ begin
     split, simp, tauto, split, ring_nf, rw eq_cy1, simp, assumption, },
   { existsi [n+2, 1, cx, cx1, [z], cx_cup, cx1_cup, _], swap, simp,
     split, simp, tauto, split, ring_nf, rw eq_cx1, simp, assumption, },
+end
+
+lemma config.join_n2_n3_join_n3_n2 (S : finset α) (n : ℕ)
+  (cap4_free : ¬C.has_ncap 4 S) (cup_free : ¬C.has_ncup (n+4) S)
+  (hx : C.has_join (n+2) (n+3) S) (hy : C.has_join (n+3) (n+2) S) : 
+  ∃ p q r s, C.has_interweaved_laced (n+3) S p q r s := 
+begin
+  rcases hx with ⟨x, cx, cx1, 
+    ⟨cx_cup, cx_in_S, cx_last⟩, ⟨cx1_cup, cx1_in_S, cx1_head⟩⟩,
+  rcases hy with ⟨y, cy1, cy, 
+    ⟨cy1_cup, cy1_in_S, cy1_last⟩, ⟨cy_cup, cy_in_S, cy_head⟩⟩,
+  apply C.join_n2_n3_join_n3_n2_main S n 
+    cap4_free cup_free cx_cup cx_in_S cx1_cup cx1_in_S 
+    cy1_cup cy1_in_S cy_cup cy_in_S x cx_last cx1_head
+    y cy1_last cy_head,
 end

@@ -12,6 +12,10 @@ protected def finset.mirror
   [linear_order α] (S : finset α) : finset αᵒᵈ := 
   (finset.image order_dual.to_dual S)
 
+protected def finset.of_mirror
+  [linear_order α] (S : finset αᵒᵈ) : finset α := 
+  (finset.image order_dual.of_dual S)
+
 namespace list
 
 -- Local notion for flipping a list of elements, together with its order

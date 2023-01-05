@@ -7,8 +7,6 @@ variable {α : Type*}
 
 section list_in
 
-variable [decidable_eq α]
-
 protected def list.in_superset {l : list α}
   {S T : finset α} (h : S ⊆ T) : l.in S → l.in T := 
 λ l_in_S a al, h (l_in_S _ al)
@@ -82,6 +80,14 @@ begin
   rw [list.of_mirror, list.mirror]; simp,
   rw [list.of_mirror, list.mirror] at ih; simp at ih,
   exact ih
+end
+
+@[simp] theorem finset.of_mirror_mirror {S : finset αᵒᵈ} :
+  S.of_mirror.mirror = S :=
+begin
+  rw [finset.of_mirror, finset.mirror]; simp,
+  rw finset.image_image, convert finset.image_id,
+  apply_instance,
 end
 
 @[simp] theorem list.mirror_length {l : list α} :

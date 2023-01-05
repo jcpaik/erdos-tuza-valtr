@@ -4,37 +4,32 @@ import data.finset
 import config
 import etv
 
+import main.defs
 import main.lemmas
+import main.induction_step
 
 open_locale classical
 noncomputable theory
 
 variables {α : Type*} [linear_order α] (C : config α)
 
-def config.main_goal (n : ℕ) : Prop :=
-  ∀ (S : finset α),
-  nat.choose (n+2) 2 + 2 ≤ S.card →
-  ¬C.has_ncap 4 S → ¬C.has_ncup (n+3) S → 
-  ∃ p q r s, C.has_interweaved_laced (n+2) S p q r s
+open order_dual
 
 theorem config.mirror_main_goal (n : ℕ) :
   C.main_goal n → C.mirror.main_goal n :=
 begin
-  sorry
-end
-
-def config.main_goal_wlog (n : ℕ) : Prop :=
-  ∀ (S : finset α),
-  ¬C.has_join (n+2) (n+1) S →
-  nat.choose (n+2) 2 + 2 ≤ S.card →
-  ¬C.has_ncap 4 S → ¬C.has_ncup (n+3) S → 
-  ∃ p q r s, C.has_interweaved_laced (n+2) S p q r s
-
-theorem config.main_induction_wlog (n : ℕ) :
-  C.main_goal n → C.main_goal_wlog (n+1) :=
-begin
-  intros ih S no_join hS cap4_free cup_free,
-  sorry,
+  intros h Sm hSm cap4_free cup_free,
+  have eq_S : Sm.of_mirror.mirror = Sm := finset.of_mirror_mirror,
+  rw ←eq_S at ⊢ hSm cap4_free cup_free,
+  set S := Sm.of_mirror,
+  rw finset.mirror_card at hSm,
+  rw mirror.has_ncap at cap4_free,
+  rw mirror.has_ncup at cup_free,
+  have goal := h S hSm cap4_free cup_free,
+  rcases goal with ⟨p, q, r, s, interweave⟩,
+  existsi [to_dual s, to_dual r, to_dual q, to_dual p],
+  rw mirror.has_interweaved_laced,
+  exact interweave,
 end
 
 theorem config.main_induction (n : ℕ) :

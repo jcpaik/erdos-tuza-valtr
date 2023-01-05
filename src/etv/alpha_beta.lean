@@ -1,6 +1,9 @@
 import etv.defs
 import etv.label
 
+open_locale classical
+noncomputable theory
+
 variables 
   {α : Type*} [linear_order α] {C : config α} 
   {S : finset α} (l : C.label S)
@@ -57,7 +60,16 @@ def beta (a : α) : ℕ :=
 
 variables {a : α} (ha : a ∈ S)
 
+def row (S : finset α) (i : ℕ) : finset α :=
+  S.filter (λ p, C.beta S p = i)
+
+def delta (S : finset α) : finset α :=
+  S.filter (λ p, ∃ i : ℕ, ↑p = (C.row S i).min)
+
 /-
+Define a map from delta to some set
+Show that it is injective...
+
 theorem alpha_le_beta : l.alpha a ≤ C.beta S a := sorry
 
 theorem alpha_append_cup

@@ -60,11 +60,11 @@ def beta (a : α) : ℕ :=
 
 variables {a : α} (ha : a ∈ S)
 
-def row (S : finset α) (i : ℕ) : finset α :=
+def row(i : ℕ) (S : finset α) : finset α :=
   S.filter (λ p, C.beta S p = i)
 
-def delta (S : finset α) : finset α :=
-  S.filter (λ p, ∃ i : ℕ, ↑p = (C.row S i).min)
+def delta (n : ℕ) (S : finset α) : finset α :=
+  S.filter (λ p, ∃ i : ℕ, i < n ∧ ↑p = (C.row i S).min)
 
 /-
 Define a map from delta to some set

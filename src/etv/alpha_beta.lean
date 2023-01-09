@@ -14,23 +14,20 @@ private lemma mem_imply_nnil (a : α) {l : list α} (ha : a ∈ l) : l ≠ [] :=
 namespace config.label
 
 def is_alpha_cup {a : α} (ha : a ∈ S) (c : list α) : Prop :=
-  C.cup c ∧ c.last' = some a ∧ c.chain' l.slopeᶜ
+  C.cup c ∧ (c ++ [a]).chain' l.slopeᶜ
 
 instance decidable_is_alpha_cup {a : α} (ha : a ∈ S) (c : list α) :
   decidable (l.is_alpha_cup ha c) := by rw is_alpha_cup; apply_instance
 
-def alpha_cups {a : α} (ha : a ∈ S) : 
-  Σ' (lists : list (list α)), lists ≠ [] :=
-⟨((S.sort (≤)).sublists.filter (l.is_alpha_cup ha)), 
-  by apply mem_imply_nnil [a]; simp [is_alpha_cup]; tauto⟩
+def alpha_cups {a : α} (ha : a ∈ S) : list (list α) :=
+  ((S.sort (≤)).sublists.filter (l.is_alpha_cup ha))
 
 def alpha_cup {a : α} (ha : a ∈ S) : list α :=
-  let ⟨lists, lists_nnil⟩ := l.alpha_cups ha in
-  (lists.argmax list.length).get_or_else []
+  ((l.alpha_cups ha).argmax list.length).get_or_else []
 
 -- one off from actual definition
 def alpha (a : α) : ℕ := 
-  if ha : a ∈ S then (l.alpha_cup ha).length - 1 else 0
+  if ha : a ∈ S then (l.alpha_cup ha).length else 0
 
 end config.label
 
@@ -57,14 +54,6 @@ variable (S)
 
 def beta (a : α) : ℕ :=
   if ha : a ∈ S then (C.beta_cup ha).length else 0
-
-variables {a : α} (ha : a ∈ S)
-
-def row(i : ℕ) (S : finset α) : finset α :=
-  S.filter (λ p, C.beta S p = i)
-
-def delta (n : ℕ) (S : finset α) : finset α :=
-  S.filter (λ p, ∃ i : ℕ, i < n ∧ ↑p = (C.row i S).min)
 
 /-
 Define a map from delta to some set

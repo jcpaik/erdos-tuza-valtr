@@ -41,19 +41,31 @@ def is_beta_cup {a : α} (ha : a ∈ S) (c : list α) : Prop :=
 instance decidable_is_beta_cup {a : α} (ha : a ∈ S) (c : list α) :
   decidable (C.is_beta_cup ha c) := by rw is_beta_cup; apply_instance
 
-def beta_cups {a : α} (ha : a ∈ S) : 
-  Σ' (lists : list (list α)), lists ≠ [] :=
-⟨((S.sort (≤)).sublists.filter (C.is_beta_cup ha)), 
-  by apply mem_imply_nnil [a]; simp [is_beta_cup]; tauto⟩
+def beta_cups {a : α} (ha : a ∈ S) : list (list α) :=
+  (S.sort (≤)).sublists.filter (C.is_beta_cup ha)
 
-def beta_cup {a : α} (ha : a ∈ S) : list α :=
-  let ⟨lists, lists_nnil⟩ := C.beta_cups ha in
-  (lists.argmax list.length).get_or_else []
+def beta_cups_nnil {a : α} (ha : a ∈ S) : C.beta_cups ha ≠ [] :=
+  by apply mem_imply_nnil [a]; simp [beta_cups, is_beta_cup]; tauto
+
+def beta_cup {a : α} (ha : a ∈ S) : option (list α) :=
+  (C.beta_cups ha).argmax list.length
+
+def beta_cup_is_some {a : α} (ha : a ∈ S) : (C.beta_cup ha).is_some :=
+begin
+  set c := C.beta_cup ha with def_c,
+  cases c,  
+end
 
 variable (S)
 
 def beta (a : α) : ℕ :=
   if ha : a ∈ S then (C.beta_cup ha).length else 0
+
+lemma exists_beta_cup {a : α} (ha : a ∈ S) {n : ℕ} (hn : n ≤ C.beta S a): 
+  ∃ c : list α, C.ncup n c ∧ c.in S ∧ a ∈ c.last' :=
+begin
+  sorry
+end
 
 /-
 Define a map from delta to some set

@@ -18,7 +18,7 @@ def row (i : ℕ) (S : finset α) : finset α :=
   S.filter (λ p, C.beta S p = i)
 
 def delta (n : ℕ) (S : finset α) : finset α :=
-  S.filter (λ p, ∃ i : ℕ, i < n ∧ ↑p = (C.row i S).min)
+  S.filter (λ p, ∃ i : ℕ, i ≤ n ∧ ↑p = (C.row i S).min)
 
 lemma delta_card (n : ℕ) (S : finset α) : (C.delta n S).card ≤ n :=
 begin
@@ -26,14 +26,22 @@ begin
 
 end   
 
-lemma cup_extension (n : ℕ) (S D : finset α)
-  (S_card : (n + 1 + 2).choose 2 + 2 ≤ S.card)
-  (cap4_free : ¬C.has_ncap 4 S) (cup_free : ¬C.has_ncup (n + 1 + 3) S)
+lemma cup_extension (n : ℕ) (S D : finset α) (l : C.label S)
+  (S_card : (n + 3).choose 2 + 2 ≤ S.card)
+  (cap4_free : ¬C.has_ncap 4 S) (cup_free : ¬C.has_ncup (n + 4) S)
   (D_def : D = C.delta (n + 2) S)
   (a : ℕ) (p' : α) (c : list α) 
   (c_cup : C.ncup a c) (c_in : c.in (S \ D)) (c_head : p' ∈ c.head') : 
-  (∃ d : list α, ) ∨
-  (∃ p : α, C.ncup (a + 1) (p :: c) ∧ (p :: c).in S) := sorry
+  (∃ d : list α, C.ncup (n + 3) d ∧ d.in S ∧ p' ∈ d.last') ∨
+  (l.alpha p' = 1 ∧
+    ∃ p : α, C.ncup (a + 1) (p :: c) ∧ (p :: c).in S ∧
+    l.alpha p = 0 ∧ C.beta S p = C.beta S p') :=
+begin
+  cases (nat.lt_or_ge (n+2) (C.beta S p')) with beta_p' beta_p',
+  { rw nat.lt_iff_add_one_le at beta_p',
+    },
+  { sorry },
+end
 
 /-
 I have a function `f : ℕ → option α` and I want to define a finset `S` defined as `{f 0, f 1, ..., f (n-1)} : finset α` with no elements for values of `f i = none`. Any good way of doing that? (say, so that I can utilize mathlib lemmas the best, like the fact that `S.card ≤ n`)

@@ -8,22 +8,29 @@ variables
   {α : Type*} [linear_order α] {C : config α} 
   {S : finset α} (l : C.label S)
 
-private lemma mem_imply_nnil (a : α) {l : list α} (ha : a ∈ l) : l ≠ [] := 
+private lemma mem_imply_nnil {α : Type*} (a : α) {l : list α} (ha : a ∈ l) : l ≠ [] := 
   by intro eq; subst eq; simp at ha; tauto
 
 namespace config.label
 
-def is_alpha_cup {a : α} (ha : a ∈ S) (c : list α) : Prop :=
-  C.cup c ∧ (c ++ [a]).chain' l.slopeᶜ
+def is_alpha_cup (a : α) (c : list α) : Prop :=
+  (c ++ [a]).in S ∧ (c ++ [a]).chain' l.slopeᶜ
 
-instance decidable_is_alpha_cup {a : α} (ha : a ∈ S) (c : list α) :
-  decidable (l.is_alpha_cup ha c) := by rw is_alpha_cup; apply_instance
+instance decidable_is_alpha_cup (a : α) (c : list α) :
+  decidable (l.is_alpha_cup a c) := by rw is_alpha_cup; apply_instance
 
-def alpha_cups {a : α} (ha : a ∈ S) : list (list α) :=
-  ((S.sort (≤)).sublists.filter (l.is_alpha_cup ha))
+def alpha_cup' (a : α) : option (list α) :=
+  ((S.sort (≤)).sublists.filter (l.is_alpha_cup a)).argmax list.length
+
+def alpha_cup'_is_some {a : α} (ha : a ∈ S) : 
+  option.is_some (l.alpha_cup' a) :=
+begin
+  rw [←option.ne_none_iff_is_some, config.label.alpha_cup'], simp,
+  apply mem_imply_nnil [], simp [config.label.is_alpha_cup], exact ha,
+end
 
 def alpha_cup {a : α} (ha : a ∈ S) : list α :=
-  ((l.alpha_cups ha).argmax list.length).get_or_else []
+  option.get (l.alpha_cup'_is_some ha)
 
 -- one off from actual definition
 def alpha (a : α) : ℕ := 
@@ -47,14 +54,17 @@ def beta_cups {a : α} (ha : a ∈ S) : list (list α) :=
 def beta_cups_nnil {a : α} (ha : a ∈ S) : C.beta_cups ha ≠ [] :=
   by apply mem_imply_nnil [a]; simp [beta_cups, is_beta_cup]; tauto
 
-def beta_cup {a : α} (ha : a ∈ S) : option (list α) :=
+def beta_cup' {a : α} (ha : a ∈ S) : option (list α) :=
   (C.beta_cups ha).argmax list.length
 
-def beta_cup_is_some {a : α} (ha : a ∈ S) : (C.beta_cup ha).is_some :=
+def beta_cup'_is_some {a : α} (ha : a ∈ S) : option.is_some (C.beta_cup' ha) :=
 begin
-  set c := C.beta_cup ha with def_c,
-  cases c,  
+  rw ←option.ne_none_iff_is_some, rw config.beta_cup', simp,
+  exact C.beta_cups_nnil ha,
 end
+
+def beta_cup {a : α} (ha : a ∈ S) : list α :=
+  option.get (C.beta_cup'_is_some ha)
 
 variable (S)
 

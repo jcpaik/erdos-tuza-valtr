@@ -73,8 +73,8 @@ begin
     apply cap4_free, use c, split, assumption,
     apply list.in_superset _ c_in, exact finset.sdiff_subset S D, },
   swap, { intro h, rcases h with ⟨c, ⟨c_cup, c_in⟩⟩,
-    sorry
-  },
+    sorry },
+  sorry,
 end
 
 end config

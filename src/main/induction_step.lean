@@ -38,7 +38,8 @@ lemma cup_extension (n : ℕ) (S D : finset α) (l : C.label S)
     l.alpha p = 0 ∧ C.beta S p = C.beta S p') :=
 begin
   cases (nat.lt_or_ge (n+2) (C.beta S p')) with beta_p' beta_p',
-  { rw nat.lt_iff_add_one_le at beta_p',
+  { rw nat.lt_iff_add_one_le at beta_p', sorry,
+    -- TODO: use exists_beta_cup, and take
     },
   { sorry },
 end

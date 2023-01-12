@@ -174,6 +174,11 @@ theorem list.last'_cons_append_cons (a b : α) (l1 l2 : list α) :
   (a :: (l1 ++ b :: l2)).last' = (b :: l2).last' := 
 by revert a; induction l1 with c l1 ih; simp; intro; exact ih c
 
+def list.take_head' {a : α} : ∀ {l : list α} (h : a ∈ l.head'),
+  Σ' t, l = a :: t 
+| [] h := by simp at h; exfalso; assumption
+| (b :: t) h := ⟨t, by simp at ⊢ h; assumption⟩
+
 def list.take_head : ∀ {l : list α}, l ≠ [] → 
   Σ' (h1 : α) (t : list α), l = h1 :: t
 | [] h := absurd rfl h
@@ -191,6 +196,17 @@ def list.take_head3 : ∀ {l : list α}, 3 ≤ l.length →
 | [a] h := absurd h (of_to_bool_ff rfl)
 | [a, b] h := absurd h (of_to_bool_ff rfl)
 | (a :: b :: c :: t) _ := ⟨a, b, c, t, rfl⟩
+
+def list.take_last' {a : α} : ∀ {l : list α} (h : a ∈ l.last'),
+  Σ' l', l = l' ++ [a]
+| [] h := by simp at h; exfalso; assumption
+| [a] h := ⟨[], by simp at ⊢ h; assumption⟩
+| (b :: c :: t) h := 
+  let h' : a ∈ (c :: t).last' := by 
+    simp only [option.mem_def, list.last'_cons_cons]; exact h in
+  let ⟨l'', hl''⟩ := list.take_last' h' in
+  ⟨b :: l'', by 
+    simp only [true_and, list.cons_append, eq_self_iff_true]; exact hl''⟩
 
 def list.take_last : ∀ {l : list α}, l ≠ [] →
   Σ' (e1 : α) (m : list α), l = m ++ [e1]

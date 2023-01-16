@@ -114,30 +114,13 @@ begin
 end 
 
 protected theorem init {l : list α} (h : C.cup l) : C.cup l.init :=
-begin
-  induction l with a l,
-  {simp [config.cup]; tauto},
-  cases l with b l, 
-  {simp [config.cup]; tauto},
-  cases l with c l,
-  {simp [config.cup, list.init] at *},
-  cases l with d l,
-  {simp [config.cup, list.init] at *, tauto},
-  simp [list.init] at *, tauto,
-end
+  ⟨h.left.init, h.right.init⟩
+
+protected theorem take {l : list α} (h : C.cup l) (n : ℕ) : C.cup (l.take n) :=
+  ⟨h.left.take n, h.right.take n⟩
 
 protected theorem tail {l : list α} (h : C.cup l) : C.cup l.tail :=
-begin
-  cases l with a l,
-  {simp [config.cup]; tauto},
-  cases l with b l, 
-  {simp [config.cup]; tauto},
-  cases l with c l,
-  {simp [config.cup] at *},
-  cases l with d l,
-  {simp [config.cup] at *, tauto},
-  simp [list.init] at *, tauto,
-end
+  ⟨h.left.tail, h.right.tail⟩
 
 theorem head'_lt_last' 
   {l : list α} (l_cup : C.cup l) (p q : α) 
@@ -282,4 +265,14 @@ begin
   existsi [c1, c2], refine ⟨gon, _, _⟩,
   intros a a_c1, apply h, exact c1_in a a_c1,
   intros a a_c2, apply h, exact c2_in a a_c2,
+end
+
+theorem has_ncup_le {n m : ℕ} {S : finset α} (h : n ≤ m) :
+  C.has_ncup m S → C.has_ncup n S :=
+begin
+  intro ngon, 
+  rcases ngon with ⟨c, ⟨⟨c_cup, c_length⟩, c_in⟩⟩,
+  use (c.take n), split,
+  { split, exact c_cup.take n, simp, rw c_length, exact h, },
+  { intros a ha, apply c_in, exact (list.take_subset _ _ ha), }
 end

@@ -170,8 +170,7 @@ def beta (a : α) : ℕ :=
 
 -- APIs for beta: First, existence of a cup with length alpha + 1
 def beta_cup {a : α} (ha : a ∈ S) : 
-  Σ' c : list α, c.length = C.beta S a + 1 ∧ 
-    c.in S ∧ C.cup c ∧ a ∈ c.last' :=
+  Σ' c : list α, c.in S ∧ C.ncup (C.beta S a + 1) c ∧ a ∈ c.last' :=
 begin
   have some := C.beta_cup'_is_some S ha,
   set c := option.get some with def_c, 
@@ -180,7 +179,14 @@ begin
   rw [←def_c, beta_cup'] at h_argmax,
   have c_beta_cup := list.argmax_mem h_argmax,
   simp [beta_cups', is_beta_cup] at c_beta_cup,
-  use (c ++ [a]), simp, tauto,
+  use (c ++ [a]), simp [config.ncup], tauto,
+end
+
+theorem has_beta_cup {a : α} (ha : a ∈ S) :
+  C.has_ncup (C.beta S a + 1) S :=
+begin
+  rcases C.beta_cup S ha with ⟨c, c_in, c_cup, -⟩,
+  use c, tauto,
 end
 
 -- Next, maximality of the cup with length alpha + 1
@@ -214,6 +220,8 @@ end
 
 end config
 
+variables (l) {C}
+
 theorem config.label.alpha_le_beta {a : α} (ha : a ∈ S) : 
   l.alpha a ≤ C.beta S a :=
 begin
@@ -224,15 +232,9 @@ begin
   rw c_length at ineq, simp at ineq, exact ineq,
 end
 
-theorem config.has_beta_cup {a : α} (ha : a ∈ S) :
-  C.has_ncup (C.beta S a + 1) S :=
-begin
-  rcases (C.beta_cup S ha) with 
-    ⟨c, c_length, c_in, c_cup, c_last⟩,
-  use c, rw config.ncup, tauto,
-end
+variables {l}
 
-theorem config.label.slope.ff_inc_alpha 
+theorem slope_ff_inc_alpha 
   {a b : α} (sab : ¬l.slope a b)
   (ha : a ∈ S) (hb : b ∈ S) (a_le_b : a < b) : 
   l.alpha a < l.alpha b :=
@@ -255,13 +257,13 @@ begin
   { rw def_d, simp, },
 end
 
-theorem config.label.slope.tt_inc_beta
+theorem slope_tt_inc_beta
   {a b : α} (sab : l.slope a b)
   (ha : a ∈ S) (hb : b ∈ S) (a_le_b : a < b) : 
   C.beta S a < C.beta S b :=
 begin
   rcases (C.beta_cup S ha) with 
-    ⟨c, c_length, c_in, c_cup, c_last⟩,
+    ⟨c, c_in, ⟨c_cup, c_length⟩, c_last⟩,
   rcases list.take_last' c_last with ⟨c', c_eq⟩,
   rw [nat.lt_iff_add_one_le, ←(add_le_add_iff_right 1)],
   set d := c ++ [b] with def_d,
@@ -272,4 +274,50 @@ begin
   simp, split; assumption,
   apply c_cup.extend_right sab; try {simp}; try {assumption},
   simp,
+end
+
+variables (C)
+
+theorem config.alpha_eq_beta_inc {a b : α} 
+  (ha : a ∈ S) (hb : b ∈ S) (h : l.alpha a = l.alpha b) :
+  a < b ↔ C.beta S a < C.beta S b :=
+begin
+  split, 
+  { intro hab, 
+    by_cases hl : l.slope a b, 
+    apply slope_tt_inc_beta hl; assumption,
+    have h' := slope_ff_inc_alpha hl ha hb hab,
+    rw h at h', simp at h', exfalso, assumption, },
+  { intro hab,
+    rcases (lt_trichotomy a b) with a_lt_b | a_eq_b | b_lt_a,
+    exact a_lt_b, 
+    subst a_eq_b, simp at hab, exfalso, assumption,
+    exfalso, by_cases hl : l.slope b a, 
+    have h' := slope_tt_inc_beta hl hb ha b_lt_a,
+    have h'' := lt_trans h' hab, simp at h'', exact h'',
+    have h' := slope_ff_inc_alpha hl hb ha b_lt_a,
+    rw h at h', simp at h', exact h', },
+end
+
+variables {C} (l)
+
+theorem config.label.beta_eq_alpha_inc {a b : α} 
+  (ha : a ∈ S) (hb : b ∈ S) (h : C.beta S a = C.beta S b) :
+  a < b ↔ l.alpha a < l.alpha b :=
+begin
+  split, 
+  { intro hab, 
+    by_cases hl : l.slope a b, 
+    have h' := slope_tt_inc_beta hl ha hb hab,
+    rw h at h', simp at h', exfalso, assumption,
+    apply slope_ff_inc_alpha hl; assumption, },
+  { intro hab,
+    rcases (lt_trichotomy a b) with a_lt_b | a_eq_b | b_lt_a,
+    exact a_lt_b, 
+    subst a_eq_b, simp at hab, exfalso, assumption,
+    exfalso, by_cases hl : l.slope b a, 
+    have h' := slope_tt_inc_beta hl hb ha b_lt_a,
+    rw h at h', simp at h', exact h',
+    have h' := slope_ff_inc_alpha hl hb ha b_lt_a,
+    have h'' := lt_trans h' hab, simp at h'', exact h'', },
 end

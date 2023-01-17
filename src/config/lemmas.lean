@@ -119,6 +119,9 @@ protected theorem init {l : list α} (h : C.cup l) : C.cup l.init :=
 protected theorem take {l : list α} (h : C.cup l) (n : ℕ) : C.cup (l.take n) :=
   ⟨h.left.take n, h.right.take n⟩
 
+protected theorem drop {l : list α} (h : C.cup l) (n : ℕ) : C.cup (l.drop n) :=
+  ⟨h.left.drop n, h.right.drop n⟩
+
 protected theorem tail {l : list α} (h : C.cup l) : C.cup l.tail :=
   ⟨h.left.tail, h.right.tail⟩
 
@@ -205,6 +208,26 @@ begin
   rcases cup_l'.init_append_last with ⟨l'', b, eq_l', cup_l''⟩,
   use [a, l'', b], split,
   rw [eq_l, eq_l'], simp, assumption,
+end
+
+theorem take_right_with_last {n : ℕ} {l : list α} (h : C.ncup n l) 
+  (m : ℕ) (p : α) : 1 ≤ m → m ≤ n → p ∈ l.last' → 
+  ∃ (l' : list α), l' ⊆ l ∧ C.ncup m l' ∧ p ∈ l'.last' :=
+begin
+  intros one_le_m m_le_n l_last,
+  use l.drop (n - m), refine ⟨_, _, _⟩,
+  { exact list.drop_subset (n - m) l },
+  { split, exact h.left.drop (n - m), simp, rw h.right, 
+    exact nat.sub_sub_self m_le_n },
+  { rw ←list.take_append_drop (n - m) l at l_last,
+    rw list.last'_append_of_ne_nil at l_last, exact l_last,
+    rw ←h.right at m_le_n,
+    intro hnil, rw [←list.reverse_eq_nil, ←h.right,
+      ←list.reverse_take _ m_le_n] at hnil,
+    simp at hnil, cases hnil, 
+    have h' := h.right, subst hnil, simp at h', subst h', 
+    simp at m_le_n, linarith,
+    subst hnil, linarith, },
 end
 
 theorem head'_lt_last' {n : ℕ} {l : list α} (l_ncup : C.ncup (n+2) l)

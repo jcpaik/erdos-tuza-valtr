@@ -69,30 +69,44 @@ begin
     rw def_p, exact finset.min'_le _ _ p'_in_row, },
 end
 
-lemma laced_extension (n : ℕ) (S D : finset α) (l : C.label S)
-  (cup_free : ¬C.has_ncup (n + 4) S) (D_def : D = C.delta (n + 2) S)
-  (a : ℕ) (p' : α) (c : list α) 
-  (c_cup : C.ncup a c) (c_in : c.in (S \ D)) (c_head : p' ∈ c.head') : 
-  (∃ d : list α, C.ncup (n + 3) d ∧ d.in S ∧ p' ∈ d.last') ∨
-  (l.alpha p' = 1 ∧
-    ∃ p : α, C.ncup (a + 1) (p :: c) ∧ (p :: c).in S ∧
-    l.alpha p = 0 ∧ C.beta S p = C.beta S p') :=
+lemma laced_extension (n : ℕ) {S D : finset α} {l : C.label S}
+  (cup_free : ¬C.has_ncup (n + 4) S) (def_D : D = C.delta (n + 2) S)
+  (no_join: ¬C.has_join (n + 1 + 2) (n + 1 + 1) S)
+  {p' r : α} (p'r_laced : C.has_laced (n + 2) (S \ D) p' r) : 
+  l.alpha p' = 1 ∧ ∃ p : α, C.has_laced (n + 3) S p r :=
 begin
-  cases (nat.lt_or_ge (n+2) (C.beta S p')) with beta_p' beta_p',
-  { rw nat.lt_iff_add_one_le at beta_p', sorry,
-    -- TODO: use exists_beta_cup, and take
-    },
-  { sorry, },
+  rcases p'r_laced with ⟨a, b, cp', c, cr, cp'_cup, c_cup, cr_cup, 
+    ⟨cp'_in_SD, c_in_SD, cr_in_SD⟩, eq_ab, cp'_last, c_head, c_last, cr_head⟩,
+  have p'_in_SD := c_in_SD _ (list.mem_of_mem_head' c_head),
+  have p'_in_S := (finset.sdiff_subset S D) p'_in_SD,
+  have c_in_S := (λ a ha, (finset.sdiff_subset S D) (c_in_SD a ha)),
+  rw def_D at p'_in_SD,
+  rcases (C.not_mem_delta p'_in_SD) with 
+    p'_beta | ⟨p, p_in_delta, eq_p, p_lt_p'⟩,
+  { exfalso, apply no_join,
+    rcases C.beta_cup S p'_in_S with ⟨d, d_in_S, d_ncup, d_last⟩,
+    rcases d_ncup.take_right_with_last (n+3) p'
+      (by dec_trivial) (by linarith) d_last with 
+      ⟨d', d'_in_d, d'_cup, d'_last⟩,
+    use [p', d', c], tauto, },
+  { have p_in_S : p ∈ S := begin 
+      rw [delta, finset.mem_filter] at p_in_delta, exact p_in_delta.left end,
+    split,
+    { have ap_lt_ap' := (l.beta_eq_alpha_inc p_in_S p'_in_S eq_p).mp p_lt_p',
+      cases nat.lt_or_ge (l.alpha p') 2 with ap' ap', linarith,
+      exfalso, apply cup_free,
+      have has_cup := l.add_alpha p'_in_S c_in_S c_cup c_head,
+      apply has_ncup_le _ has_cup, linarith, },
+    { use p, have a1_le_bp' : a + 1 ≤ C.beta S p' := begin
+        have cp'_nnil : cp' ≠ [] := begin 
+          intro h, subst h, simp at cp'_last, exact cp'_last end,
+        rcases list.take_head cp'_nnil with ⟨o, cp'', eq_cp'⟩,
+        sorry,
+      end, sorry, }, },
 end
 
-/-
-I have a function `f : ℕ → option α` and I want to define a finset `S` defined as `{f 0, f 1, ..., f (n-1)} : finset α` with no elements for values of `f i = none`. Any good way of doing that? (say, so that I can utilize mathlib lemmas the best, like the fact that `S.card ≤ n`)
-
-  ∀ (S : finset α),
-  ¬C.has_join (n+2) (n+1) S →
-  nat.choose (n+2) 2 + 2 ≤ S.card →
-  ¬C.has_ncap 4 S → ¬C.has_ncup (n+3) S → 
--/
+/- Lemma: if one has a tight cup, 
+  its left end is strictly less than the minimum value of the last row -/
 theorem main_induction_wlog (n : ℕ) :
   C.main_goal n → C.main_goal_wlog (n+1) :=
 begin
@@ -124,20 +138,24 @@ begin
     have c_in_S : c.in S := (λ a ha, (finset.sdiff_subset S D) (c_in a ha)),
     rcases (C.not_mem_delta p_in_SD) with 
       le_bp | ⟨o, o_in_delta, bo_eq_bp, o_lt_p⟩,
-    { -- n + 2 ≤ C.beta S p and p is the start of n+3 -cup,
-      apply no_join, 
+    { apply no_join, 
       rcases C.beta_cup S p_in_S with ⟨d, d_in_S, d_ncup, d_last⟩,
-      sorry, 
-
-    },
+      rcases d_ncup.take_right_with_last (n+3) p
+        (by dec_trivial) (by linarith) d_last with 
+        ⟨d', d'_in_d, d'_cup, d'_last⟩,
+      use [p, d', p :: c'], split,
+      refine ⟨by assumption, _, by assumption⟩,
+      intros a ha, exact d_in_S _ (d'_in_d ha),
+      refine ⟨_, _, by simp⟩,
+      convert c_cup.init using 1, rw eq_c, simp,
+      rw eq_c at c_in_S, simp at ⊢ c_in_S, tauto, },
     { have o_in_S : o ∈ S := begin 
         rw [delta, finset.mem_filter] at o_in_delta, 
         exact o_in_delta.left end,
       have ao_lt_ap := (l.beta_eq_alpha_inc o_in_S p_in_S bo_eq_bp).mp o_lt_p,
       have has_cup := l.add_alpha p_in_S c_in_S c_cup (by rw eq_c; simp),
       apply cup_free, ring_nf at ⊢ has_cup,
-      have ineq : n + 4 ≤ n + (l.alpha p + 3) := by linarith,
-      exact has_ncup_le ineq has_cup, }, },
+      apply has_ncup_le _ has_cup, linarith, }, },
   { rcases t with ⟨p', q', r, s, 
       ⟨⟨p'_lt_q', q'_le_r, r_lt_s⟩, ⟨laced_pr, laced_qs⟩⟩⟩,
     sorry,

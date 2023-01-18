@@ -73,3 +73,15 @@ begin
       assumption, },
     apply C.join_n2_n3_join_n3_n2; assumption, },
 end
+
+theorem main (n : ℕ) (C : config α) 
+  (S : finset α) (hS : nat.choose (n+2) 2 + 2 ≤ S.card) :
+  C.has_ncap 4 S ∨ C.has_ngon (n+3) S :=
+begin
+  by_cases has_cap4 : C.has_ncap 4 S, left, exact has_cap4,
+  by_cases has_cup : C.has_ncup (n+3) S, 
+  { right, apply ncup_is_ngon _ has_cup, dec_trivial, },
+  rcases C.main_lemma n S hS has_cap4 has_cup with ⟨p, q, r, s, laced⟩,
+  right, exact C.has_interweaved_laced_has_ngon
+    has_cap4 laced,
+end

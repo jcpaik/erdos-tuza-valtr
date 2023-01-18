@@ -10,6 +10,15 @@ def has_laced (n : ℕ) (S : finset α) (p q : α) : Prop :=
     (cp.in S ∧ c.in S ∧ cq.in S) ∧ a + b = n ∧ 
     (p ∈ cp.last' ∧ p ∈ c.head' ∧ q ∈ c.last' ∧ q ∈ cq.head')
 
+theorem has_laced.mem_ends {C : config α} {n : ℕ} {S : finset α} {p q : α}
+  (h : C.has_laced n S p q) : p ∈ S ∧ q ∈ S :=
+begin
+  rcases h with ⟨-, -, -, c, -, -, -, -, 
+    ⟨-, c_in_S, -⟩, -, ⟨-, c_head, c_last, -⟩⟩,
+  exact ⟨c_in_S _ (list.mem_of_mem_head' c_head), 
+    c_in_S _ (list.mem_of_mem_last' c_last)⟩,
+end
+
 def has_interweaved_laced
   (n : ℕ) (S : finset α) (p q r s : α) : Prop :=
   (p < q ∧ q ≤ r ∧ r < s) ∧

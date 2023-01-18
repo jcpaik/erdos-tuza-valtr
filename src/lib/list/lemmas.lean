@@ -7,9 +7,13 @@ variable {α : Type*}
 
 section list_in
 
-protected def list.in_superset {l : list α}
+def list.in_superset {l : list α}
   {S T : finset α} (h : S ⊆ T) : l.in S → l.in T := 
 λ l_in_S a al, h (l_in_S _ al)
+
+def list.subset_in {l1 l2 : list α} {S : finset α}
+  (h : l1 ⊆ l2) (h_l2 : l2.in S) : l1.in S := 
+  λ a ha, h_l2 a (h ha) 
 
 @[simp]
 theorem list.nil_in {S : finset α} : [].in S := 

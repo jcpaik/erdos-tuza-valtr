@@ -210,6 +210,22 @@ begin
   rw [eq_l, eq_l'], simp, assumption,
 end
 
+theorem take_left_with_head {n : ℕ} {l : list α} (h : C.ncup n l) 
+  (m : ℕ) (p : α) : 1 ≤ m → m ≤ n → p ∈ l.head' → 
+  ∃ (l' : list α), l' ⊆ l ∧ C.ncup m l' ∧ p ∈ l'.head' :=
+begin
+  intros one_le_m m_le_n l_last,
+  use l.take m, refine ⟨_, _, _⟩,
+  { exact list.take_subset m l },
+  { refine ⟨h.left.take m, _⟩, simp, rw h.right, assumption, },
+  { rw ←list.take_append_drop m l at l_last,
+    rw list.head'_append_of_ne_nil at l_last, exact l_last,
+    rw ←h.right at m_le_n,
+    intro hnil, simp at hnil, cases hnil,
+    subst hnil, simp at m_le_n, linarith,
+    linarith, },
+end
+
 theorem take_right_with_last {n : ℕ} {l : list α} (h : C.ncup n l) 
   (m : ℕ) (p : α) : 1 ≤ m → m ≤ n → p ∈ l.last' → 
   ∃ (l' : list α), l' ⊆ l ∧ C.ncup m l' ∧ p ∈ l'.last' :=
@@ -237,6 +253,23 @@ begin
   apply l_cup.head'_lt_last' p q,
   rw l_length, exact le_add_self,
   assumption, assumption,
+end
+
+theorem head'_le_last' {n : ℕ} {l : list α} (l_ncup : C.ncup n l)
+  (p q : α) (hp : p ∈ l.head') (hq : q ∈ l.last') : p ≤ q :=
+begin
+  have l_sorted : l.sorted (<) := begin
+    rw [list.sorted, ←list.chain'_iff_pairwise],
+    exact l_ncup.left.left, end,
+  cases l_ncup with l_cup l_length,
+  cases l with p l, simp at hp, exfalso, exact hp,
+  simp at hp, subst hp,
+  cases l with p' l, simp at hq, subst hq,
+  rw list.last'_cons_cons at hq,
+  set l' := p' :: l, clear_value l',
+  simp at l_sorted, 
+  apply le_of_lt, apply l_sorted.left,
+  exact list.mem_of_mem_last' hq,
 end
 
 end ncup

@@ -32,27 +32,44 @@ begin
   exact interweave,
 end
 
-theorem config.main_induction (n : ℕ) :
-  C.main_goal n → C.main_goal (n+1) :=
+theorem config.main_lemma (n : ℕ) : C.main_goal n :=
 begin
-  intros ih S hS cap4_free cup_free,
-  by_cases join_n3_n2 : C.has_join (n+3) (n+2) S, swap,
-  { apply C.main_induction_wlog; assumption, },
-  by_cases join_n2_n3 : C.has_join (n+2) (n+3) S, swap,
-  { rw ←finset.mirror_card at hS,
-    rw ←mirror.has_join at join_n2_n3,
-    rw ←mirror.has_ncap at cap4_free,
-    rw ←mirror.has_ncup at cup_free,
-    have mirrored_goal := C.mirror.main_induction_wlog n 
-      (C.mirror_main_goal n ih)
-      S.mirror join_n2_n3 hS cap4_free cup_free,
-    rcases mirrored_goal with ⟨sm, rm, qm, pm, mgoal⟩,
-    have eq_p := pm.to_dual_of_dual, set p := pm.of_dual,
-    have eq_q := qm.to_dual_of_dual, set q := qm.of_dual,
-    have eq_r := rm.to_dual_of_dual, set r := rm.of_dual,
-    have eq_s := sm.to_dual_of_dual, set s := sm.of_dual,
-    existsi [p, q, r, s],
-    rw [←eq_p, ←eq_q, ←eq_r, ←eq_s, mirror.has_interweaved_laced] at mgoal,
-    assumption, },
-  apply C.join_n2_n3_join_n3_n2; assumption,
+  induction n with n ih,
+  { intros S hS cap4_free cup_free, simp at hS,
+    set Sl := S.sort (≤) with def_Sl,
+    have Sl_card : 3 ≤ Sl.length := by rw def_Sl; simp; exact hS,
+    have mem_Sl : ∀ {a : α}, a ∈ Sl ↔ a ∈ S := begin 
+      intros a, rw def_Sl, exact finset.mem_sort (≤) end,
+    -- Take three elements of S
+    rcases list.take_head3 Sl_card with ⟨a, b, c, Sl', eq_Sl⟩,
+    have abc_mem : a ∈ S ∧ b ∈ S ∧ c ∈ S := by
+      rw [←mem_Sl, ←mem_Sl, ←mem_Sl]; rw eq_Sl; simp,
+    have abc_lt : a < b ∧ b < c := begin 
+      have sorted := S.sort_sorted_lt, 
+      rw [←def_Sl, eq_Sl] at sorted,
+      simp at sorted, tauto, end,
+    refine ⟨a, b, b, c, _, ⟨_, _⟩⟩,
+    exact ⟨abc_lt.left, le_refl b, abc_lt.right⟩,
+    use [1, 1, [a], [a, b], [b]], simp, tauto,
+    use [1, 1, [b], [b, c], [c]], simp, tauto, },
+  { intros S hS cap4_free cup_free,
+    by_cases join_n3_n2 : C.has_join (n+3) (n+2) S, swap,
+    { apply C.main_induction_wlog; assumption, },
+    by_cases join_n2_n3 : C.has_join (n+2) (n+3) S, swap,
+    { rw ←finset.mirror_card at hS,
+      rw ←mirror.has_join at join_n2_n3,
+      rw ←mirror.has_ncap at cap4_free,
+      rw ←mirror.has_ncup at cup_free,
+      have mirrored_goal := C.mirror.main_induction_wlog n 
+        (C.mirror_main_goal n ih)
+        S.mirror join_n2_n3 hS cap4_free cup_free,
+      rcases mirrored_goal with ⟨sm, rm, qm, pm, mgoal⟩,
+      have eq_p := pm.to_dual_of_dual, set p := pm.of_dual,
+      have eq_q := qm.to_dual_of_dual, set q := qm.of_dual,
+      have eq_r := rm.to_dual_of_dual, set r := rm.of_dual,
+      have eq_s := sm.to_dual_of_dual, set s := sm.of_dual,
+      existsi [p, q, r, s],
+      rw [←eq_p, ←eq_q, ←eq_r, ←eq_s, mirror.has_interweaved_laced] at mgoal,
+      assumption, },
+    apply C.join_n2_n3_join_n3_n2; assumption, },
 end

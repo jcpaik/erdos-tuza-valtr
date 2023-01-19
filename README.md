@@ -25,10 +25,20 @@ The cups-caps theorem shows the exact value $E(a, b) = \binom{a+b-4}{a-2}+1$,
 and this agrees with the value $E(n, a, b)$ for $n \geq a + b - 3$ suggested by the Erdős-Tuza-Valtr conjecture$.
 So far this was the only case of the Erdős-Tuza-Valtr conjecture known in the literature.
 
-In our manuscript, we show the first new case $a = 4, b = n$ of the Erdős-Tuza-Valtr conjecture.
-That is, we show the equality $E(n, 4, n) = \binom{n-1}{2} + 2$, 
-putting the Erdős-Szekeres conjecture $E(n) = 2^{n-2}$ slightly in more affirmative side.
-Observe that $n < a + b - 3$ in this case, so it is not a direct consequence of the cups-caps theorem.
+In our manuscript, we show the first new case $a = 4, b = n$ of the Erdős-Tuza-Valtr conjecture,
+putting the full Erdős-Szekeres conjecture $E(n) = 2^{n-2}$ slightly in more affirmative side.
+That is, we show the equality $E(n, 4, n) = \binom{n-1}{2} + 2$, so any set of $\binom{n-1}{2} + 2$ points either contain a convex $n$-gon or a 4-cap.
+Observe that $n < a + b - 3$ in this case, so the case is not a direct consequence of the cups-caps theorem.
 Our proof also generalizes to a purely combinatorial model of convexity.
 
 ## Formalization
+The folder `src` contains the Lean 3 source files.
+The main theorem $E(n, 4, n) \leq \binom{n-1}{2} + 2$ is stated and verified as `theorem main` in the file `main/main.lean`.
+Note that the cups-caps theroem is also shown in the file `main/cap_cup.lean`.
+
+For the minimal set of definitions required for stating the main theorem, we refer to the following files. 
+- `config/defs.lean` for the combinatorial model of convexity and 
+- `lib/list/defs.lean` for the definitions related to a list
+
+The rest are only required for the proof of the main theorem. 
+The directories `config`, `etv`, and `main` loosely corresponds to Section 2, Section 3 & 4, and Section 5 of the manuscript respectively.

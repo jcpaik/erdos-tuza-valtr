@@ -18,7 +18,7 @@ also showed that their generalization is actually equivalent to (thus, also a co
 The case $a, b \geq 2$ and $n \geq a + b - 3$ of the Erdős-Tuza-Valtr conjecture is actually a direct consequence of the _cups-caps theorem_ 
 shown in the original 1935 paper of Erdős and Szekeres.
 This is because for any $n \geq a + b - 3$, either the upper or lower part of a convex $n$-gon contains an $a$-cap or a $b$-cup, 
-so the case where a convex $n$-gon exists reduces to the existence of either an $a$-cap or a $b$-cup.
+so the existence of a convex $n$-gon implies the existence of either an $a$-cap or a $b$-cup.
 Define $E(a, b)$ as the minimum number such that any $E(a, b)$ points on a plane with no three on a line
 always contain either an $a$-cap or a $b$-cup.
 The cups-caps theorem shows the exact value $E(a, b) = \binom{a+b-4}{a-2}+1$,

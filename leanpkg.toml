@@ -1,5 +1,5 @@
 [package]
-name = "formal-erdos"
+name = "erdos-tuza-valtr"
 version = "0.1"
 lean_version = "leanprover-community/lean:3.49.1"
 path = "src"

@@ -22,7 +22,7 @@ so the case where a convex $n$-gon exists reduces to the existence of either an 
 Define $E(a, b)$ as the minimum number such that any $E(a, b)$ points on a plane with no three on a line
 always contain either an $a$-cap or a $b$-cup.
 The cups-caps theorem shows the exact value $E(a, b) = \binom{a+b-4}{a-2}+1$,
-and this agrees with the value $E(n, a, b)$ for $n \geq a + b - 3 suggested by the Erdős-Tuza-Valtr conjecture$.
+and this agrees with the value $E(n, a, b)$ for $n \geq a + b - 3$ suggested by the Erdős-Tuza-Valtr conjecture$.
 So far this was the only case of the Erdős-Tuza-Valtr conjecture known in the literature.
 
 In our manuscript, we show the first new case $a = 4, b = n$ of the Erdős-Tuza-Valtr conjecture.

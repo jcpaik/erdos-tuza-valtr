@@ -4,9 +4,6 @@ import data.finset
 import lib.list
 import lib.core.rel3
 
-Menlo
-Monaco
-
 structure config (α : Type*) [linear_order α] :=
 (cup3 : α → α → α → Prop)
 (decidable_cup3 : decidable_rel3 cup3)

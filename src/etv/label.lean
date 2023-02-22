@@ -1,6 +1,6 @@
 import data.finset
 
-import lib.core.trel
+import lib.core.rel3
 import config
 
 variables {α : Type*} [linear_order α] (C : config α)

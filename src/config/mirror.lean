@@ -1,6 +1,6 @@
 -- Mirror configuration
 
-import lib.core.trel
+import lib.core.rel3
 import lib.list
 import config.defs
 

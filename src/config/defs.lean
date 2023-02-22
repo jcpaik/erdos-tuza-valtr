@@ -2,11 +2,14 @@ import data.list
 import data.finset
 
 import lib.list
-import lib.core.trel
+import lib.core.rel3
+
+Menlo
+Monaco
 
 structure config (α : Type*) [linear_order α] :=
 (cup3 : α → α → α → Prop)
-(decidable_cup3 : decidable_trel cup3)
+(decidable_cup3 : decidable_rel3 cup3)
 
 namespace config
 
@@ -18,7 +21,7 @@ attribute [instance] config.decidable_cup3
 
 def cap3 (a b c : α) : Prop := ¬(C.cup3 a b c)
 
-def decidable_cap3 : decidable_trel C.cap3 :=
+def decidable_cap3 : decidable_rel3 C.cap3 :=
   λ a b c, @not.decidable _ (C.decidable_cup3 a b c)
 
 attribute [instance] config.decidable_cap3

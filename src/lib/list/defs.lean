@@ -1,6 +1,6 @@
 import data.finset
 
-import lib.core.trel
+import lib.core.rel3
 
 variable {α : Type*}
 
@@ -48,13 +48,13 @@ theorem chain3_cons {a b c : α} {l : list α} :
 
 attribute [simp] chain3.nil
 
-instance decidable_chain3 [decidable_trel R] (a b : α) (l : list α) : 
+instance decidable_chain3 [decidable_rel3 R] (a b : α) (l : list α) : 
   decidable (chain3 R a b l) :=
 by induction l generalizing a b; 
   simp only [chain3.nil, chain3_cons];
   resetI; apply_instance
 
-instance decidable_chain3' [decidable_trel R] (l : list α) : 
+instance decidable_chain3' [decidable_rel3 R] (l : list α) : 
   decidable (chain3' R l) :=
 by cases l with _ l; try {cases l with _ l}; 
   dunfold chain3'; apply_instance

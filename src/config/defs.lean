@@ -26,9 +26,9 @@ attribute [instance] config.decidable_cap3
 -- Notion of caps and cups
 
 def cap (l : list α) : Prop := 
-  l.chain' ord.lt ∧ l.chain3' C.cap3
+  l.chain' (<) ∧ l.chain3' C.cap3
 def cup (l : list α) : Prop := 
-  l.chain' ord.lt ∧ l.chain3' C.cup3
+  l.chain' (<) ∧ l.chain3' C.cup3
 @[simp] def gon (l1 l2 : list α) : Prop :=
   2 ≤ l1.length ∧ C.cap l1 ∧
   2 ≤ l2.length ∧ C.cup l2 ∧

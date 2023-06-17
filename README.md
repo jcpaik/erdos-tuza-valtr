@@ -1,5 +1,5 @@
 # Formal verification of a manuscript "On the Erdős-Tuza-Valtr Conjecture" 
-This is a formal verification of the manuscript "[On the Erdős-Tuza-Valtr Conjecture](https://arxiv.org/abs/2206.04260)" in Lean 3.
+This is a formal verification of the manuscript "On the Erdős-Tuza-Valtr Conjecture" in Lean 3.
 
 ## The theorem
 For any $n \geq 2$, let $E(n)$ be the minimum number with the property that any $E(n)$ points on a plane with no three on a line contains $n$ points 

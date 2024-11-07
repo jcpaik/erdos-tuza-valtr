@@ -7,7 +7,7 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 namespace Config
 
 def HasLaced (n : ℕ) (S : Finset α) (p q : α) : Prop :=
-  ∃ (a b : ℕ) (cp c cq : List α) (hcp : C.Ncup a cp) (hc : C.Ncup n c) (hcQ : C.Ncup b cq),
+  ∃ (a b : ℕ) (cp c cq : List α) (hcp : C.NCup a cp) (hc : C.NCup n c) (hcQ : C.NCup b cq),
     (cp.In S ∧ c.In S ∧ cq.In S) ∧
       a + b = n ∧ p ∈ cp.getLast? ∧ p ∈ c.head? ∧ q ∈ c.getLast? ∧ q ∈ cq.head?
 
@@ -22,6 +22,6 @@ def HasInterweavedLaced (n : ℕ) (S : Finset α) (p q r s : α) : Prop :=
 
 def HasJoin (a b : ℕ) (S : Finset α) : Prop :=
   ∃ (p : α) (cl cr : List α),
-    (C.Ncup a cl ∧ cl.In S ∧ p ∈ cl.getLast?) ∧ C.Ncup b cr ∧ cr.In S ∧ p ∈ cr.head?
+    (C.NCup a cl ∧ cl.In S ∧ p ∈ cl.getLast?) ∧ C.NCup b cr ∧ cr.In S ∧ p ∈ cr.head?
 
 end Config

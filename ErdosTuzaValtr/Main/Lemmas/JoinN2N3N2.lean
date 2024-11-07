@@ -19,10 +19,10 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNcap 4 S) {n : ℕ} (x y : α)
-    {P : List α} (hPx : C.Ncup (n + 2) (P ++ [x])) (Px_in_S : (P ++ [x]).In S) {Q : List α}
-    (hxQy : C.Ncup (n + 3) ((x::Q) ++ [y])) (xQy_in_S : ((x::Q) ++ [y]).In S) {R : List α}
-    (hyR : C.Ncup (n + 2) (y::R)) (yR_in_S : (y::R).In S) (label : C.Label S)
+theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n : ℕ} (x y : α)
+    {P : List α} (hPx : C.NCup (n + 2) (P ++ [x])) (Px_in_S : (P ++ [x]).In S) {Q : List α}
+    (hxQy : C.NCup (n + 3) ((x::Q) ++ [y])) (xQy_in_S : ((x::Q) ++ [y]).In S) {R : List α}
+    (hyR : C.NCup (n + 2) (y::R)) (yR_in_S : (y::R).In S) (label : C.Label S)
     (sxy : ¬label.Slope x y) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s :=
   by
   have x_in_S : x ∈ S := by simp at xQy_in_S <;> tauto
@@ -56,8 +56,8 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNcap 4 S) {n
     constructor; assumption; rw [eq_R] at yR_in_S
     simp; simp at yR_in_S; tauto
     simp; simp
-  have a_lt_x : a < x := by rw [Config.Ncup, Config.Cup] at hPx <;> simp at hPx <;> tauto
-  have x_lt_b : x < b := by rw [Config.Ncup, Config.Cup] at hxQy <;> simp at hxQy <;> tauto
+  have a_lt_x : a < x := by rw [Config.NCup, Config.Cup] at hPx <;> simp at hPx <;> tauto
+  have x_lt_b : x < b := by rw [Config.NCup, Config.Cup] at hxQy <;> simp at hxQy <;> tauto
   have y_lt_z : y < z := by
     rw [eq_R] at hyR; apply hyR.head'_lt_last' y z
     simp; simp
@@ -126,16 +126,16 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNcap 4 S) {n
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Config.join_n2_n3_n2_tt (S : Finset α) (cap4_free : ¬C.HasNcap 4 S) {n : ℕ} (x y : α)
-    {P : List α} (hPx : C.Ncup (n + 2) (P ++ [x])) (Px_in_S : (P ++ [x]).In S) {Q : List α}
-    (hxQy : C.Ncup (n + 3) ((x::Q) ++ [y])) (xQy_in_S : ((x::Q) ++ [y]).In S) {R : List α}
-    (hyR : C.Ncup (n + 2) (y::R)) (yR_in_S : (y::R).In S) (label : C.Label S)
+theorem Config.join_n2_n3_n2_tt (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n : ℕ} (x y : α)
+    {P : List α} (hPx : C.NCup (n + 2) (P ++ [x])) (Px_in_S : (P ++ [x]).In S) {Q : List α}
+    (hxQy : C.NCup (n + 3) ((x::Q) ++ [y])) (xQy_in_S : ((x::Q) ++ [y]).In S) {R : List α}
+    (hyR : C.NCup (n + 2) (y::R)) (yR_in_S : (y::R).In S) (label : C.Label S)
     (sxy : label.Slope x y) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s :=
   by
   have mirrored_goal : ∃ s r q p, C.mirror.has_interweaved_laced (n + 3) S.mirror s r q p :=
     by
     rw [← Mirror.ncup] at hPx hxQy hyR; simp at hPx hxQy hyR
-    rw [← Mirror.hasNcap] at cap4_free
+    rw [← Mirror.hasNCap] at cap4_free
     rw [← List.mirror_in] at Px_in_S xQy_in_S yR_in_S
     simp [-List.cons_in, -List.append_in] at Px_in_S xQy_in_S yR_in_S
     have syx := sxy; rw [← mirror_slope] at syx
@@ -147,10 +147,10 @@ theorem Config.join_n2_n3_n2_tt (S : Finset α) (cap4_free : ¬C.HasNcap 4 S) {n
   rw [Mirror.hasInterweavedLaced] at h
   use p, q, r, s; exact h
 
-theorem Config.join_n2_n3_n2 (S : Finset α) {n : ℕ} (cap4_free : ¬C.HasNcap 4 S)
-    (cup_free : ¬C.HasNcup (n + 4) S) {cx : List α} (cx_ncup : C.Ncup (n + 2) cx)
-    (cx_in_S : cx.In S) {c : List α} (c_ncup : C.Ncup (n + 3) c) (c_in_S : c.In S) {cy : List α}
-    (cy_ncup : C.Ncup (n + 2) cy) (cy_in_S : cy.In S) (x : α) (hxcx : x ∈ cx.getLast?)
+theorem Config.join_n2_n3_n2 (S : Finset α) {n : ℕ} (cap4_free : ¬C.HasNCap 4 S)
+    (cup_free : ¬C.HasNCup (n + 4) S) {cx : List α} (cx_ncup : C.NCup (n + 2) cx)
+    (cx_in_S : cx.In S) {c : List α} (c_ncup : C.NCup (n + 3) c) (c_in_S : c.In S) {cy : List α}
+    (cy_ncup : C.NCup (n + 2) cy) (cy_in_S : cy.In S) (x : α) (hxcx : x ∈ cx.getLast?)
     (hxc : x ∈ c.head?) (y : α) (hyc : y ∈ c.getLast?) (hycy : y ∈ cy.head?) :
     ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s :=
   by

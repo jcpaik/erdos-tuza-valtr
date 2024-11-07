@@ -23,8 +23,8 @@ theorem Config.mirror_mainGoal (n : ℕ) : C.MainGoal n → C.mirror.MainGoal n 
   rw [← eq_S] at hSm cap4_free cup_free ⊢
   set S := Sm.of_mirror
   rw [Finset.mirror_card] at hSm
-  rw [Mirror.hasNcap] at cap4_free
-  rw [Mirror.hasNcup] at cup_free
+  rw [Mirror.hasNCap] at cap4_free
+  rw [Mirror.hasNCup] at cup_free
   have goal := h S hSm cap4_free cup_free
   rcases goal with ⟨p, q, r, s, interweave⟩
   exists to_dual s, to_dual r, to_dual q, to_dual p
@@ -57,8 +57,8 @@ theorem Config.main_lemma (n : ℕ) : C.MainGoal n :=
     by_cases join_n2_n3 : C.has_join (n + 2) (n + 3) S; swap
     · rw [← Finset.mirror_card] at hS
       rw [← Mirror.hasJoin] at join_n2_n3
-      rw [← Mirror.hasNcap] at cap4_free
-      rw [← Mirror.hasNcup] at cup_free
+      rw [← Mirror.hasNCap] at cap4_free
+      rw [← Mirror.hasNCup] at cup_free
       have mirrored_goal :=
         C.mirror.main_induction_wlog n (C.mirror_main_goal n ih) S.mirror join_n2_n3 hS cap4_free
           cup_free
@@ -73,7 +73,7 @@ theorem Config.main_lemma (n : ℕ) : C.MainGoal n :=
     apply C.join_n2_n3_join_n3_n2 <;> assumption
 
 theorem main (n : ℕ) (C : Config α) (S : Finset α) (hS : Nat.choose (n + 2) 2 + 2 ≤ S.card) :
-    C.HasNcap 4 S ∨ C.HasNgon (n + 3) S :=
+    C.HasNCap 4 S ∨ C.HasNGon (n + 3) S :=
   by
   by_cases has_cap4 : C.has_ncap 4 S; left; exact has_cap4
   by_cases has_cup : C.has_ncup (n + 3) S

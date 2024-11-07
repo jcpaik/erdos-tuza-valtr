@@ -11,7 +11,7 @@ import ErdosTuzaValtr.Main.CapCup
 import ErdosTuzaValtr.Main.Defs
 import ErdosTuzaValtr.Main.InductionStep
 import ErdosTuzaValtr.Main.Main
-import ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNgon
+import ErdosTuzaValtr.Main.Lemmas.InterweavedLacedNGon
 import ErdosTuzaValtr.Main.Lemmas.Default
 import ErdosTuzaValtr.Main.Lemmas.JoinN2N2
 import ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2

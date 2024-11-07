@@ -17,11 +17,11 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 : List α)
     (lab : C.Label S) (a_in_S : a ∈ S) (x_in_S : x ∈ S) (b_in_S : b ∈ S)
-    (hc1 : C.Ncup (n + 2) (c1 ++ [a, x])) (c1_in_S : c1.In S) (hc2 : C.Ncup (n + 2) (x::b::c2))
-    (c2_in_S : c2.In S) (sab : ¬lab.Slope a b) : C.HasNgon (n + 3) S :=
+    (hc1 : C.NCup (n + 2) (c1 ++ [a, x])) (c1_in_S : c1.In S) (hc2 : C.NCup (n + 2) (x::b::c2))
+    (c2_in_S : c2.In S) (sab : ¬lab.Slope a b) : C.HasNGon (n + 3) S :=
   by
-  have hax : a < x := by simp [Config.Cup, Config.Ncup] at hc1 <;> tauto
-  have hxb : x < b := by simp [Config.Cup, Config.Ncup] at hc2 <;> tauto
+  have hax : a < x := by simp [Config.Cup, Config.NCup] at hc1 <;> tauto
+  have hxb : x < b := by simp [Config.Cup, Config.NCup] at hc2 <;> tauto
   have hab : a < b := LT.lt.trans hax hxb
   have h_b_c2 : (b::c2) ≠ [] := by simp
   rcases List.takeLast h_b_c2 with ⟨c, c3, eq_c2⟩
@@ -33,8 +33,8 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
   by_cases haxc : C.cup3 a x c
   · apply ncup_is_ngon; decide
     use c1 ++ [a, x, c]; constructor; constructor
-    simp; rw [Config.Ncup] at hc1; tauto
-    simp; simp [Config.Ncup] at hc1; tauto
+    simp; rw [Config.NCup] at hc1; tauto
+    simp; simp [Config.NCup] at hc1; tauto
     simp; tauto
   · use[a, x, c], a::c3 ++ [c]
     refine' ⟨⟨_, _⟩, _, _⟩ <;> try simp <;> try tauto
@@ -42,7 +42,7 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
     rw [← eq_c2]; rw [← eq_c2] at hc2
     have hbc2 := hc2.tail.left; simp at hbc2
     apply hbc2.extend_left sab <;> try tauto
-    simp; tauto; simp [Config.Ncup] at hc2
+    simp; tauto; simp [Config.NCup] at hc2
     ring_nf; ring_nf at hc2; simp; simp at hc2
     exact hc2.right; constructor; assumption
     have hh : (b::c2).In S := by simp <;> tauto
@@ -52,8 +52,8 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Config.join_n2_n2_case_tt (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 : List α)
     (lab : C.Label S) (a_in_S : a ∈ S) (x_in_S : x ∈ S) (b_in_S : b ∈ S)
-    (hc1 : C.Ncup (n + 2) (c1 ++ [a, x])) (c1_in_S : c1.In S) (hc2 : C.Ncup (n + 2) (x::b::c2))
-    (c2_in_S : c2.In S) (hab : lab.Slope a b) : C.HasNgon (n + 3) S :=
+    (hc1 : C.NCup (n + 2) (c1 ++ [a, x])) (c1_in_S : c1.In S) (hc2 : C.NCup (n + 2) (x::b::c2))
+    (c2_in_S : c2.In S) (hab : lab.Slope a b) : C.HasNGon (n + 3) S :=
   by
   rw [← Finset.mem_mirror] at a_in_S x_in_S b_in_S
   rw [← Mirror.ncup] at hc1 hc2
@@ -63,13 +63,13 @@ theorem Config.join_n2_n2_case_tt (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
   have mirrored_goal :=
     C.mirror.join_n2_n2_case_ff S.mirror n (to_dual b) (to_dual x) (to_dual a) c2.mirror c1.mirror
       lab.mirror b_in_S x_in_S a_in_S hc2 c2_in_S hc1 c1_in_S hba
-  rw [Mirror.hasNgon] at mirrored_goal
+  rw [Mirror.hasNGon] at mirrored_goal
   tauto
 
-theorem Config.join_n2_n2 (S : Finset α) {n : ℕ} (cap4_free : ¬C.HasNcap 4 S) {c1 : List α}
-    (hc1 : C.Ncup (n + 2) c1) (c1_in_S : c1.In S) {c2 : List α} (hc2 : C.Ncup (n + 2) c2)
+theorem Config.join_n2_n2 (S : Finset α) {n : ℕ} (cap4_free : ¬C.HasNCap 4 S) {c1 : List α}
+    (hc1 : C.NCup (n + 2) c1) (c1_in_S : c1.In S) {c2 : List α} (hc2 : C.NCup (n + 2) c2)
     (c2_in_S : c2.In S) (x : α) (hx1 : x ∈ c1.getLast?) (hx2 : x ∈ c2.head?) :
-    C.HasNgon (n + 3) S :=
+    C.HasNGon (n + 3) S :=
   by
   -- Introduce variables
   have c1_size2 : 2 ≤ c1.length := by cases hc1 <;> linarith

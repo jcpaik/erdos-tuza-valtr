@@ -87,8 +87,8 @@ def cup_length_le_alpha {a : α} {c : List α} (c_in_S : c.In S) (c_sorted : c.S
   exact List.le_of_mem_argmax c'_alpha_cup h_argmax
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem add_alpha {a : α} (ha : a ∈ S) {n : ℕ} {c : List α} (c_in_S : c.In S) (c_cup : C.Ncup n c)
-    (c_head : a ∈ c.head?) : C.HasNcup (n + l.alpha a) S :=
+theorem add_alpha {a : α} (ha : a ∈ S) {n : ℕ} {c : List α} (c_in_S : c.In S) (c_cup : C.NCup n c)
+    (c_head : a ∈ c.head?) : C.HasNCup (n + l.alpha a) S :=
   by
   rcases l.alpha_cup ha with ⟨d, d_length, d_in_S, d_sorted, d_chain, d_last⟩
   have d_cup : C.cup d := l.alpha_cup_is_cup _ d_in_S d_sorted d_chain
@@ -104,13 +104,13 @@ theorem add_alpha {a : α} (ha : a ∈ S) {n : ℕ} {c : List α} (c_in_S : c.In
     subst c_len; rw [← eq_d]; refine' ⟨⟨_, _⟩, _⟩
     assumption; rw [d_length]; exact add_comm _ _; assumption
   rw [eq_d']; constructor
-  · rw [Config.Ncup]; constructor; simp; refine' ⟨_, _, _⟩
+  · rw [Config.NCup]; constructor; simp; refine' ⟨_, _, _⟩
     convert d_cup; rw [eq_d, eq_d']; simp
     rw [eq_d'] at eq_d; simp at eq_d
     rw [eq_d] at d_chain d_sorted d_in_S
     rw [eq_c] at c_in_S c_cup
     rw [List.Sorted] at d_sorted
-    rw [Config.Ncup, Config.Cup] at c_cup
+    rw [Config.NCup, Config.Cup] at c_cup
     apply l.extend_left
     simp at d_in_S <;> tauto; simp at d_in_S <;> tauto
     have t := @List.Pairwise.sublist _ _ [p, a] (d'' ++ [p, a]) _ d_sorted
@@ -154,7 +154,7 @@ def beta (a : α) : ℕ :=
 
 -- APIs for beta: First, existence of a cup with length alpha + 1
 def betaCup {a : α} (ha : a ∈ S) :
-    Σ' c : List α, c.In S ∧ C.Ncup (C.beta S a + 1) c ∧ a ∈ c.getLast? :=
+    Σ' c : List α, c.In S ∧ C.NCup (C.beta S a + 1) c ∧ a ∈ c.getLast? :=
   by
   have some := C.beta_cup'_is_some S ha
   set c := Option.get some with def_c
@@ -163,9 +163,9 @@ def betaCup {a : α} (ha : a ∈ S) :
   rw [← def_c, beta_cup'] at h_argmax
   have c_beta_cup := List.argmax_mem h_argmax
   simp [beta_cups', is_beta_cup] at c_beta_cup
-  use c ++ [a]; simp [Config.Ncup]; tauto
+  use c ++ [a]; simp [Config.NCup]; tauto
 
-theorem has_beta_cup {a : α} (ha : a ∈ S) : C.HasNcup (C.beta S a + 1) S :=
+theorem has_beta_cup {a : α} (ha : a ∈ S) : C.HasNCup (C.beta S a + 1) S :=
   by
   rcases C.beta_cup S ha with ⟨c, c_in, c_cup, -⟩
   use c; tauto

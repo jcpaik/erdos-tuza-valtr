@@ -10,7 +10,7 @@ open OrderDual
 -- to_dual : α → αᵒᵈ
 -- of_dual : αᵒᵈ → α
 def Config.mirror : Config (OrderDual α) :=
-  ⟨mirror3 C.Cup3, C.decidableCup3.mirror3⟩
+  ⟨Mirror3 C.Cup3, C.DecidableCup3.Mirror3⟩
 
 variable {C}
 
@@ -46,21 +46,21 @@ def Mirror.gon {l1 l2 : List α} : C.mirror.Gon l1.mirror l2.mirror ↔ C.Gon l1
   rw [ot_inj.eq_iff]; rw [ot_inj.eq_iff]; tauto
 
 @[simp]
-def Mirror.ncap {n : ℕ} {l : List α} : C.mirror.Ncap n l.mirror ↔ C.Ncap n l := by rw [Config.Ncap];
-  rw [Config.Ncap]; simp
+def Mirror.ncap {n : ℕ} {l : List α} : C.mirror.NCap n l.mirror ↔ C.NCap n l := by rw [Config.NCap];
+  rw [Config.NCap]; simp
 
 @[simp]
-def Mirror.ncup {n : ℕ} {l : List α} : C.mirror.Ncup n l.mirror ↔ C.Ncup n l := by rw [Config.Ncup];
-  rw [Config.Ncup]; simp
+def Mirror.ncup {n : ℕ} {l : List α} : C.mirror.NCup n l.mirror ↔ C.NCup n l := by rw [Config.NCup];
+  rw [Config.NCup]; simp
 
 @[simp]
-def Mirror.ngon {n : ℕ} {l1 l2 : List α} : C.Ngon n l1 l2 ↔ C.mirror.Ngon n l1.mirror l2.mirror :=
+def Mirror.ngon {n : ℕ} {l1 l2 : List α} : C.NGon n l1 l2 ↔ C.mirror.NGon n l1.mirror l2.mirror :=
   by
-  rw [Config.Ngon]; rw [Config.Ngon]
+  rw [Config.NGon]; rw [Config.NGon]
   rw [Mirror.gon]; simp
 
 @[simp]
-def Mirror.hasNcap {n : ℕ} {S : Finset α} : C.mirror.HasNcap n S.mirror ↔ C.HasNcap n S :=
+def Mirror.hasNCap {n : ℕ} {S : Finset α} : C.mirror.HasNCap n S.mirror ↔ C.HasNCap n S :=
   by
   constructor
   · intro h; rcases h with ⟨c, ⟨c_ncap, c_in⟩⟩
@@ -75,7 +75,7 @@ def Mirror.hasNcap {n : ℕ} {S : Finset α} : C.mirror.HasNcap n S.mirror ↔ C
     rw [List.mirror_in]; assumption
 
 @[simp]
-def Mirror.hasNcup {n : ℕ} {S : Finset α} : C.mirror.HasNcup n S.mirror ↔ C.HasNcup n S :=
+def Mirror.hasNCup {n : ℕ} {S : Finset α} : C.mirror.HasNCup n S.mirror ↔ C.HasNCup n S :=
   by
   constructor
   · intro h; rcases h with ⟨c, ⟨c_ncup, c_in⟩⟩
@@ -89,7 +89,7 @@ def Mirror.hasNcup {n : ℕ} {S : Finset α} : C.mirror.HasNcup n S.mirror ↔ C
     constructor; rw [Mirror.ncup]; tauto
     rw [List.mirror_in]; assumption
 
-def Mirror.hasNgon {n : ℕ} {S : Finset α} : C.mirror.HasNgon n S.mirror ↔ C.HasNgon n S :=
+def Mirror.hasNGon {n : ℕ} {S : Finset α} : C.mirror.HasNGon n S.mirror ↔ C.HasNGon n S :=
   by
   constructor
   · intro h; rcases h with ⟨c1, c2, ⟨c_ngon, c1_in, c2_in⟩⟩

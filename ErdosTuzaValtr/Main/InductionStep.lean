@@ -65,9 +65,9 @@ theorem not_mem_delta {n : ℕ} {S : Finset α} {p' : α} (h : p' ∈ S \ C.delt
       assumption; exfalso; apply h; rw [← def_p, p_le_p']
     rw [def_p]; exact Finset.min'_le _ _ p'_in_row
 
-theorem find_join {n : ℕ} {S : Finset α} (l : C.Label S) (cup_free : ¬C.HasNcup (n + 4) S)
+theorem find_join {n : ℕ} {S : Finset α} (l : C.Label S) (cup_free : ¬C.HasNCup (n + 4) S)
     (no_join : ¬C.HasJoin (n + 3) (n + 2) S) (o p : α) (c : List α) (m : ℕ) (o_in_S : o ∈ S)
-    (p_in_S : p ∈ S) (o_le_p : o ≤ p) (c_in_S : c.In S) (c_ncup : C.Ncup m c) (c_head : p ∈ c.head?)
+    (p_in_S : p ∈ S) (o_le_p : o ≤ p) (c_in_S : c.In S) (c_ncup : C.NCup m c) (c_head : p ∈ c.head?)
     (le_m : n + 2 ≤ m) (ho : n + 2 ≤ C.beta S o) : False :=
   by
   rw [le_iff_lt_or_eq] at o_le_p; cases' o_le_p with o_lt_p o_eq_p
@@ -76,7 +76,7 @@ theorem find_join {n : ℕ} {S : Finset α} (l : C.Label S) (cup_free : ¬C.HasN
     · apply cup_free
       have dp_ncup := d_ncup.extend_right sop o_lt_p p_in_S d_in_S d_last
       have ineq : n + 4 ≤ C.beta S o + 1 + 1 := by linarith
-      apply hasNcup_le ineq; use d ++ [p]
+      apply hasNCup_le ineq; use d ++ [p]
       constructor; exact dp_ncup; simp; tauto
     · apply no_join
       rcases d_ncup.take_right_with_last (n + 3) o (by decide) (by linarith) d_last with
@@ -101,7 +101,7 @@ theorem find_join {n : ℕ} {S : Finset α} (l : C.Label S) (cup_free : ¬C.HasN
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : ¬C.HasNcup (n + 4) S)
+theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : ¬C.HasNCup (n + 4) S)
     (def_D : D = C.delta (n + 2) S) (no_join : ¬C.HasJoin (n + 3) (n + 2) S) {p' r : α}
     (p'r_laced : C.HasLaced (n + 2) (S \ D) p' r) :
     l.alpha p' = 1 ∧
@@ -124,7 +124,7 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
     cases' Nat.lt_or_ge (l.alpha p') 2 with ap' ap'; linarith
     exfalso; apply cup_free
     have has_cup := l.add_alpha p'_in_S c_in_S c_cup c_head
-    apply hasNcup_le _ has_cup; linarith
+    apply hasNCup_le _ has_cup; linarith
   have ap : l.alpha p = 0 := by linarith
   refine' ⟨ap', ⟨p, _, p_lt_p', ap, eq_p⟩⟩
   · have a_le_bp : a ≤ C.beta S p := by
@@ -208,7 +208,7 @@ theorem main_induction_wlog (n : ℕ) : C.MainGoal n → C.MainGoalWlog (n + 1) 
       have ao_lt_ap := (l.beta_eq_alpha_inc o_in_S p_in_S bo_eq_bp).mp o_lt_p
       have has_cup := l.add_alpha p_in_S c_in_S c_cup (by rw [eq_c] <;> simp)
       apply cup_free; ring_nf at has_cup ⊢
-      apply hasNcup_le _ has_cup; linarith
+      apply hasNCup_le _ has_cup; linarith
   · rcases t with ⟨p', q', r, s, ⟨⟨p'_lt_q', q'_le_r, r_lt_s⟩, ⟨p'r_laced, q's_laced⟩⟩⟩
     rcases C.laced_extension l cup_free def_D no_join p'r_laced with
       ⟨ap', ⟨p, pr_laced, p_lt_p', ap, bp⟩⟩

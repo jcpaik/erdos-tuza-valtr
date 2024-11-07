@@ -13,7 +13,7 @@ namespace Config
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 
-theorem has_cap2_cup2 {S : Finset α} (hS : 1 < S.card) : C.HasNcap 2 S ∧ C.HasNcup 2 S :=
+theorem has_cap2_cup2 {S : Finset α} (hS : 1 < S.card) : C.HasNCap 2 S ∧ C.HasNCup 2 S :=
   by
   set l := S.sort (· ≤ ·) with eq_l
   have hl : 2 ≤ l.length := by rw [eq_l] <;> simp <;> exact hS
@@ -25,8 +25,8 @@ theorem has_cap2_cup2 {S : Finset α} (hS : 1 < S.card) : C.HasNcap 2 S ∧ C.Ha
   have b_in_S : b ∈ l := by rw [eq_ab] <;> simp
   rw [eq_l] at b_in_S; simp at b_in_S
   constructor
-  · use[a, b]; simp [Config.Ncap]; tauto
-  · use[a, b]; simp [Config.Ncap]; tauto
+  · use[a, b]; simp [Config.NCap]; tauto
+  · use[a, b]; simp [Config.NCap]; tauto
 
 theorem binom_eq (a b : ℕ) :
     (a + b + 2).choose (a + 1) = (a + b + 1).choose a + (a + b + 1).choose (a + 1) :=
@@ -34,7 +34,7 @@ theorem binom_eq (a b : ℕ) :
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card) :
-    C.HasNcap (a + 2) S ∨ C.HasNcup (b + 2) S :=
+    C.HasNCap (a + 2) S ∨ C.HasNCup (b + 2) S :=
   by
   revert a b S hS; refine' Nat.pincerRecursion _ _ _
   -- case b = 0
@@ -71,10 +71,10 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
         exfalso; exact f
         refine' List.in_superset _ c_in; simp
       · right
-        exact hasNcup_supset (Finset.sdiff_subset S T) hcup
+        exact hasNCup_supset (Finset.sdiff_subset S T) hcup
     -- case sz_a1b < T.card
     cases' ha1b T sz_cases with hcap hcup
-    · left; refine' hasNcap_supset _ hcap
+    · left; refine' hasNCap_supset _ hcap
       rw [def_T]; simp
     · rcases hcup with ⟨cl, ⟨cl_cup, cl_length⟩, cl_in_T⟩
       have cl_sz2 : 2 ≤ cl.length := by rw [cl_length] <;> simp

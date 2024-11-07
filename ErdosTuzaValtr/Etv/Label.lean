@@ -1,8 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import ErdosTuzaValtr.Lib.Core.Rel3
-import Mathlib.Project.Config.Default
-
-#align_import ErdosTuzaValtr.Etv.label
+import Mathlib.Config.Default
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 
@@ -18,21 +16,21 @@ structure Config.Label (S : Finset α) where
 
 attribute [instance] Config.Label.decidableSlope
 
-def Cap4FreeSlope {S : Finset α} (h : ¬C.HasNcap 4 S) (a b : α) : Prop :=
+def Cap4FreeSlope {S : Finset α} (h : ¬C.HasNCap 4 S) (a b : α) : Prop :=
   ∀ c : S, ↑c < a → C.Cup3 c a b
 
-instance decidableCap4FreeSlope {S : Finset α} (h : ¬C.HasNcap 4 S) :
+instance decidableCap4FreeSlope {S : Finset α} (h : ¬C.HasNCap 4 S) :
     DecidableRel (Cap4FreeSlope C h) := fun a b => by rw [Cap4FreeSlope] <;> simp <;> infer_instance
 
 variable {C}
 
-def cap4FreeLabel {S : Finset α} (h : ¬C.HasNcap 4 S) : C.Label S :=
+def cap4FreeLabel {S : Finset α} (h : ¬C.HasNCap 4 S) : C.Label S :=
   by
   use Cap4FreeSlope C h
   infer_instance
   · intro a b ha hb hab hn c hc hbc
     by_contra h'; apply hn; intro d hd
-    by_contra h''; apply h; use[d, a, b, c]; simp [Config.Ncap]; tauto
+    by_contra h''; apply h; use[d, a, b, c]; simp [Config.NCap]; tauto
   · intro a b ha hb hab hy c hc hca
     exact hy ⟨c, hc⟩ hca
 
@@ -71,17 +69,17 @@ protected theorem Config.Cup.extend_right {l : List α} (l_cup : C.Cup l) {a b :
   exfalso; apply hl; exact le_add_self
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-protected theorem Config.Ncup.extend_left {n : ℕ} {l : List α} (l_ncup : C.Ncup n l) {a b : α}
+protected theorem Config.NCup.extend_left {n : ℕ} {l : List α} (l_ncup : C.NCup n l) {a b : α}
     (s_ab : ¬label.Slope a b) (ha : a ∈ S) (hab : a < b) (l_in_S : l.In S)
-    (b_head_l : b ∈ l.head?) : C.Ncup (n + 1) (a::l) :=
+    (b_head_l : b ∈ l.head?) : C.NCup (n + 1) (a::l) :=
   by
   cases' l_ncup with l_cup l_len; constructor
   apply l_cup.extend_left s_ab <;> try assumption
   simp; assumption
 
-protected theorem Config.Ncup.extend_right {n : ℕ} {l : List α} (l_ncup : C.Ncup n l) {a b : α}
+protected theorem Config.NCup.extend_right {n : ℕ} {l : List α} (l_ncup : C.NCup n l) {a b : α}
     (s_ab : label.Slope a b) (hab : a < b) (hb : b ∈ S) (l_in_S : l.In S)
-    (a_last_l : a ∈ l.getLast?) : C.Ncup (n + 1) (l ++ [b]) :=
+    (a_last_l : a ∈ l.getLast?) : C.NCup (n + 1) (l ++ [b]) :=
   by
   cases' l_ncup with l_cup l_len; constructor
   apply l_cup.extend_right s_ab <;> try assumption
@@ -92,12 +90,12 @@ variable (label)
 open OrderDual
 
 protected def Config.Label.mirror : C.mirror.Label S.mirror :=
-  ⟨fun a b => ¬mirror2 label.Slope a b, fun a b =>
-    @Not.decidable _ (label.decidableSlope.mirror2 a b),
+  ⟨fun a b => ¬Mirror2 label.Slope a b, fun a b =>
+    @Not.decidable _ (label.decidableSlope.Mirror2 a b),
     by
     intro a b a_in_S b_in_S hab hslope c c_in_S hbc
-    simp [mirror2] at hslope
-    simp [Config.mirror, mirror3]
+    simp [Mirror2] at hslope
+    simp [Config.mirror, Mirror3]
     simp [Finset.mirror] at a_in_S b_in_S c_in_S
     rcases a_in_S with ⟨oa, ⟨oa_in_S, oa_eq⟩⟩
     rcases b_in_S with ⟨ob, ⟨ob_in_S, ob_eq⟩⟩
@@ -111,8 +109,8 @@ protected def Config.Label.mirror : C.mirror.Label S.mirror :=
     apply label.extend_right <;> tauto,
     by
     intro a b a_in_S b_in_S hab hslope c c_in_S hca
-    simp [mirror2] at hslope
-    simp [Config.mirror, mirror3]
+    simp [Mirror2] at hslope
+    simp [Config.mirror, Mirror3]
     simp [Finset.mirror] at a_in_S b_in_S c_in_S
     rcases a_in_S with ⟨oa, ⟨oa_in_S, oa_eq⟩⟩
     rcases b_in_S with ⟨ob, ⟨ob_in_S, ob_eq⟩⟩
@@ -130,4 +128,4 @@ variable {label}
 def mirror_slope {a b : α} : ¬label.mirror.Slope (toDual b) (toDual a) ↔ label.Slope a b :=
   by
   rw [Config.Label.mirror]; simp
-  rw [mirror2]; simp
+  rw [Mirror2]; simp

@@ -11,9 +11,9 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Config.hasInterweavedLaced_hasNgon_ff {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNcap 4 S)
+theorem Config.hasInterweavedLaced_hasNGon_ff {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
     {p q r s : α} (label : C.Label S) (q_lt_r : q < r) (sqr : ¬label.Slope q r) :
-    C.HasInterweavedLaced (n + 2) S p q r s → C.HasNgon (n + 3) S :=
+    C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
   by
   intro h; rcases h with ⟨⟨p_lt_q, q_le_r, r_lt_s⟩, ⟨pr_laced, qs_laced⟩⟩
   rcases pr_laced with
@@ -69,17 +69,17 @@ theorem Config.hasInterweavedLaced_hasNgon_ff {n : ℕ} {S : Finset α} (cap4_fr
     simp at c1_head c1_last
     have h2n : 2 ≤ n + 2 := le_add_self; tauto
 
-theorem Config.hasInterweavedLaced_hasNgon_tt {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNcap 4 S)
+theorem Config.hasInterweavedLaced_hasNGon_tt {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
     {p q r s : α} (label : C.Label S) (q_lt_r : q < r) (sqr : label.Slope q r) :
-    C.HasInterweavedLaced (n + 2) S p q r s → C.HasNgon (n + 3) S :=
+    C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
   by
-  rw [← Mirror.hasInterweavedLaced, ← Mirror.hasNgon]
+  rw [← Mirror.hasInterweavedLaced, ← Mirror.hasNGon]
   have srq := sqr; rw [← mirror_slope] at srq
-  rw [← Mirror.hasNcap] at cap4_free
+  rw [← Mirror.hasNCap] at cap4_free
   apply C.mirror.has_interweaved_laced_has_ngon_ff <;> assumption
 
-theorem Config.hasInterweavedLaced_hasNgon {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNcap 4 S)
-    {p q r s : α} : C.HasInterweavedLaced (n + 2) S p q r s → C.HasNgon (n + 3) S :=
+theorem Config.hasInterweavedLaced_hasNGon {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
+    {p q r s : α} : C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
   by
   intro h; have q_le_r : q ≤ r := by rw [Config.HasInterweavedLaced] at h <;> tauto
   rw [le_iff_eq_or_lt] at q_le_r

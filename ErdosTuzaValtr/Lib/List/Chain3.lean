@@ -95,7 +95,7 @@ theorem Chain3'.tail {l : List α} (h : Chain3' R l) : Chain3' R l.tail :=
   cases' l with c l; simp
   simp at h ⊢; exact h.right
 
-theorem chain3'_mirror [LinearOrder α] {l : List α} : Chain3' (mirror3 R) l.mirror ↔ Chain3' R l :=
+theorem chain3'_mirror [LinearOrder α] {l : List α} : Chain3' (Mirror3 R) l.mirror ↔ Chain3' R l :=
   by
   induction' l with a l ih; simp only [List.mirror, map_nil, reverse_nil, chain3'_nil]
   cases' l with b l; simp only [List.mirror, map_cons, map_nil, reverse_cons, reverse_nil,
@@ -104,6 +104,6 @@ theorem chain3'_mirror [LinearOrder α] {l : List α} : Chain3' (mirror3 R) l.mi
   rw [List.mirror]; simp
   rw [List.mirror]; simp
   simp [List.mirror] at ih; rw [← ih]
-  rw [mirror3]; simp; exact and_comm
+  rw [Mirror3]; simp; exact and_comm
 
 end List

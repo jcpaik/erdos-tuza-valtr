@@ -74,9 +74,9 @@ theorem Config.hasInterweavedLaced_hasNGon_tt {n : ℕ} {S : Finset α} (cap4_fr
     C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
   by
   rw [← Mirror.hasInterweavedLaced, ← Mirror.hasNGon]
-  have srq := sqr; rw [← mirror_slope] at srq
+  have srq := sqr; rw [← Mirror_slope] at srq
   rw [← Mirror.hasNCap] at cap4_free
-  apply C.mirror.has_interweaved_laced_has_ngon_ff <;> assumption
+  apply C.Mirror.has_interweaved_laced_has_ngon_ff <;> assumption
 
 theorem Config.hasInterweavedLaced_hasNGon {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
     {p q r s : α} : C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=

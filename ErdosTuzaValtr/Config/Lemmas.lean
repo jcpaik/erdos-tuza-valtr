@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Algebra.Defs
+import Mathlib.Data.List.Sort
 import Mathlib.Tactic.Linarith
 import ErdosTuzaValtr.Config.Defs
 
@@ -10,59 +11,48 @@ namespace Config
 namespace Cap
 
 @[simp]
-protected theorem nil : C.Cap [] := by rw [Config.Cap] <;> tauto
+protected theorem nil : C.Cap [] := by rw [Config.Cap]; tauto
 
 @[simp]
-protected theorem singleton (a : α) : C.Cap [a] := by rw [Config.Cap] <;> simp
+protected theorem singleton (a : α) : C.Cap [a] := by rw [Config.Cap]; simp
 
 @[simp]
-protected theorem pair {a b : α} : C.Cap [a, b] ↔ a < b := by rw [Config.Cap] <;> simp <;> tauto
+protected theorem pair {a b : α} : C.Cap [a, b] ↔ a < b := by rw [Config.Cap]; simp
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 protected theorem cons3 {a b c : α} {l : List α} :
     C.Cap (a::b::c::l) ↔ a < b ∧ C.Cap3 a b c ∧ C.Cap (b::c::l) := by
-  repeat' rw [Config.Cap] <;> simp <;> tauto
+  repeat' rw [Config.Cap]; simp
+  tauto
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 protected theorem append_cons3 {a b c : α} {l1 l2 : List α} :
     C.Cap (l1 ++ a::b::c::l2) ↔ C.Cap (l1 ++ [a, b]) ∧ C.Cap3 a b c ∧ C.Cap (b::c::l2) :=
   by
   induction' l1 with d l1 l1_ih
-  · simp [Config.Cap] <;> tauto
+  · simp [Config.Cap]; tauto
   cases' l1 with e l1
-  · simp [Config.Cap] <;> tauto
+  · simp [Config.Cap]; tauto
   cases' l1 with f l1
-  · simp [Config.Cap] <;> tauto
+  · simp [Config.Cap]; tauto
   simp; simp at l1_ih; rw [l1_ih]; tauto
 
-protected theorem dropLast {l : List α} (h : C.Cap l) : C.Cap l.dropLast :=
-  by
+protected theorem dropLast {l : List α} (h : C.Cap l) : C.Cap l.dropLast := by
   induction' l with a l
-  · simp [Config.Cap] <;> tauto
+  · simp [Config.Cap]
   cases' l with b l
-  · simp [Config.Cap] <;> tauto
+  · simp [Config.Cap]
   cases' l with c l
   · simp [Config.Cap, List.dropLast] at *
   cases' l with d l
   · simp [Config.Cap, List.dropLast] at *; tauto
   simp [List.dropLast] at *; tauto
 
-protected theorem tail {l : List α} (h : C.Cap l) : C.Cap l.tail :=
-  by
+protected theorem tail {l : List α} (h : C.Cap l) : C.Cap l.tail := by
   induction' l with a l
-  · simp [Config.Cap] <;> tauto
+  · simp [Config.Cap]
   cases' l with b l
-  · simp [Config.Cap] <;> tauto
+  · simp [Config.Cap]
   cases' l with c l
   · simp [Config.Cap] at *
   cases' l with d l
@@ -92,33 +82,42 @@ end NCap
 namespace Cup
 
 @[simp]
-protected theorem nil : C.Cup [] := by rw [Config.Cup] <;> tauto
+protected theorem nil : C.Cup [] := by rw [Config.Cup]; tauto
 
 @[simp]
-protected theorem singleton (a : α) : C.Cup [a] := by rw [Config.Cup] <;> simp
+protected theorem singleton (a : α) : C.Cup [a] := by rw [Config.Cup]; simp
 
 @[simp]
-protected theorem pair {a b : α} : C.Cup [a, b] ↔ a < b := by rw [Config.Cup] <;> simp <;> tauto
+protected theorem pair {a b : α} : C.Cup [a, b] ↔ a < b := by rw [Config.Cup]; simp
 
 @[simp]
 protected theorem cons3 {a b c : α} {l : List α} :
     C.Cup (a::b::c::l) ↔ a < b ∧ C.Cup3 a b c ∧ C.Cup (b::c::l) := by
-  repeat' rw [Config.Cup] <;> simp <;> tauto
+  repeat' rw [Config.Cup]; simp
+  tauto
 
 @[simp]
 protected theorem append_cons3 {a b c : α} {l1 l2 : List α} :
     C.Cup (l1 ++ a::b::c::l2) ↔ C.Cup (l1 ++ [a, b]) ∧ C.Cup3 a b c ∧ C.Cup (b::c::l2) :=
   by
   induction' l1 with d l1 l1_ih
-  · simp [Config.Cup] <;> tauto
+  · simp [Config.Cup]; tauto
   cases' l1 with e l1
-  · simp [Config.Cup] <;> tauto
+  · simp [Config.Cup]; tauto
   cases' l1 with f l1
-  · simp [Config.Cup] <;> tauto
+  · simp [Config.Cup]; tauto
   simp; simp at l1_ih; rw [l1_ih]; tauto
 
 protected theorem dropLast {l : List α} (h : C.Cup l) : C.Cup l.dropLast := by
-  sorry
+  induction' l with a l
+  · simp
+  cases' l with b l
+  · simp
+  cases' l with c l
+  · simp
+  cases' l with d l
+  · simp [Config.Cap, List.dropLast] at *; tauto
+  simp [List.dropLast] at *; tauto
 
 protected theorem take {l : List α} (h : C.Cup l) (n : ℕ) : C.Cup (l.take n) :=
   ⟨h.left.take n, h.right.take n⟩
@@ -135,7 +134,7 @@ theorem head?_lt_getLast? {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤
   cases' l with p l
   · simp at hp
   simp at hp; subst hp
-  have l_nnil : l ≠ [] := by intro h <;> subst h <;> simp at hl <;> exact Nat.lt_asymm hl hl
+  have l_nnil : l ≠ [] := by intro h; subst h; simp at hl
   rcases List.takeLast l_nnil with ⟨q, l', eq_l⟩
   rw [eq_l] at hq; simp at hq; subst hq
   rw [Config.Cup, eq_l] at l_cup
@@ -148,31 +147,27 @@ end Cup
 namespace NCup
 
 @[simp]
-protected theorem nil : C.NCup 0 [] := by rw [Config.NCup, Config.Cup] <;> tauto
+protected theorem nil : C.NCup 0 [] := by rw [Config.NCup, Config.Cup]; tauto
 
 @[simp]
-protected theorem singleton (a : α) : C.NCup 1 [a] := by rw [Config.NCup, Config.Cup] <;> simp
+protected theorem singleton (a : α) : C.NCup 1 [a] := by rw [Config.NCup, Config.Cup]; simp
 
 @[simp]
 protected theorem pair {a b : α} : C.NCup 2 [a, b] ↔ a < b := by
-  rw [Config.NCup, Config.Cup] <;> simp <;> tauto
+  rw [Config.NCup, Config.Cup]; simp
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 protected theorem cons3 {n : ℕ} {a b c : α} {l : List α} :
     C.NCup (n + 1) (a::b::c::l) ↔ a < b ∧ C.Cup3 a b c ∧ C.NCup n (b::c::l) := by
-  repeat' rw [Config.NCup, Config.Cup] <;> simp <;> tauto
+  repeat' rw [Config.NCup, Config.Cup]; simp
+  tauto
 
 protected theorem dropLast {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) : C.NCup n l.dropLast :=
   by
   cases' l with a l
   · simp [Config.NCup, Config.Cup] at h
   simp [Config.NCup] at *; cases' h with hc hl
-  constructor; exact hc.init; assumption
+  constructor; exact hc.dropLast; assumption
 
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -185,7 +180,7 @@ protected theorem init_append_last {n : ℕ} {l : List α} (h : C.NCup (n + 1) l
   have nnil : (a::l) ≠ [] := by simp
   use(a::l).dropLast, (a::l).getLast nnil; constructor
   apply symm; exact List.dropLast_append_getLast nnil
-  exact h.init
+  exact h.dropLast
 
 protected theorem tail {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) : C.NCup n l.tail :=
   by
@@ -199,7 +194,7 @@ protected theorem cons_head_tail {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) 
     ∃ (a : α) (l' : List α), (l = a::l') ∧ C.NCup n l' :=
   by
   cases' l with a l
-  · simp [Config.NCup, Config.Cup] at h; cases h
+  · simp [Config.NCup, Config.Cup] at h
   simp [Config.NCup] at *; cases' h with hc hl
   use a, l; have hc' := hc.tail; simp at hc'; tauto
 
@@ -236,17 +231,15 @@ theorem take_right_with_last {n : ℕ} {l : List α} (h : C.NCup n l) (m : ℕ) 
   · rw [← List.take_append_drop (n - m) l] at l_last
     rw [List.getLast?_append_of_ne_nil] at l_last; exact l_last
     rw [← h.right] at m_le_n
-    intro hnil; rw [← List.reverse_eq_nil_iff, ← h.right, ← List.reverse_take _ m_le_n] at hnil
-    simp at hnil; cases hnil
-    have h' := h.right; subst hnil; simp at h'; subst h'
-    simp at m_le_n; linarith
-    subst hnil; linarith
+    intro hnil; rw [← List.reverse_eq_nil_iff, ← h.right] at hnil
+    simp at hnil
+    omega
 
 theorem head?_lt_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q : α)
     (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
   by
   cases' l_ncup with l_cup l_length
-  apply l_cup.head'_lt_last' p q
+  apply l_cup.head?_lt_getLast? p q
   rw [l_length]; exact le_add_self
   assumption; assumption
 
@@ -254,14 +247,14 @@ theorem head?_lt_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p
 theorem head?_le_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α) (hp : p ∈ l.head?)
     (hq : q ∈ l.getLast?) : p ≤ q :=
   by
-  have l_sorted : l.sorted (· < ·) :=
+  have l_sorted : l.Sorted (· < ·) :=
     by
     rw [List.Sorted, ← List.chain'_iff_pairwise]
     exact l_ncup.left.left
   cases' l_ncup with l_cup l_length
-  cases' l with p l; simp at hp; exfalso; exact hp
+  cases' l with p l; simp at hp
   simp at hp; subst hp
-  cases' l with p' l; simp at hq; subst hq
+  cases' l with p' l; simp at hq; subst hq; exact le_rfl
   rw [List.getLast?_cons_cons] at hq
   set l' := p'::l; clear_value l'
   simp at l_sorted
@@ -276,19 +269,20 @@ end Config
 theorem ncup_is_ngon {n : ℕ} {S : Finset α} (hn : 2 ≤ n) (h : C.HasNCup n S) : C.HasNGon n S :=
   by
   rcases h with ⟨c, ⟨⟨c_cup, c_length⟩, c_in_S⟩⟩
-  have hc : c ≠ [] := by cases c <;> subst c_length <;> simp at hn <;> tauto
+  have hc : c ≠ [] := by cases c; subst c_length; simp at hn; tauto
   rcases List.takeLast hc with ⟨y, c, eq_c⟩; subst eq_c
   have hc : c ≠ [] := by
-    intro h <;> subst c_length <;> subst h <;> simp at hn <;> exact Nat.lt_asymm hn hn
+    intro h; subst c_length; subst h; simp at hn
   rcases List.takeHead hc with ⟨x, c, eq_c⟩; subst eq_c
-  clear hc hc
+  clear hc
   use[x, y], (x::c) ++ [y]
-  refine' ⟨_, _, _⟩ <;> try simp <;> simp at c_in_S <;> tauto
+  refine' ⟨_, _, _⟩; try simp; simp at c_in_S; tauto
   rw [Config.NGon, Config.Gon]; simp
   have hxy : x < y := by
-    apply c_cup.head'_lt_last' x y
-    simp; exact inf_eq_left.mp rfl; simp; simp
+    apply c_cup.head?_lt_getLast? x y <;> simp
   simp at c_length; rw [c_length]; constructor; tauto; linarith
+  simp at c_in_S; simp; tauto
+  exact c_in_S
 
 theorem hasNCap_supset {n : ℕ} {S1 S2 : Finset α} (h : S1 ⊆ S2) (h1 : C.HasNCap n S1) :
     C.HasNCap n S2 := by

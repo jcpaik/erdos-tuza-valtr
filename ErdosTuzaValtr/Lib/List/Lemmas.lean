@@ -51,52 +51,52 @@ variable [LinearOrder α]
 open OrderDual
 
 @[simp]
-theorem List.mirror_nil : ([] : List α).mirror = [] :=
+theorem List.Mirror_nil : ([] : List α).Mirror = [] :=
   rfl
 
 @[simp]
-theorem List.mirror_singleton {a : α} : [a].mirror = [toDual a] :=
+theorem List.Mirror_singleton {a : α} : [a].Mirror = [toDual a] :=
   rfl
 
 @[simp]
-theorem List.mirror_cons {a : α} {l : List α} : (a :: l).mirror = l.mirror ++ [toDual a] := by
-  simp [List.mirror]
+theorem List.Mirror_cons {a : α} {l : List α} : (a :: l).Mirror = l.Mirror ++ [toDual a] := by
+  simp [List.Mirror]
 
 @[simp]
-theorem List.mirror_append {l1 l2 : List α} : (l1 ++ l2).mirror = l2.mirror ++ l1.mirror := by
-  simp [List.mirror]
+theorem List.Mirror_append {l1 l2 : List α} : (l1 ++ l2).Mirror = l2.Mirror ++ l1.Mirror := by
+  simp [List.Mirror]
 
 @[simp]
 theorem List.ofMirror_nil : ([] : List αᵒᵈ).ofMirror = [] :=
   rfl
 
 @[simp]
-theorem List.ofMirror_mirror {l : List αᵒᵈ} : l.ofMirror.mirror = l :=
+theorem List.ofMirrorMirror {l : List αᵒᵈ} : l.ofMirror.Mirror = l :=
   by
   induction' l with a l ih; simp
-  rw [List.ofMirror, List.mirror]; simp
-  rw [List.ofMirror, List.mirror] at ih; simp at ih
+  rw [List.ofMirror, List.Mirror]; simp
+  rw [List.ofMirror, List.Mirror] at ih; simp at ih
   exact ih
 
 @[simp]
-theorem Finset.ofMirror_mirror {S : Finset αᵒᵈ} : S.ofMirror.mirror = S :=
+theorem Finset.ofMirrorMirror {S : Finset αᵒᵈ} : S.ofMirror.Mirror = S :=
   by
-  rw [Finset.ofMirror, Finset.mirror]
+  rw [Finset.ofMirror, Finset.Mirror]
   rw [Finset.image_image]; convert Finset.image_id
   infer_instance
 
 @[simp]
-theorem List.mirror_length {l : List α} : l.mirror.length = l.length := by rw [List.mirror]; simp
+theorem List.Mirror_length {l : List α} : l.Mirror.length = l.length := by rw [List.Mirror]; simp
 
-theorem List.chain'_mirror {l : List α} : List.Chain' (· < ·) l.mirror ↔ List.Chain' (· < ·) l := by
-  simp_rw [List.mirror, List.chain'_reverse, List.chain'_map, flip, toDual_lt_toDual]
+theorem List.chain'_mirror {l : List α} : List.Chain' (· < ·) l.Mirror ↔ List.Chain' (· < ·) l := by
+  simp_rw [List.Mirror, List.chain'_reverse, List.chain'_map, flip, toDual_lt_toDual]
 
-theorem List.mirror_getLast? {l : List α} : l.mirror.getLast? = Option.map toDual l.head? := by
-  rw [List.mirror] <;> cases l <;> simp <;> tauto
+theorem List.Mirror_getLast? {l : List α} : l.Mirror.getLast? = Option.map toDual l.head? := by
+  rw [List.Mirror] <;> cases l <;> simp <;> tauto
 
-theorem List.mirror_head? {l : List α} : l.mirror.head? = Option.map toDual l.getLast? :=
+theorem List.Mirror_head? {l : List α} : l.Mirror.head? = Option.map toDual l.getLast? :=
   by
-  rw [List.mirror, List.reverse_head?]
+  rw [List.Mirror, List.reverse_head?]
   -- quick-and-dirty proof
   induction' l with a l ih;
   simp
@@ -115,12 +115,12 @@ theorem List.ofMirror_head? {l : List αᵒᵈ} : l.ofMirror.head? = Option.map 
   simp; cases' l with b l; simp
   simp; simp at ih; exact ih
 
-theorem List.mirror_mem_getLast? {a : α} {l : List α} :
-    toDual a ∈ l.mirror.getLast? ↔ a ∈ l.head? := by rw [List.mirror] <;> cases l <;> simp
+theorem List.Mirror_mem_getLast? {a : α} {l : List α} :
+    toDual a ∈ l.Mirror.getLast? ↔ a ∈ l.head? := by rw [List.Mirror] <;> cases l <;> simp
 
-theorem List.mirror_mem_head? {a : α} {l : List α} : toDual a ∈ l.mirror.head? ↔ a ∈ l.getLast? :=
+theorem List.Mirror_mem_head? {a : α} {l : List α} : toDual a ∈ l.Mirror.head? ↔ a ∈ l.getLast? :=
   by
-  rw [List.mirror, List.reverse_head?]
+  rw [List.Mirror, List.reverse_head?]
   -- quick-and-dirty proof
   induction' l with a l ih;
   simp
@@ -128,20 +128,20 @@ theorem List.mirror_mem_head? {a : α} {l : List α} : toDual a ∈ l.mirror.hea
   simp; simp at ih; exact ih
 
 @[simp]
-theorem List.mirror_in {l : List α} {S : Finset α} : l.mirror.In S.mirror ↔ l.In S :=
+theorem List.Mirror_in {l : List α} {S : Finset α} : l.Mirror.In S.Mirror ↔ l.In S :=
   by
-  rw [List.mirror]; simp; constructor
-  · simp [List.In, Finset.mirror, HasSubset.Subset]
-  · simp [List.In, Finset.mirror]
+  rw [List.Mirror]; simp; constructor
+  · simp [List.In, Finset.Mirror, HasSubset.Subset]
+  · simp [List.In, Finset.Mirror]
 
 @[simp]
-theorem Finset.mem_mirror {a : α} {S : Finset α} : toDual a ∈ S.mirror ↔ a ∈ S := by
-  simp [Finset.mirror]
+theorem Finset.memMirror {a : α} {S : Finset α} : toDual a ∈ S.Mirror ↔ a ∈ S := by
+  simp [Finset.Mirror]
 
 @[simp]
-theorem Finset.mirror_card {S : Finset α} : S.mirror.card = S.card :=
+theorem Finset.Mirror_card {S : Finset α} : S.Mirror.card = S.card :=
   by
-  rw [Finset.mirror]
+  rw [Finset.Mirror]
   apply S.card_image_of_injective
   intro a b; simp
 

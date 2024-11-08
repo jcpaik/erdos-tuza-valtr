@@ -1,6 +1,6 @@
 import Mathlib.Data.Finset.Basic
 import ErdosTuzaValtr.Lib.Core.Rel3
-import Mathlib.Config.Default
+import ErdosTuzaValtr.Config.Default
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 
@@ -89,14 +89,14 @@ variable (label)
 
 open OrderDual
 
-protected def Config.Label.mirror : C.mirror.Label S.mirror :=
+protected def Config.Label.Mirror : C.Mirror.Label S.Mirror :=
   ⟨fun a b => ¬Mirror2 label.Slope a b, fun a b =>
     @Not.decidable _ (label.decidableSlope.Mirror2 a b),
     by
     intro a b a_in_S b_in_S hab hslope c c_in_S hbc
     simp [Mirror2] at hslope
-    simp [Config.mirror, Mirror3]
-    simp [Finset.mirror] at a_in_S b_in_S c_in_S
+    simp [Config.Mirror, Mirror3]
+    simp [Finset.Mirror] at a_in_S b_in_S c_in_S
     rcases a_in_S with ⟨oa, ⟨oa_in_S, oa_eq⟩⟩
     rcases b_in_S with ⟨ob, ⟨ob_in_S, ob_eq⟩⟩
     rcases c_in_S with ⟨oc, ⟨oc_in_S, oc_eq⟩⟩
@@ -110,8 +110,8 @@ protected def Config.Label.mirror : C.mirror.Label S.mirror :=
     by
     intro a b a_in_S b_in_S hab hslope c c_in_S hca
     simp [Mirror2] at hslope
-    simp [Config.mirror, Mirror3]
-    simp [Finset.mirror] at a_in_S b_in_S c_in_S
+    simp [Config.Mirror, Mirror3]
+    simp [Finset.Mirror] at a_in_S b_in_S c_in_S
     rcases a_in_S with ⟨oa, ⟨oa_in_S, oa_eq⟩⟩
     rcases b_in_S with ⟨ob, ⟨ob_in_S, ob_eq⟩⟩
     rcases c_in_S with ⟨oc, ⟨oc_in_S, oc_eq⟩⟩
@@ -125,7 +125,7 @@ protected def Config.Label.mirror : C.mirror.Label S.mirror :=
 
 variable {label}
 
-def mirror_slope {a b : α} : ¬label.mirror.Slope (toDual b) (toDual a) ↔ label.Slope a b :=
+def Mirror_slope {a b : α} : ¬label.Mirror.Slope (toDual b) (toDual a) ↔ label.Slope a b :=
   by
-  rw [Config.Label.mirror]; simp
+  rw [Config.Label.Mirror]; simp
   rw [Mirror2]; simp

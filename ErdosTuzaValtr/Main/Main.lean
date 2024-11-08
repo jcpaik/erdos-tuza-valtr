@@ -16,13 +16,13 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 
 open OrderDual
 
-theorem Config.mirror_mainGoal (n : ℕ) : C.MainGoal n → C.mirror.MainGoal n :=
+theorem Config.Mirror_mainGoal (n : ℕ) : C.MainGoal n → C.Mirror.MainGoal n :=
   by
   intro h Sm hSm cap4_free cup_free
-  have eq_S : Sm.of_mirror.mirror = Sm := Finset.ofMirror_mirror
+  have eq_S : Sm.ofMirror.Mirror = Sm := Finset.ofMirrorMirror
   rw [← eq_S] at hSm cap4_free cup_free ⊢
-  set S := Sm.of_mirror
-  rw [Finset.mirror_card] at hSm
+  set S := Sm.ofMirror
+  rw [Finset.Mirror_card] at hSm
   rw [Mirror.hasNCap] at cap4_free
   rw [Mirror.hasNCup] at cup_free
   have goal := h S hSm cap4_free cup_free
@@ -55,14 +55,14 @@ theorem Config.main_lemma (n : ℕ) : C.MainGoal n :=
     by_cases join_n3_n2 : C.has_join (n + 3) (n + 2) S; swap
     · apply C.main_induction_wlog <;> assumption
     by_cases join_n2_n3 : C.has_join (n + 2) (n + 3) S; swap
-    · rw [← Finset.mirror_card] at hS
+    · rw [← Finset.Mirror_card] at hS
       rw [← Mirror.hasJoin] at join_n2_n3
       rw [← Mirror.hasNCap] at cap4_free
       rw [← Mirror.hasNCup] at cup_free
-      have mirrored_goal :=
-        C.mirror.main_induction_wlog n (C.mirror_main_goal n ih) S.mirror join_n2_n3 hS cap4_free
+      have Mirrored_goal :=
+        C.Mirror.main_induction_wlog n (C.Mirror_main_goal n ih) S.Mirror join_n2_n3 hS cap4_free
           cup_free
-      rcases mirrored_goal with ⟨sm, rm, qm, pm, mgoal⟩
+      rcases Mirrored_goal with ⟨sm, rm, qm, pm, mgoal⟩
       have eq_p := pm.to_dual_of_dual; set p := pm.of_dual
       have eq_q := qm.to_dual_of_dual; set q := qm.of_dual
       have eq_r := rm.to_dual_of_dual; set r := rm.of_dual

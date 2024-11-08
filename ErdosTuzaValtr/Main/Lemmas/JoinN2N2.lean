@@ -55,15 +55,15 @@ theorem Config.join_n2_n2_case_tt (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
     (hc1 : C.NCup (n + 2) (c1 ++ [a, x])) (c1_in_S : c1.In S) (hc2 : C.NCup (n + 2) (x::b::c2))
     (c2_in_S : c2.In S) (hab : lab.Slope a b) : C.HasNGon (n + 3) S :=
   by
-  rw [← Finset.mem_mirror] at a_in_S x_in_S b_in_S
+  rw [← Finset.memMirror] at a_in_S x_in_S b_in_S
   rw [← Mirror.ncup] at hc1 hc2
-  rw [← List.mirror_in] at c1_in_S c2_in_S
+  rw [← List.Mirror_in] at c1_in_S c2_in_S
   simp at hc1 hc2
-  have hba := hab; rw [← mirror_slope] at hba
-  have mirrored_goal :=
-    C.mirror.join_n2_n2_case_ff S.mirror n (to_dual b) (to_dual x) (to_dual a) c2.mirror c1.mirror
-      lab.mirror b_in_S x_in_S a_in_S hc2 c2_in_S hc1 c1_in_S hba
-  rw [Mirror.hasNGon] at mirrored_goal
+  have hba := hab; rw [← Mirror_slope] at hba
+  have Mirrored_goal :=
+    C.Mirror.join_n2_n2_case_ff S.Mirror n (to_dual b) (to_dual x) (to_dual a) c2.Mirror c1.Mirror
+      lab.Mirror b_in_S x_in_S a_in_S hc2 c2_in_S hc1 c1_in_S hba
+  rw [Mirror.hasNGon] at Mirrored_goal
   tauto
 
 theorem Config.join_n2_n2 (S : Finset α) {n : ℕ} (cap4_free : ¬C.HasNCap 4 S) {c1 : List α}

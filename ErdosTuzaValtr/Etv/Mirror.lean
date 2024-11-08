@@ -1,63 +1,61 @@
 import Mathlib.Project.Config.Default
 import ErdosTuzaValtr.Etv.Defs
 
-#align_import ErdosTuzaValtr.Etv.mirror
-
 open OrderDual
 
 variable {α : Type _} [LinearOrder α] {C : Config α}
 
 def Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
-    C.mirror.HasLaced n S.mirror (toDual q) (toDual p) ↔ C.HasLaced n S p q :=
+    C.Mirror.HasLaced n S.Mirror (toDual q) (toDual p) ↔ C.HasLaced n S p q :=
   by
   constructor
   · intro h; rcases h with ⟨b, a, cqm, cm, cpm, hcqm, hcm, hcpm, h⟩
-    rw [← @List.ofMirror_mirror _ _ cpm] at hcpm h
-    set cp := cpm.of_mirror with eq_cp
+    rw [← @List.ofMirrorMirror _ _ cpm] at hcpm h
+    set cp := cpm.ofMirror with eq_cp
     rw [Mirror.ncup] at hcpm
-    rw [← @List.ofMirror_mirror _ _ cm] at hcm h
-    set c := cm.of_mirror with eq_c
+    rw [← @List.ofMirrorMirror _ _ cm] at hcm h
+    set c := cm.ofMirror with eq_c
     rw [Mirror.ncup] at hcm
-    rw [← @List.ofMirror_mirror _ _ cqm] at hcqm h
-    set cq := cqm.of_mirror with eq_cq
+    rw [← @List.ofMirrorMirror _ _ cqm] at hcqm h
+    set cq := cqm.ofMirror with eq_cq
     rw [Mirror.ncup] at hcqm
     use a, b, cp, c, cq, hcpm, hcm, hcqm
-    repeat' rw [List.mirror_in] at h
-    simp [List.mirror_getLast?, List.mirror_head?] at h
+    repeat' rw [List.Mirror_in] at h
+    simp [List.Mirror_getLast?, List.Mirror_head?] at h
     rw [Nat.add_comm a b, eq_cp, eq_c, eq_cq]
     simp [List.ofMirror_getLast?, List.ofMirror_head?]; tauto
   · intro h; rcases h with ⟨a, b, cp, c, cq, hcp, hc, hcq, h⟩
-    use b, a, cq.mirror, c.mirror, cp.mirror
+    use b, a, cq.Mirror, c.Mirror, cp.Mirror
     refine' ⟨_, _, _, _⟩ <;> try rw [Mirror.ncup] <;> tauto
-    repeat' rw [List.mirror_mem_getLast?, List.mirror_mem_head?]
+    repeat' rw [List.Mirror_mem_getLast?, List.Mirror_mem_head?]
     simp; simp at h; rw [Nat.add_comm b a]; tauto
 
 def Mirror.hasInterweavedLaced {n : ℕ} {S : Finset α} (p q r s : α) :
-    C.mirror.HasInterweavedLaced n S.mirror (toDual s) (toDual r) (toDual q) (toDual p) ↔
+    C.Mirror.HasInterweavedLaced n S.Mirror (toDual s) (toDual r) (toDual q) (toDual p) ↔
       C.HasInterweavedLaced n S p q r s :=
   by
   simp [Config.HasInterweavedLaced, Mirror.hasLaced]
   tauto
 
-def Mirror.hasJoin {a b : ℕ} {S : Finset α} : C.mirror.HasJoin b a S.mirror ↔ C.HasJoin a b S :=
+def Mirror.hasJoin {a b : ℕ} {S : Finset α} : C.Mirror.HasJoin b a S.Mirror ↔ C.HasJoin a b S :=
   by
   constructor
   · intro h; rcases h with ⟨pm, crm, clm, ⟨crm_cup, crm_in, crm_last⟩, ⟨clm_cup, clm_in, clm_head⟩⟩
     have eq_p := OrderDual.toDual_ofDual pm
-    have eq_cl := @List.ofMirror_mirror _ _ clm
-    have eq_cr := @List.ofMirror_mirror _ _ crm
+    have eq_cl := @List.ofMirrorMirror _ _ clm
+    have eq_cr := @List.ofMirrorMirror _ _ crm
     set p := pm.of_dual
-    set cl := clm.of_mirror; set cr := crm.of_mirror
+    set cl := clm.ofMirror; set cr := crm.ofMirror
     use p, cl, cr
     rw [← eq_p] at clm_head crm_last
     rw [← eq_cl] at clm_cup clm_in clm_head
     rw [← eq_cr] at crm_cup crm_in crm_last
     rw [Mirror.ncup] at clm_cup crm_cup
-    rw [List.mirror_in] at clm_in crm_in
-    rw [List.mirror_mem_head?] at clm_head
-    rw [List.mirror_mem_getLast?] at crm_last; tauto
+    rw [List.Mirror_in] at clm_in crm_in
+    rw [List.Mirror_mem_head?] at clm_head
+    rw [List.Mirror_mem_getLast?] at crm_last; tauto
   · intro h; rcases h with ⟨p, cl, cr, ⟨cl_cup, cl_in, cl_head⟩, ⟨cr_cup, cr_in, cr_last⟩⟩
-    use to_dual p, cr.mirror, cl.mirror
-    rw [List.mirror_mem_getLast?, List.mirror_mem_head?]
-    simp only [List.mirror_in, Mirror.ncup, Option.mem_def]
+    use to_dual p, cr.Mirror, cl.Mirror
+    rw [List.Mirror_mem_getLast?, List.Mirror_mem_head?]
+    simp only [List.Mirror_in, Mirror.ncup, Option.mem_def]
     tauto

@@ -132,18 +132,18 @@ theorem Config.join_n2_n3_n2_tt (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
     (hyR : C.NCup (n + 2) (y::R)) (yR_in_S : (y::R).In S) (label : C.Label S)
     (sxy : label.Slope x y) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s :=
   by
-  have mirrored_goal : ∃ s r q p, C.mirror.has_interweaved_laced (n + 3) S.mirror s r q p :=
+  have Mirrored_goal : ∃ s r q p, C.Mirror.has_interweaved_laced (n + 3) S.Mirror s r q p :=
     by
     rw [← Mirror.ncup] at hPx hxQy hyR; simp at hPx hxQy hyR
     rw [← Mirror.hasNCap] at cap4_free
-    rw [← List.mirror_in] at Px_in_S xQy_in_S yR_in_S
+    rw [← List.Mirror_in] at Px_in_S xQy_in_S yR_in_S
     simp [-List.cons_in, -List.append_in] at Px_in_S xQy_in_S yR_in_S
-    have syx := sxy; rw [← mirror_slope] at syx
+    have syx := sxy; rw [← Mirror_slope] at syx
     apply
-        C.mirror.join_n2_n3_n2_ff _ _ (to_dual y) (to_dual x) hyR _ hxQy _ hPx _ label.mirror _ <;>
+        C.Mirror.join_n2_n3_n2_ff _ _ (to_dual y) (to_dual x) hyR _ hxQy _ hPx _ label.Mirror _ <;>
       assumption
-  simp at mirrored_goal
-  rcases mirrored_goal with ⟨s, r, q, p, h⟩
+  simp at Mirrored_goal
+  rcases Mirrored_goal with ⟨s, r, q, p, h⟩
   rw [Mirror.hasInterweavedLaced] at h
   use p, q, r, s; exact h
 

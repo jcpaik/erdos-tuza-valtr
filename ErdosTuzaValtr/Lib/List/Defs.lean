@@ -8,7 +8,7 @@ variable {α : Type _}
 protected def List.In (l : List α) (S : Finset α) : Prop :=
   ∀ a : α, a ∈ l → a ∈ S
 
-protected def Finset.mirror [LinearOrder α] (S : Finset α) : Finset αᵒᵈ :=
+protected def Finset.Mirror [LinearOrder α] (S : Finset α) : Finset αᵒᵈ :=
   Finset.image OrderDual.toDual S
 
 protected def Finset.ofMirror [LinearOrder α] (S : Finset αᵒᵈ) : Finset α :=
@@ -17,7 +17,7 @@ protected def Finset.ofMirror [LinearOrder α] (S : Finset αᵒᵈ) : Finset α
 namespace List
 
 -- Local notion for flipping a list of elements, together with its order
-protected def mirror [LinearOrder α] (l : List α) : List αᵒᵈ :=
+protected def Mirror [LinearOrder α] (l : List α) : List αᵒᵈ :=
   (List.map OrderDual.toDual l).reverse
 
 protected def ofMirror [LinearOrder α] (l : List αᵒᵈ) : List α :=

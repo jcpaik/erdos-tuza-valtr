@@ -3,8 +3,6 @@ import Mathlib.Data.Finset.Basic
 import ErdosTuzaValtr.Config.Default
 import ErdosTuzaValtr.Etv.Default
 
-#align_import ErdosTuzaValtr.Main.defs
-
 open scoped Classical
 
 noncomputable section

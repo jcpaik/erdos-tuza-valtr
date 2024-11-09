@@ -5,8 +5,6 @@ import ErdosTuzaValtr.Etv.Default
 import ErdosTuzaValtr.Main.Defs
 import ErdosTuzaValtr.Main.Lemmas.Default
 
-#align_import ErdosTuzaValtr.Main.induction_step
-
 open scoped Classical
 
 noncomputable section
@@ -16,19 +14,19 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 namespace Config
 
 def delta (n : ℕ) (S : Finset α) : Finset α :=
-  S.filterₓ fun p => C.beta S p < n ∧ ↑p = (S.filterₓ fun q => C.beta S q = C.beta S p).min
+  S.filter fun p => C.beta S p < n ∧ p = (S.filter fun q => C.beta S q = C.beta S p).min
 
 theorem delta_card (n : ℕ) (S : Finset α) : (C.delta n S).card ≤ n :=
   by
   rw [← Finset.card_range n]
-  apply Finset.card_le_card_of_inj_on (C.beta S)
+  apply Finset.card_le_card_of_injOn (C.beta S)
   · rw [delta]; intro a; rw [Finset.mem_filter]
     intro h; rcases h with ⟨_, h', _⟩; simp at h' ⊢; exact h'
   · intro x hx y hy hxy
-    rw [delta] at hx hy; simp only [Finset.mem_filter] at hx hy
+    rw [delta, Finset.mem_coe, Finset.mem_filter] at hx hy
     rcases hx with ⟨x_in_S, bx_lt_n, x_min⟩
     rcases hy with ⟨y_in_S, by_lt_n, y_min⟩
-    rw [← WithBot.coe_eq_coe, x_min, y_min, hxy]
+    rw [← WithTop.coe_eq_coe, x_min, y_min, hxy]
 
 theorem not_mem_delta {n : ℕ} {S : Finset α} {p' : α} (h : p' ∈ S \ C.delta n S) :
     n ≤ C.beta S p' ∨ ∃ p, p ∈ C.delta n S ∧ C.beta S p = C.beta S p' ∧ p < p' :=
@@ -37,10 +35,10 @@ theorem not_mem_delta {n : ℕ} {S : Finset α} {p' : α} (h : p' ∈ S \ C.delt
   cases' h with p'_in_S aux; have h := aux p'_in_S; clear aux
   by_cases bp_n : C.beta S p' < n; swap
   · left; exact not_lt.mp bp_n
-  cases h; exact absurd bp_n h
+  rcases h with h | h; exact absurd bp_n h
   right
   set row := S.filter fun q => C.beta S q = C.beta S p' with def_row
-  have row_nonempty : row.nonempty := by
+  have row_nonempty : row.Nonempty := by
     use p'; rw [def_row]; rw [Finset.mem_filter]
     constructor; assumption; exact rfl
   have row_in_S : row ⊆ S := Finset.filter_subset _ _
@@ -59,10 +57,10 @@ theorem not_mem_delta {n : ℕ} {S : Finset α} {p' : α} (h : p' ∈ S \ C.delt
     refine' ⟨row_in_S p_in_row, bp_n, _⟩
     rw [def_p]; exact Finset.coe_min' _
   · rw [← Finset.coe_min' row_nonempty] at h
-    suffices p_le_p' : p ≤ p'
-    · rw [le_iff_lt_or_eq] at p_le_p'
-      cases p_le_p'
-      assumption; exfalso; apply h; rw [← def_p, p_le_p']
+    suffices p_le_p' : p ≤ p' by
+      rw [le_iff_lt_or_eq] at p_le_p'
+      rcases p_le_p' with p_lt_p' | p_eq_p'
+      assumption; exfalso; apply h; rw [← def_p, p_eq_p']
     rw [def_p]; exact Finset.min'_le _ _ p'_in_row
 
 theorem find_join {n : ℕ} {S : Finset α} (l : C.Label S) (cup_free : ¬C.HasNCup (n + 4) S)
@@ -71,7 +69,7 @@ theorem find_join {n : ℕ} {S : Finset α} (l : C.Label S) (cup_free : ¬C.HasN
     (le_m : n + 2 ≤ m) (ho : n + 2 ≤ C.beta S o) : False :=
   by
   rw [le_iff_lt_or_eq] at o_le_p; cases' o_le_p with o_lt_p o_eq_p
-  · rcases C.beta_cup S o_in_S with ⟨d, d_in_S, d_ncup, d_last⟩
+  · rcases C.betaCup S o_in_S with ⟨d, d_in_S, d_ncup, d_last⟩
     by_cases sop : l.Slope o p
     · apply cup_free
       have dp_ncup := d_ncup.extend_right sop o_lt_p p_in_S d_in_S d_last
@@ -79,28 +77,26 @@ theorem find_join {n : ℕ} {S : Finset α} (l : C.Label S) (cup_free : ¬C.HasN
       apply hasNCup_le ineq; use d ++ [p]
       constructor; exact dp_ncup; simp; tauto
     · apply no_join
-      rcases d_ncup.take_right_with_last (n + 3) o (by decide) (by linarith) d_last with
+      rcases d_ncup.take_right_with_last (n + 3) o (by simp) (by linarith) d_last with
         ⟨d', d'_in_d, d'_ncup, d'_last⟩
       have oc_ncup := c_ncup.extend_left sop o_in_S o_lt_p c_in_S c_head
-      rcases oc_ncup.take_left_with_head (n + 2) o (by decide) (by linarith) (by simp) with
+      rcases oc_ncup.take_left_with_head (n + 2) o (by simp) (by linarith) (by simp) with
         ⟨c', c'_in_oc, c'_ncup, c'_head⟩
       use o, d', c'
       have d'_in_S := List.subset_in d'_in_d d_in_S
       have c'_in_S := List.subset_in c'_in_oc (by simp <;> tauto)
       tauto
   · subst o_eq_p; apply no_join
-    rcases C.beta_cup S o_in_S with ⟨d, d_in_S, d_ncup, d_last⟩
-    rcases d_ncup.take_right_with_last (n + 3) o (by decide) (by linarith) d_last with
+    rcases C.betaCup S o_in_S with ⟨d, d_in_S, d_ncup, d_last⟩
+    rcases d_ncup.take_right_with_last (n + 3) o (by simp) (by linarith) d_last with
       ⟨d', d'_in_d, d'_ncup, d'_last⟩
-    rcases c_ncup.take_left_with_head (n + 2) o (by decide) (by linarith) c_head with
+    rcases c_ncup.take_left_with_head (n + 2) o (by simp) (by linarith) c_head with
       ⟨c', c'_in_c, c'_ncup, c'_head⟩
     use o, d', c'
     have d'_in_S := List.subset_in d'_in_d d_in_S
     have c'_in_S := List.subset_in c'_in_c c_in_S
     tauto
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : ¬C.HasNCup (n + 4) S)
     (def_D : D = C.delta (n + 2) S) (no_join : ¬C.HasJoin (n + 3) (n + 2) S) {p' r : α}
     (p'r_laced : C.HasLaced (n + 2) (S \ D) p' r) :
@@ -111,12 +107,14 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
     ⟨a, b, cp', c, cr, cp'_cup, c_cup, cr_cup, ⟨cp'_in_SD, c_in_SD, cr_in_SD⟩, eq_ab, cp'_last,
       c_head, c_last, cr_head⟩
   have p'_in_SD := c_in_SD _ (List.mem_of_mem_head? c_head)
-  have p'_in_S := (Finset.sdiff_subset S D) p'_in_SD
-  have c_in_S := List.in_superset (Finset.sdiff_subset S D) c_in_SD
-  have cr_in_S := List.in_superset (Finset.sdiff_subset S D) cr_in_SD
+  have p'_in_S := Finset.sdiff_subset p'_in_SD
+  have c_in_S := List.in_superset Finset.sdiff_subset c_in_SD
+  have cr_in_S := List.in_superset Finset.sdiff_subset cr_in_SD
   rw [def_D] at p'_in_SD
   rcases C.not_mem_delta p'_in_SD with (p'_beta | ⟨p, p_in_delta, eq_p, p_lt_p'⟩)
   · exfalso; apply C.find_join l cup_free no_join p' p' c <;> try assumption <;> try simp
+    simp
+    simp
   have p_in_S : p ∈ S := by rw [delta, Finset.mem_filter] at p_in_delta; exact p_in_delta.left
   have ap_lt_ap' := (l.beta_eq_alpha_inc p_in_S p'_in_S eq_p).mp p_lt_p'
   have ap' : l.alpha p' = 1 :=
@@ -130,37 +128,38 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
   · have a_le_bp : a ≤ C.beta S p := by
       rw [eq_p]
       -- Take the head o' of cp'
-      have cp'_nnil : cp' ≠ [] := by intro h; subst h; simp at cp'_last; exact cp'_last
+      have cp'_nnil : cp' ≠ [] := by intro h; subst h; simp at cp'_last
       rcases List.takeHead cp'_nnil with ⟨o', cp'', eq_cp'⟩
       have o'_le_p' : o' ≤ p' :=
-        cp'_cup.head'_le_last' o' p' (by rw [eq_cp'] <;> simp) (by assumption)
+        cp'_cup.head?_le_getLast? o' p' (by rw [eq_cp'] <;> simp) (by assumption)
       have o'_in_SD : o' ∈ S \ D := by apply cp'_in_SD <;> rw [eq_cp'] <;> simp
-      have o'_in_S : o' ∈ S := (Finset.sdiff_subset S D) o'_in_SD
+      have o'_in_S : o' ∈ S := Finset.sdiff_subset o'_in_SD
       rw [def_D] at o'_in_SD
       -- Locate o in delta having the same row as o'
       rcases C.not_mem_delta o'_in_SD with (le_beta | ⟨o, o_in_delta, eq_o, o_lt_o'⟩)
       · exfalso; apply C.find_join l cup_free no_join o' p' c <;> try assumption <;> try simp
+        simp
       have o_in_S : o ∈ S := by
         rw [Config.delta] at o_in_delta <;> exact Finset.mem_of_mem_filter _ o_in_delta
       -- Show that the slope of o and o' is ff
       by_cases soo' : l.Slope o o'
       · have inc := slope_tt_inc_beta soo' o_in_S o'_in_S o_lt_o'
-        rw [eq_o] at inc; simp at inc; exfalso; assumption
+        rw [eq_o] at inc; simp at inc
       -- extend cp' to left with o
-      have cp'_in_S := List.in_superset (Finset.sdiff_subset S D) cp'_in_SD
+      have cp'_in_S := List.in_superset Finset.sdiff_subset cp'_in_SD
       have ocp'_cup : C.NCup (a + 1) (o::cp') :=
         by
         apply cp'_cup.extend_left soo' <;> try assumption
         rw [eq_cp']; simp
-      apply @Nat.le_of_add_le_add_right 1; rw [← ocp'_cup.right]
+      apply Nat.le_of_add_le_add_right; rw [← ocp'_cup.right]
       apply C.cup_length_le_beta
       simp; constructor <;> assumption; exact ocp'_cup.left
       apply List.mem_getLast?_cons; assumption
     rw [Config.HasLaced]
-    rcases C.beta_cup S p_in_S with ⟨cp, cp_in_S, cp_cup, cp_last⟩
-    rcases cp_cup.take_right_with_last (a + 1) p (by decide) (by linarith) cp_last with
+    rcases C.betaCup S p_in_S with ⟨cp, cp_in_S, cp_cup, cp_last⟩
+    rcases cp_cup.take_right_with_last (a + 1) p (by simp) (by linarith) cp_last with
       ⟨dp, dp_in_cp, dp_cup, dp_last⟩
-    have dp_in_S : dp.in S := List.subset_in dp_in_cp cp_in_S
+    have dp_in_S : dp.In S := List.subset_in dp_in_cp cp_in_S
     have spp' : ¬l.Slope p p' := by
       intro spp'
       have ineq := slope_tt_inc_beta spp' p_in_S p'_in_S p_lt_p'; linarith
@@ -173,35 +172,37 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
 theorem main_induction_wlog (n : ℕ) : C.MainGoal n → C.MainGoalWlog (n + 1) :=
   by
   intro ih S no_join S_card cap4_free cup_free
-  have l : C.label S := cap4FreeLabel cap4_free
+  have l : C.Label S := cap4FreeLabel cap4_free
   set D := C.delta (n + 2) S with def_D
   have D_card := C.delta_card (n + 2) S; rw [← def_D] at D_card
   have SD_card : (n + 2).choose 2 + 2 ≤ (S \ D).card :=
     by
-    apply @Nat.le_of_add_le_add_right D.card
+    apply Nat.le_of_add_le_add_right
     rw [Finset.card_sdiff_add_card]
-    apply le_trans _ (Finset.card_le_card (Finset.subset_union_left S D))
+    apply le_trans _ (Finset.card_le_card Finset.subset_union_left)
     apply le_trans _ S_card
     apply le_trans (Nat.add_le_add_left D_card _) _
     rw [Nat.add_right_comm]; apply le_of_eq
     rw [Nat.add_right_comm n 1 2]; simp; apply symm; rw [Nat.choose]; simp
     rw [Nat.add_comm]
-  have t := ih (S \ D) SD_card _ _
+  have t := ih (S \ D) SD_card ?_ ?_
   swap;
   · intro h; rcases h with ⟨c, ⟨_, c_in⟩⟩
     apply cap4_free; use c; constructor; assumption
-    apply List.in_superset _ c_in; exact Finset.sdiff_subset S D
+    apply List.in_superset _ c_in; exact Finset.sdiff_subset
   swap;
   · intro h; rcases h with ⟨c, ⟨c_cup, c_in⟩⟩
     rcases c_cup.cons_head_tail with ⟨p, c', eq_c, -⟩
     have p_in_c : p ∈ c := by rw [eq_c] <;> left <;> exact rfl
     have p_in_SD : p ∈ S \ D := c_in _ p_in_c
     rw [def_D] at p_in_SD
-    have p_in_S : p ∈ S := (Finset.sdiff_subset S D) p_in_SD
-    have c_in_S : c.in S := fun a ha => (Finset.sdiff_subset S D) (c_in a ha)
+    have p_in_S : p ∈ S := Finset.sdiff_subset p_in_SD
+    have c_in_S : c.In S := fun a ha => Finset.sdiff_subset (c_in a ha)
     rcases C.not_mem_delta p_in_SD with (le_bp | ⟨o, o_in_delta, bo_eq_bp, o_lt_p⟩)
     · apply C.find_join l cup_free no_join p p c <;> try assumption <;> try simp
+      simp
       rw [eq_c]; simp
+      simp
     · have o_in_S : o ∈ S := by
         rw [delta, Finset.mem_filter] at o_in_delta
         exact o_in_delta.left
@@ -216,8 +217,8 @@ theorem main_induction_wlog (n : ℕ) : C.MainGoal n → C.MainGoalWlog (n + 1) 
       ⟨aq', ⟨q, qs_laced, q_lt_q', aq, bq⟩⟩
     rcases pr_laced.mem_ends with ⟨p_in_S, r_in_S⟩
     rcases qs_laced.mem_ends with ⟨q_in_S, s_in_S⟩
-    have p'_in_S := (Finset.sdiff_subset S D) p'r_laced.mem_ends.left
-    have q'_in_S := (Finset.sdiff_subset S D) q's_laced.mem_ends.left
+    have p'_in_S := Finset.sdiff_subset p'r_laced.mem_ends.left
+    have q'_in_S := Finset.sdiff_subset q's_laced.mem_ends.left
     refine' ⟨p, q, r, s, ⟨⟨_, _, r_lt_s⟩, pr_laced, qs_laced⟩⟩
     · have ap_eq_aq := Eq.trans ap aq.symm
       rw [C.alpha_eq_beta_inc p_in_S q_in_S ap_eq_aq]

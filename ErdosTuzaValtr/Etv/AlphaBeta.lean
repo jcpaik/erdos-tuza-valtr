@@ -85,7 +85,6 @@ def cup_length_le_alpha {a : α} {c : List α} (c_in_S : c.In S) (c_sorted : c.S
     · refine' ⟨_, _, _⟩ <;> assumption
   exact List.le_of_mem_argmax c'_alpha_cup h_argmax
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem add_alpha {a : α} (ha : a ∈ S) {n : ℕ} {c : List α} (c_in_S : c.In S) (c_cup : C.NCup n c)
     (c_head : a ∈ c.head?) : C.HasNCup (n + l.alpha a) S :=
   by

@@ -169,7 +169,7 @@ protected theorem dropLast {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) : C.NC
   simp [Config.NCup] at *; cases' h with hc hl
   constructor; exact hc.dropLast; assumption
 
-protected theorem init_append_last {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) :
+protected theorem dropLast_append_last {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) :
     ∃ (l' : List α) (a : α), l = l' ++ [a] ∧ C.NCup n l' :=
   by
   cases' l with a l

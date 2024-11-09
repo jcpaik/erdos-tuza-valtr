@@ -3,14 +3,10 @@ import ErdosTuzaValtr.Lib.List.Default
 import ErdosTuzaValtr.Etv.Default
 import ErdosTuzaValtr.Main.Lemmas.JoinN2N2
 
-#align_import ErdosTuzaValtr.Main.lemmas.interweaved_laced_ngon
-
 open OrderDual
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Config.hasInterweavedLaced_hasNGon_ff {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
     {p q r s : α} (label : C.Label S) (q_lt_r : q < r) (sqr : ¬label.Slope q r) :
     C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
@@ -41,21 +37,21 @@ theorem Config.hasInterweavedLaced_hasNGon_ff {n : ℕ} {S : Finset α} (cap4_fr
     apply hc2.extend_left spq <;> assumption
     simp; tauto
   -- (spq : ¬label.Slope p q) from now on
-  by_cases cpqr : C.cup3 p q r
+  by_cases cpqr : C.Cup3 p q r
   · apply ncup_is_ngon; linarith
     use cp ++ q::cr; constructor; swap; simp; tauto
-    have cp_nnil : cp ≠ [] := by intro h; subst h; simp at cp_last; exact cp_last
+    have cp_nnil : cp ≠ [] := by intro h; subst h; simp at cp_last
     rcases List.takeLast cp_nnil with ⟨p, cp', eq_cp⟩
     rw [eq_cp] at cp_last; simp at cp_last; subst cp_last
     -- idea: implement a lemma for taking explicit head
     -- from a statement like this
-    have cr_nnil : cr ≠ [] := by intro h; subst h; simp at cr_head; exact cr_head
+    have cr_nnil : cr ≠ [] := by intro h; subst h; simp at cr_head
     rcases List.takeHead cr_nnil with ⟨r, cr', eq_cr⟩; constructor
     rw [eq_cr] at cr_head; simp at cr_head; subst cr_head
     rw [eq_cp, eq_cr]; simp
     refine' ⟨_, _, _⟩; swap; assumption
     have eq : cp' ++ [p, q] = cp' ++ [p] ++ [q] := by simp
-    rw [Eq]; rw [← eq_cp]
+    rw [eq]; rw [← eq_cp]
     apply hcp.left.extend_right spq <;> try assumption
     rw [eq_cp]; simp
     rw [← eq_cr]
@@ -76,22 +72,21 @@ theorem Config.hasInterweavedLaced_hasNGon_tt {n : ℕ} {S : Finset α} (cap4_fr
   rw [← Mirror.hasInterweavedLaced, ← Mirror.hasNGon]
   have srq := sqr; rw [← Mirror_slope] at srq
   rw [← Mirror.hasNCap] at cap4_free
-  apply C.Mirror.has_interweaved_laced_has_ngon_ff <;> assumption
+  apply C.Mirror.hasInterweavedLaced_hasNGon_ff <;> assumption
 
 theorem Config.hasInterweavedLaced_hasNGon {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
     {p q r s : α} : C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
   by
   intro h; have q_le_r : q ≤ r := by rw [Config.HasInterweavedLaced] at h <;> tauto
   rw [le_iff_eq_or_lt] at q_le_r
-  cases q_le_r
-  · subst q_le_r; rcases h with ⟨-, pr_laced, qs_laced⟩
+  rcases q_le_r with q_eq_r | q_lt_r
+  · subst q_eq_r; rcases h with ⟨-, pr_laced, qs_laced⟩
     rcases pr_laced with ⟨-, -, -, c1, -, -, hc1, -, ⟨-, c1_in_S, -⟩, -, ⟨-, c1_head, c1_last, -⟩⟩
     rcases qs_laced with ⟨-, -, -, c2, -, -, hc2, -, ⟨-, c2_in_S, -⟩, -, ⟨-, c2_head, c2_last, -⟩⟩
     apply C.join_n2_n2 S cap4_free hc1 c1_in_S hc2 c2_in_S q c1_last c2_head
-  rename' q_le_r => q_lt_r
   have label := cap4FreeLabel cap4_free
   by_cases sqr : label.Slope q r
-  · revert sqr h
-    apply C.has_interweaved_laced_has_ngon_tt <;> assumption
-  · revert sqr h
-    apply C.has_interweaved_laced_has_ngon_ff <;> assumption
+  · revert h
+    apply C.hasInterweavedLaced_hasNGon_tt <;> assumption
+  · revert h
+    apply C.hasInterweavedLaced_hasNGon_ff <;> assumption

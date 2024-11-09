@@ -1,4 +1,5 @@
 import Mathlib.Order.Basic
+import Mathlib.Tactic.Ring.RingNF
 import ErdosTuzaValtr.Lib.List.Default
 import ErdosTuzaValtr.Etv.Default
 import ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2
@@ -20,10 +21,15 @@ theorem Config.join_n2_n2_interweaved {S : Finset α} {n : ℕ} {c1 : List α}
   · refine' ⟨_, _, _⟩
     rw [eq_c1] at c1_cup; apply c1_cup.head?_lt_getLast? p q <;> simp; simp
     rw [eq_c2] at c2_cup; apply c2_cup.head?_lt_getLast? q r <;> simp
-  · exists 1, n + 1, [p], c1, c2.dropLast, _, c1_cup, c2_cup.dropLast; swap; simp
+  · exists 1, n + 1, [p], c1, c2.dropLast, (by simp), c1_cup, c2_cup.dropLast; simp
     rw [eq_c1] at c1_in_S ⊢; rw [eq_c2] at c2_in_S ⊢
-    simp at c1_in_S c2_in_S ⊢; ring_nf; tauto
-  · exists n + 1, 1, c1.tail, c2, [r], c1_cup.tail, c2_cup, _; swap; simp
+    simp only [List.getLast?_concat, List.cons_in, List.append_in, List.nil_in, and_true,
+      List.head?_cons, List.getLast?_cons_append_cons, List.getLast?_singleton, true_and,
+      List.dropLast_concat]
+        at c1_in_S c2_in_S ⊢; ring_nf;
+    simp only [List.cons_append, List.head?_cons]
+    tauto
+  · exists n + 1, 1, c1.tail, c2, [r], c1_cup.tail, c2_cup, (by simp); simp
     rw [eq_c1] at c1_in_S ⊢; rw [eq_c2] at c2_in_S ⊢
     simp at c1_in_S c2_in_S ⊢; tauto
 
@@ -67,7 +73,8 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
       apply C.join_n2_n2_interweaved cxw_cup _ cy1_cup cy1_in_S w
       simp; rw [eq_cy1]; simp; simp; tauto
     · exfalso; apply cup_free; use x::cy1; constructor
-      apply cy1_cup.extend_left lxw <;> try assumption; rw [eq_cy1]; simp
+      apply cy1_cup.extend_left lxw <;> try assumption;
+      rw [eq_cy1]; simp
       simp; constructor <;> assumption
   -- w < x
   rcases lt_trichotomy z y with (hyz | hyz | hyz);
@@ -89,10 +96,11 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
   -- y < z
   use w, x, y, z;
   refine' ⟨_, _, _⟩; tauto
-  · exists 1, n + 2, [w], cy1, cy, _, cy1_cup, cy_cup; swap; simp
-    constructor; simp; tauto; constructor; ring_nf; rw [eq_cy1]; simp; assumption
-  · exists n + 2, 1, cx, cx1, [z], cx_cup, cx1_cup, _; swap; simp
-    constructor; simp; tauto; constructor; ring_nf; rw [eq_cx1]; simp; assumption
+  · exists 1, n + 2, [w], cy1, cy, (by simp), cy1_cup, cy_cup; simp
+    constructor; tauto; constructor; ring_nf; rw [eq_cy1]; simp; assumption
+  · exists n + 2, 1, cx, cx1, [z], cx_cup, cx1_cup, (by simp); simp
+    constructor; tauto; constructor; rw [←Option.mem_def]; assumption
+    rw [eq_cx1]; simp
 
 theorem Config.join_n2_n3_join_n3_n2 (S : Finset α) (n : ℕ) (cap4_free : ¬C.HasNCap 4 S)
     (cup_free : ¬C.HasNCup (n + 4) S) (hx : C.HasJoin (n + 2) (n + 3) S)

@@ -21,5 +21,3 @@ import ErdosTuzaValtr.Lib.List.Chain3
 import ErdosTuzaValtr.Lib.List.Lemmas
 import ErdosTuzaValtr.Lib.List.Default
 import ErdosTuzaValtr.Lib.List.Defs
-
-#align_import Mathlib.all

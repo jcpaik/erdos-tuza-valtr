@@ -40,5 +40,5 @@ For the minimal set of definitions required for stating the main theorem, we ref
 - `Config/Defs.lean` for the combinatorial model of convexity and 
 - `Lib/List/Defs.lean` for the definitions related to a list
 
-The rest are only required for the proof of the main theorem. 
+The rest are required for only the proof of the main theorem, not its statement. 
 The directories `Config`, `Etv`, and `Main` loosely corresponds to Section 2, Section 3 & 4, and Section 5 of the paper respectively.

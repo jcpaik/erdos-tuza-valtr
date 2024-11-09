@@ -17,7 +17,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
   have x_lt_y : x < y := by apply hxQy.head?_lt_getLast? x y <;> simp
   have hP := hPx.dropLast; simp at hP
   have hQy := hxQy.tail; simp at hQy
-  rcases hP.init_append_last with ⟨P', a, eq_P, hP'⟩; subst eq_P
+  rcases hP.dropLast_append_last with ⟨P', a, eq_P, hP'⟩; subst eq_P
   rcases hQy.cons_head_tail with ⟨b, Q', eq_Q, hQ'⟩
   have eq_xQy : (x::Q) ++ [y] = x::(Q ++ [y]) := by simp
   rw [eq_xQy] at hxQy xQy_in_S; clear eq_xQy
@@ -25,7 +25,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
   have a_in_S : a ∈ S := by simp at Px_in_S <;> tauto
   have b_in_S : b ∈ S := by simp at xQy_in_S <;> tauto
   have hR := hyR.tail; simp at hR
-  rcases hR.init_append_last with ⟨R', z, eq_R, hR'⟩
+  rcases hR.dropLast_append_last with ⟨R', z, eq_R, hR'⟩
   have xy_laced : C.HasLaced (n + 3) S x y :=
     by
     have hy : C.NCup 1 [y] := by simp
@@ -54,7 +54,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
     simp; simp
   have a_lt_b : a < b := LT.lt.trans a_lt_x x_lt_b
   by_cases sab : label.Slope a b; swap
-  -- case ¬label.slope a b
+  -- case ¬label.Slope a b
   · have hQy := hxQy.tail; simp at hQy
     have haQy : C.NCup (n + 3) ((a::Q) ++ [y]) :=
       by
@@ -73,7 +73,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
     · constructor; assumption; constructor
       exact le_of_lt x_lt_y; assumption
     · tauto
-  -- case label.slope a b
+  -- case label.Slope a b
   have b_lt_y : b < y := by
     have hQy := hxQy.tail; simp at hQy
     apply hQy.head?_lt_getLast? b y <;> simp
@@ -146,7 +146,7 @@ theorem Config.join_n2_n3_n2 (S : Finset α) {n : ℕ} (cap4_free : ¬C.HasNCap 
   by
   rcases c_ncup.take_head_last with ⟨x, Q, y, eq_Q, Q_ncup⟩
   subst eq_Q; simp at hxc hyc; subst hxc; subst hyc
-  rcases cx_ncup.init_append_last with ⟨P, x, eq_P, P_ncup⟩
+  rcases cx_ncup.dropLast_append_last with ⟨P, x, eq_P, P_ncup⟩
   subst eq_P; simp at hxcx; subst hxcx
   rcases cy_ncup.cons_head_tail with ⟨y, R, eq_R, R_ncup⟩
   subst eq_R; simp at hycy; subst hycy

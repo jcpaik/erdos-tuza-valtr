@@ -20,7 +20,7 @@ theorem Config.join_n2_n2_interweaved {S : Finset α} {n : ℕ} {c1 : List α}
   · refine' ⟨_, _, _⟩
     rw [eq_c1] at c1_cup; apply c1_cup.head?_lt_getLast? p q <;> simp; simp
     rw [eq_c2] at c2_cup; apply c2_cup.head?_lt_getLast? q r <;> simp
-  · exists 1, n + 1, [p], c1, c2.init, _, c1_cup, c2_cup.init; swap; simp
+  · exists 1, n + 1, [p], c1, c2.dropLast, _, c1_cup, c2_cup.dropLast; swap; simp
     rw [eq_c1] at c1_in_S ⊢; rw [eq_c2] at c2_in_S ⊢
     simp at c1_in_S c2_in_S ⊢; ring_nf; tauto
   · exists n + 1, 1, c1.tail, c2, [r], c1_cup.tail, c2_cup, _; swap; simp
@@ -40,7 +40,7 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
   have y_in_S := cy_in_S _ (List.mem_of_mem_head? cy_head)
   rcases lt_or_le y x with (hxy | hxy)
   -- Case y < x
-  · by_cases lyx : l.slope y x
+  · by_cases lyx : l.Slope y x
     · exfalso; apply cup_free; use cy1 ++ [x]; constructor
       apply cy1_cup.extend_right lyx <;> try assumption
       simp; constructor <;> assumption
@@ -61,8 +61,8 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
             cx_last _ y _ cy_head <;>
         rw [eq_cy1] <;>
       simp
-  · by_cases lxw : l.slope x w
-    · have cxw_cup : C.ncup (n + 3) (cx ++ [w]) := by
+  · by_cases lxw : l.Slope x w
+    · have cxw_cup : C.NCup (n + 3) (cx ++ [w]) := by
         apply cx_cup.extend_right lxw <;> try assumption
       apply C.join_n2_n2_interweaved cxw_cup _ cy1_cup cy1_in_S w
       simp; rw [eq_cy1]; simp; simp; tauto
@@ -78,11 +78,12 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
             cx_last _ z _ cy_head <;>
         rw [eq_cx1] <;>
       simp
-  · by_cases lzy : l.slope z y
+  · by_cases lzy : l.Slope z y
     · exfalso; apply cup_free; use cx1 ++ [y]; constructor
-      apply cx1_cup.extend_right lzy <;> try assumption; rw [eq_cx1]; simp
+      apply cx1_cup.extend_right lzy <;> try assumption
+      rw [eq_cx1]; simp
       simp; constructor <;> assumption
-    · have zcy_cup : C.ncup (n + 3) (z::cy) := by apply cy_cup.extend_left lzy <;> try assumption
+    · have zcy_cup : C.NCup (n + 3) (z::cy) := by apply cy_cup.extend_left lzy <;> try assumption
       apply C.join_n2_n2_interweaved cx1_cup _ zcy_cup _ z
       rw [eq_cx1]; simp; simp; tauto; simp; tauto
   -- y < z

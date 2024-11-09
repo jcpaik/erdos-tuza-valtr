@@ -35,12 +35,12 @@ theorem Config.hasInterweavedLaced_hasNGon_ff {n : ℕ} {S : Finset α} (cap4_fr
     apply c2_in_S
     exact List.mem_of_mem_getLast? c2_last
   have label := cap4FreeLabel cap4_free
-  by_cases spq : label.slope p q; swap
+  by_cases spq : label.Slope p q; swap
   · apply ncup_is_ngon; linarith
     use p::c2; constructor
     apply hc2.extend_left spq <;> assumption
     simp; tauto
-  -- (spq : ¬label.slope p q) from now on
+  -- (spq : ¬label.Slope p q) from now on
   by_cases cpqr : C.cup3 p q r
   · apply ncup_is_ngon; linarith
     use cp ++ q::cr; constructor; swap; simp; tauto
@@ -90,7 +90,7 @@ theorem Config.hasInterweavedLaced_hasNGon {n : ℕ} {S : Finset α} (cap4_free 
     apply C.join_n2_n2 S cap4_free hc1 c1_in_S hc2 c2_in_S q c1_last c2_head
   rename' q_le_r => q_lt_r
   have label := cap4FreeLabel cap4_free
-  by_cases sqr : label.slope q r
+  by_cases sqr : label.Slope q r
   · revert sqr h
     apply C.has_interweaved_laced_has_ngon_tt <;> assumption
   · revert sqr h

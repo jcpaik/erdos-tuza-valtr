@@ -72,7 +72,7 @@ theorem find_join {n : ℕ} {S : Finset α} (l : C.Label S) (cup_free : ¬C.HasN
   by
   rw [le_iff_lt_or_eq] at o_le_p; cases' o_le_p with o_lt_p o_eq_p
   · rcases C.beta_cup S o_in_S with ⟨d, d_in_S, d_ncup, d_last⟩
-    by_cases sop : l.slope o p
+    by_cases sop : l.Slope o p
     · apply cup_free
       have dp_ncup := d_ncup.extend_right sop o_lt_p p_in_S d_in_S d_last
       have ineq : n + 4 ≤ C.beta S o + 1 + 1 := by linarith
@@ -143,12 +143,12 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
       have o_in_S : o ∈ S := by
         rw [Config.delta] at o_in_delta <;> exact Finset.mem_of_mem_filter _ o_in_delta
       -- Show that the slope of o and o' is ff
-      by_cases soo' : l.slope o o'
+      by_cases soo' : l.Slope o o'
       · have inc := slope_tt_inc_beta soo' o_in_S o'_in_S o_lt_o'
         rw [eq_o] at inc; simp at inc; exfalso; assumption
       -- extend cp' to left with o
       have cp'_in_S := List.in_superset (Finset.sdiff_subset S D) cp'_in_SD
-      have ocp'_cup : C.ncup (a + 1) (o::cp') :=
+      have ocp'_cup : C.NCup (a + 1) (o::cp') :=
         by
         apply cp'_cup.extend_left soo' <;> try assumption
         rw [eq_cp']; simp
@@ -161,7 +161,7 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
     rcases cp_cup.take_right_with_last (a + 1) p (by decide) (by linarith) cp_last with
       ⟨dp, dp_in_cp, dp_cup, dp_last⟩
     have dp_in_S : dp.in S := List.subset_in dp_in_cp cp_in_S
-    have spp' : ¬l.slope p p' := by
+    have spp' : ¬l.Slope p p' := by
       intro spp'
       have ineq := slope_tt_inc_beta spp' p_in_S p'_in_S p_lt_p'; linarith
     have pc_cup := c_cup.extend_left spp' p_in_S p_lt_p' c_in_S c_head

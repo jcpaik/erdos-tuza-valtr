@@ -198,7 +198,7 @@ protected theorem take_head_last {n : ℕ} {l : List α} (h : C.NCup (n + 2) l) 
     ∃ (a : α) (l' : List α) (b : α), l = (a::l') ++ [b] ∧ C.NCup n l' :=
   by
   rcases h.cons_head_tail with ⟨a, l', eq_l, cup_l'⟩
-  rcases cup_l'.init_append_last with ⟨l'', b, eq_l', cup_l''⟩
+  rcases cup_l'.dropLast_append_last with ⟨l'', b, eq_l', cup_l''⟩
   use a, l'', b; constructor
   rw [eq_l, eq_l']; simp; assumption
 

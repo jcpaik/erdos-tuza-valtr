@@ -1,4 +1,4 @@
-import Mathlib.Project.Config.Default
+import ErdosTuzaValtr.Config.Default
 import ErdosTuzaValtr.Etv.Defs
 
 open OrderDual
@@ -22,8 +22,11 @@ def Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
     use a, b, cp, c, cq, hcpm, hcm, hcqm
     repeat' rw [List.Mirror_in] at h
     simp [List.Mirror_getLast?, List.Mirror_head?] at h
-    rw [Nat.add_comm a b, eq_cp, eq_c, eq_cq]
-    simp [List.ofMirror_getLast?, List.ofMirror_head?]; tauto
+    rcases h with ⟨hIn, ⟨eq_ab, h⟩⟩
+    rw [add_comm] at eq_ab
+    refine ⟨(by tauto), eq_ab, ?_⟩
+    simp only [Option.mem_def]
+    tauto
   · intro h; rcases h with ⟨a, b, cp, c, cq, hcp, hc, hcq, h⟩
     use b, a, cq.Mirror, c.Mirror, cp.Mirror
     refine' ⟨_, _, _, _⟩ <;> try rw [Mirror.ncup] <;> tauto
@@ -44,7 +47,7 @@ def Mirror.hasJoin {a b : ℕ} {S : Finset α} : C.Mirror.HasJoin b a S.Mirror �
     have eq_p := OrderDual.toDual_ofDual pm
     have eq_cl := @List.ofMirrorMirror _ _ clm
     have eq_cr := @List.ofMirrorMirror _ _ crm
-    set p := pm.of_dual
+    set p := ofDual pm
     set cl := clm.ofMirror; set cr := crm.ofMirror
     use p, cl, cr
     rw [← eq_p] at clm_head crm_last
@@ -55,7 +58,7 @@ def Mirror.hasJoin {a b : ℕ} {S : Finset α} : C.Mirror.HasJoin b a S.Mirror �
     rw [List.Mirror_mem_head?] at clm_head
     rw [List.Mirror_mem_getLast?] at crm_last; tauto
   · intro h; rcases h with ⟨p, cl, cr, ⟨cl_cup, cl_in, cl_head⟩, ⟨cr_cup, cr_in, cr_last⟩⟩
-    use to_dual p, cr.Mirror, cl.Mirror
+    use toDual p, cr.Mirror, cl.Mirror
     rw [List.Mirror_mem_getLast?, List.Mirror_mem_head?]
     simp only [List.Mirror_in, Mirror.ncup, Option.mem_def]
     tauto

@@ -6,15 +6,12 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 
 structure Config.Label (S : Finset α) where
   Slope : α → α → Prop
-  decidableSlope : DecidableRel slope
   -- The direction looks odd, but it is written in perspective of
   -- _where_ the edge ab is placed
   extend_left :
-    ∀ {a b : α}, a ∈ S → b ∈ S → a < b → ¬slope a b → ∀ {c : α}, c ∈ S → b < c → C.Cup3 a b c
+    ∀ {a b : α}, a ∈ S → b ∈ S → a < b → ¬Slope a b → ∀ {c : α}, c ∈ S → b < c → C.Cup3 a b c
   extend_right :
-    ∀ {a b : α}, a ∈ S → b ∈ S → a < b → slope a b → ∀ {c : α}, c ∈ S → c < a → C.Cup3 c a b
-
-attribute [instance] Config.Label.decidableSlope
+    ∀ {a b : α}, a ∈ S → b ∈ S → a < b → Slope a b → ∀ {c : α}, c ∈ S → c < a → C.Cup3 c a b
 
 def Cap4FreeSlope {S : Finset α} (h : ¬C.HasNCap 4 S) (a b : α) : Prop :=
   ∀ c : S, ↑c < a → C.Cup3 c a b
@@ -27,22 +24,20 @@ variable {C}
 def cap4FreeLabel {S : Finset α} (h : ¬C.HasNCap 4 S) : C.Label S :=
   by
   use Cap4FreeSlope C h
-  infer_instance
   · intro a b ha hb hab hn c hc hbc
     by_contra h'; apply hn; intro d hd
     by_contra h''; apply h; use[d, a, b, c]; simp [Config.NCap]; tauto
   · intro a b ha hb hab hy c hc hca
     exact hy ⟨c, hc⟩ hca
 
-variable {C} {S : Finset α} {label : C.Label S}
+variable {C : Config α} {S : Finset α} {label : C.Label S}
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Config.Cup.extend_left {l : List α} (l_cup : C.Cup l) {a b : α}
     (s_ab : ¬label.Slope a b) (ha : a ∈ S) (hab : a < b) (l_in_S : l.In S)
     (b_head_l : b ∈ l.head?) : C.Cup (a::l) :=
   by
   cases' l with b l
-  · simp at b_head_l; tauto
+  · simp at b_head_l
   simp at b_head_l; subst b_head_l
   cases' l with c l
   · simp; exact hab
@@ -68,7 +63,6 @@ protected theorem Config.Cup.extend_right {l : List α} (l_cup : C.Cup l) {a b :
   cases' l with q l; simp at *; subst a_last_l <;> tauto
   exfalso; apply hl; exact le_add_self
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem Config.NCup.extend_left {n : ℕ} {l : List α} (l_ncup : C.NCup n l) {a b : α}
     (s_ab : ¬label.Slope a b) (ha : a ∈ S) (hab : a < b) (l_in_S : l.In S)
     (b_head_l : b ∈ l.head?) : C.NCup (n + 1) (a::l) :=
@@ -90,8 +84,7 @@ variable (label)
 open OrderDual
 
 protected def Config.Label.Mirror : C.Mirror.Label S.Mirror :=
-  ⟨fun a b => ¬Mirror2 label.Slope a b, fun a b =>
-    @Not.decidable _ (label.decidableSlope.Mirror2 a b),
+  ⟨fun a b => ¬Mirror2 label.Slope a b,
     by
     intro a b a_in_S b_in_S hab hslope c c_in_S hbc
     simp [Mirror2] at hslope

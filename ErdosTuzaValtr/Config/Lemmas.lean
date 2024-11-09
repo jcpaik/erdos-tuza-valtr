@@ -169,9 +169,6 @@ protected theorem dropLast {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) : C.NC
   simp [Config.NCup] at *; cases' h with hc hl
   constructor; exact hc.dropLast; assumption
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem init_append_last {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) :
     ∃ (l' : List α) (a : α), l = l' ++ [a] ∧ C.NCup n l' :=
   by
@@ -189,7 +186,6 @@ protected theorem tail {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) : C.NCup n
   simp at *; cases' h with hc hl
   constructor; exact hc.tail; simp at hl; assumption
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem cons_head_tail {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) :
     ∃ (a : α) (l' : List α), (l = a::l') ∧ C.NCup n l' :=
   by
@@ -198,7 +194,6 @@ protected theorem cons_head_tail {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) 
   simp [Config.NCup] at *; cases' h with hc hl
   use a, l; have hc' := hc.tail; simp at hc'; tauto
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 protected theorem take_head_last {n : ℕ} {l : List α} (h : C.NCup (n + 2) l) :
     ∃ (a : α) (l' : List α) (b : α), l = (a::l') ++ [b] ∧ C.NCup n l' :=
   by
@@ -243,7 +238,6 @@ theorem head?_lt_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p
   rw [l_length]; exact le_add_self
   assumption; assumption
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem head?_le_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α) (hp : p ∈ l.head?)
     (hq : q ∈ l.getLast?) : p ≤ q :=
   by
@@ -265,7 +259,6 @@ end NCup
 
 end Config
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem ncup_is_ngon {n : ℕ} {S : Finset α} (hn : 2 ≤ n) (h : C.HasNCup n S) : C.HasNGon n S :=
   by
   rcases h with ⟨c, ⟨⟨c_cup, c_length⟩, c_in_S⟩⟩

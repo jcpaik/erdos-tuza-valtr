@@ -1,6 +1,4 @@
-import Mathlib.Project.Config.Default
-
-#align_import ErdosTuzaValtr.Etv.defs
+import ErdosTuzaValtr.Config.Default
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 

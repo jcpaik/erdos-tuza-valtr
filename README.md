@@ -1,4 +1,4 @@
-# Formal verification of a paper "On the Erdős-Tuza-Valtr Conjecture" 
+# Formal verification of the paper "On the Erdős-Tuza-Valtr Conjecture" 
 This is a formal verification of the paper "On the Erdős-Tuza-Valtr Conjecture" in Lean 4.
 
 ## The theorem

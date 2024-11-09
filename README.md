@@ -1,5 +1,5 @@
-# Formal verification of a manuscript "On the Erdős-Tuza-Valtr Conjecture" 
-This is a formal verification of the manuscript "On the Erdős-Tuza-Valtr Conjecture" in Lean 4.
+# Formal verification of a paper "On the Erdős-Tuza-Valtr Conjecture" 
+This is a formal verification of the paper "On the Erdős-Tuza-Valtr Conjecture" in Lean 4.
 
 ## The theorem
 For any $n \geq 2$, let $E(n)$ be the minimum number with the property that any $E(n)$ points on a plane with no three on a line contains $n$ points 
@@ -7,7 +7,7 @@ forming the vertices of a convex $n$-gon.
 The _Erdős-Szekeres conjecture_ asserts the equality $E(n) = 2^{n−2}$. 
 Despite decades of serious attempts and substantial progresses, the exact equality remains open as of January 18, 2022.
 Erdős and Szekeres showed the lower bound $E(n) \geq 2^{n−2}$ by construction, and 
-the best upper bound known so far is of magnitude $E(n) \leq 2^{n + o(n)}$ (see the manuscript for references).
+the best upper bound known so far is of magnitude $E(n) \leq 2^{n + o(n)}$ (see the paper for references).
 
 The _Erdős-Tuza-Valtr conjecture_ is a generalization of the Erdős-Szekeres conjecture.
 For any $n, a, b \geq 2$, let $E(n, a, b)$ be the minimum number with the property that any $E(n, a, b)$ points on a plane with no three on a line
@@ -25,7 +25,7 @@ The cups-caps theorem shows the exact value $E(a, b) = \binom{a+b-4}{a-2}+1$,
 and this agrees with the value $E(n, a, b)$ for $n \geq a + b - 3$ suggested by the Erdős-Tuza-Valtr conjecture.
 So far this was the only case of the Erdős-Tuza-Valtr conjecture known in the literature.
 
-In our manuscript, we show the first new case $a = 4, b = n$ of the Erdős-Tuza-Valtr conjecture,
+In our paper, we show the first new case $a = 4, b = n$ of the Erdős-Tuza-Valtr conjecture,
 putting the full Erdős-Szekeres conjecture $E(n) = 2^{n-2}$ slightly in more affirmative side.
 That is, we show the equality $E(n, 4, n) = \binom{n-1}{2} + 2$, so any set of $\binom{n-1}{2} + 2$ points either contain a convex $n$-gon or a 4-cap.
 Observe that $n < a + b - 3$ in this case, so the case is not a direct consequence of the cups-caps theorem.
@@ -41,4 +41,4 @@ For the minimal set of definitions required for stating the main theorem, we ref
 - `Lib/List/Defs.lean` for the definitions related to a list
 
 The rest are only required for the proof of the main theorem. 
-The directories `Config`, `Etv`, and `Main` loosely corresponds to Section 2, Section 3 & 4, and Section 5 of the manuscript respectively.
+The directories `Config`, `Etv`, and `Main` loosely corresponds to Section 2, Section 3 & 4, and Section 5 of the paper respectively.

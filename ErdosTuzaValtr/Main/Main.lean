@@ -10,7 +10,7 @@ open scoped Classical
 
 noncomputable section
 
-variable {α : Type _} [LinearOrder α] (C : Config α)
+variable {γ : Type _} [LinearOrder γ] (C : Config γ)
 
 open OrderDual
 
@@ -35,7 +35,7 @@ theorem Config.main_lemma (n : ℕ) : C.MainGoal n :=
   · intro S hS cap4_free cup_free; simp at hS
     set Sl := S.sort (· ≤ ·) with def_Sl
     have Sl_card : 3 ≤ Sl.length := by rw [def_Sl] <;> simp <;> exact hS
-    have mem_Sl : ∀ {a : α}, a ∈ Sl ↔ a ∈ S := by
+    have mem_Sl : ∀ {a : γ}, a ∈ Sl ↔ a ∈ S := by
       intro a; rw [def_Sl];
       exact Finset.mem_sort (· ≤ ·)
     -- Take three elements of S
@@ -71,7 +71,7 @@ theorem Config.main_lemma (n : ℕ) : C.MainGoal n :=
       assumption
     apply C.join_n2_n3_join_n3_n2 <;> assumption
 
-theorem main (n : ℕ) (C : Config α) (S : Finset α) (hS : Nat.choose (n + 2) 2 + 2 ≤ S.card) :
+theorem main (n : ℕ) (C : Config γ) (S : Finset γ) (hS : Nat.choose (n + 2) 2 + 2 ≤ S.card) :
     C.HasNCap 4 S ∨ C.HasNGon (n + 3) S :=
   by
   by_cases has_cap4 : C.HasNCap 4 S; left; exact has_cap4

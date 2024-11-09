@@ -1,7 +1,7 @@
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Data.Finset.Basic
-import Mathlib.Project.Config.Default
-import Mathlib.Project.Etv.Default
+import ErdosTuzaValtr.Config.Default
+import ErdosTuzaValtr.Etv.Default
 
 #align_import ErdosTuzaValtr.Main.cap_cup
 

@@ -1,9 +1,7 @@
 import Mathlib.Order.Basic
-import Mathlib.Project.Lib.List.Default
-import Mathlib.Project.Etv.Default
+import ErdosTuzaValtr.Lib.List.Default
+import ErdosTuzaValtr.Etv.Default
 import ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2
-
-#align_import ErdosTuzaValtr.Main.lemmas.join_n2_n3_join_n3_n2
 
 open OrderDual
 
@@ -20,8 +18,8 @@ theorem Config.join_n2_n2_interweaved {S : Finset α} {n : ℕ} {c1 : List α}
   simp at c1_last c2_head; subst c1_last; subst c2_head
   use p, q, q, r; refine' ⟨_, _, _⟩
   · refine' ⟨_, _, _⟩
-    rw [eq_c1] at c1_cup; apply c1_cup.head'_lt_last' p q <;> simp; simp
-    rw [eq_c2] at c2_cup; apply c2_cup.head'_lt_last' q r <;> simp
+    rw [eq_c1] at c1_cup; apply c1_cup.head?_lt_getLast? p q <;> simp; simp
+    rw [eq_c2] at c2_cup; apply c2_cup.head?_lt_getLast? q r <;> simp
   · exists 1, n + 1, [p], c1, c2.init, _, c1_cup, c2_cup.init; swap; simp
     rw [eq_c1] at c1_in_S ⊢; rw [eq_c2] at c2_in_S ⊢
     simp at c1_in_S c2_in_S ⊢; ring_nf; tauto
@@ -29,9 +27,6 @@ theorem Config.join_n2_n2_interweaved {S : Finset α} {n : ℕ} {c1 : List α}
     rw [eq_c1] at c1_in_S ⊢; rw [eq_c2] at c2_in_S ⊢
     simp at c1_in_S c2_in_S ⊢; tauto
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free : ¬C.HasNCap 4 S)
     (cup_free : ¬C.HasNCup (n + 4) S) {cx : List α} (cx_cup : C.NCup (n + 2) cx) (cx_in_S : cx.In S)
     {cx1 : List α} (cx1_cup : C.NCup (n + 3) cx1) (cx1_in_S : cx1.In S) {cy1 : List α}

@@ -1,9 +1,9 @@
 import Mathlib.Data.Nat.Choose.Basic
 import Mathlib.Data.Finset.Basic
-import Mathlib.Project.Config.Default
-import Mathlib.Project.Etv.Default
+import ErdosTuzaValtr.Config.Default
+import ErdosTuzaValtr.Etv.Default
 import ErdosTuzaValtr.Main.Defs
-import Mathlib.Project.Main.Lemmas.Default
+import ErdosTuzaValtr.Main.Lemmas.Default
 
 #align_import ErdosTuzaValtr.Main.induction_step
 

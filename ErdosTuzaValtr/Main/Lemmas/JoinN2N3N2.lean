@@ -1,24 +1,11 @@
 import Mathlib.Order.Basic
-import Mathlib.Project.Lib.List.Default
-import Mathlib.Project.Etv.Default
-
-#align_import ErdosTuzaValtr.Main.lemmas.join_n2_n3_n2
+import ErdosTuzaValtr.Lib.List.Default
+import ErdosTuzaValtr.Etv.Default
 
 open OrderDual
 
 variable {α : Type _} [LinearOrder α] (C : Config α)
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n : ℕ} (x y : α)
     {P : List α} (hPx : C.NCup (n + 2) (P ++ [x])) (Px_in_S : (P ++ [x]).In S) {Q : List α}
     (hxQy : C.NCup (n + 3) ((x::Q) ++ [y])) (xQy_in_S : ((x::Q) ++ [y]).In S) {R : List α}
@@ -27,30 +14,34 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
   by
   have x_in_S : x ∈ S := by simp at xQy_in_S <;> tauto
   have y_in_S : y ∈ S := by simp at xQy_in_S <;> tauto
-  have x_lt_y : x < y := by apply hxQy.head'_lt_last' x y <;> simp
-  have hP := hPx.init; simp at hP
+  have x_lt_y : x < y := by apply hxQy.head?_lt_getLast? x y <;> simp
+  have hP := hPx.dropLast; simp at hP
   have hQy := hxQy.tail; simp at hQy
   rcases hP.init_append_last with ⟨P', a, eq_P, hP'⟩; subst eq_P
   rcases hQy.cons_head_tail with ⟨b, Q', eq_Q, hQ'⟩
-  have eq_xQy : (x::Q) ++ [y] = x::Q ++ [y] := by simp
-  rw [eq_xQy, eq_Q] at *; clear eq_xQy
+  have eq_xQy : (x::Q) ++ [y] = x::(Q ++ [y]) := by simp
+  rw [eq_xQy] at hxQy xQy_in_S; clear eq_xQy
+  rw [eq_Q] at hxQy xQy_in_S;
   have a_in_S : a ∈ S := by simp at Px_in_S <;> tauto
   have b_in_S : b ∈ S := by simp at xQy_in_S <;> tauto
   have hR := hyR.tail; simp at hR
   rcases hR.init_append_last with ⟨R', z, eq_R, hR'⟩
-  have xy_laced : C.has_laced (n + 3) S x y :=
+  have xy_laced : C.HasLaced (n + 3) S x y :=
     by
-    have hy : C.ncup 1 [y] := by simp
+    have hy : C.NCup 1 [y] := by simp
     exists _, _, _, _, _, hPx, hxQy, hy
     refine' ⟨_, _, _⟩
     constructor; assumption; constructor; assumption
     simp; simp at xQy_in_S; tauto
-    simp; simp; rw [← eq_Q]; simp
-  have xz_laced : C.has_laced (n + 3) S x z :=
+    simp; simp
+    rw [←eq_Q]; simp
+  have xz_laced : C.HasLaced (n + 3) S x z :=
     by
-    have hxyR : C.ncup (n + 3) (x::y::R) := by apply hyR.extend_left sxy <;> try assumption; simp
+    have hxyR : C.NCup (n + 3) (x::y::R) := by
+      apply hyR.extend_left sxy <;> try assumption
+      simp
     rw [eq_R] at hxyR
-    have hz : C.ncup 1 [z] := by simp
+    have hz : C.NCup 1 [z] := by simp
     exists _, _, _, _, _, hPx, hxyR, hz
     refine' ⟨_, _, _⟩
     constructor; assumption; rw [eq_R] at yR_in_S
@@ -59,19 +50,20 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
   have a_lt_x : a < x := by rw [Config.NCup, Config.Cup] at hPx <;> simp at hPx <;> tauto
   have x_lt_b : x < b := by rw [Config.NCup, Config.Cup] at hxQy <;> simp at hxQy <;> tauto
   have y_lt_z : y < z := by
-    rw [eq_R] at hyR; apply hyR.head'_lt_last' y z
+    rw [eq_R] at hyR; apply hyR.head?_lt_getLast? y z
     simp; simp
   have a_lt_b : a < b := LT.lt.trans a_lt_x x_lt_b
-  by_cases sab : label.slope a b; swap
+  by_cases sab : label.Slope a b; swap
   -- case ¬label.slope a b
-  · have hQy := hxQy.tail; simp at hQy; rw [← eq_Q] at hQy
-    have haQy : C.ncup (n + 3) ((a::Q) ++ [y]) :=
+  · have hQy := hxQy.tail; simp at hQy
+    have haQy : C.NCup (n + 3) ((a::Q) ++ [y]) :=
       by
+      rw [←eq_Q] at hQy xQy_in_S
       apply hQy.extend_left sab <;> try assumption
-      simp; rw [← eq_Q] at xQy_in_S; simp at xQy_in_S; tauto; simp
+      simp; simp at xQy_in_S; tauto;
       rw [eq_Q]; simp
-    have ha : C.ncup 1 [a] := by simp
-    have ay_laced : C.has_laced (n + 3) S a y :=
+    have ha : C.NCup 1 [a] := by simp
+    have ay_laced : C.HasLaced (n + 3) S a y :=
       by
       exists _, _, _, _, _, ha, haQy, hyR
       refine' ⟨_, _, _⟩
@@ -84,19 +76,21 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
   -- case label.slope a b
   have b_lt_y : b < y := by
     have hQy := hxQy.tail; simp at hQy
-    apply hQy.head'_lt_last' b y <;> simp
+    apply hQy.head?_lt_getLast? b y <;> simp
     rw [← eq_Q]; simp
-  have hP := hPx.init; simp at hP
-  have hPb : C.ncup (n + 2) (P' ++ [a] ++ [b]) :=
+  have hP := hPx.dropLast; simp at hP
+  have hPb : C.NCup (n + 2) (P' ++ [a] ++ [b]) :=
     by
     apply hP.extend_right sab <;> try assumption
     simp <;> simp at Px_in_S <;> tauto
     simp
-  by_cases sby : label.slope b y; swap
-  · have bz_laced : C.has_laced (n + 3) S b z :=
+  by_cases sby : label.Slope b y; swap
+  · have bz_laced : C.HasLaced (n + 3) S b z :=
       by
-      have hbyR : C.ncup (n + 3) (b::y::R) := by apply hyR.extend_left sby <;> try assumption; simp
-      have hz : C.ncup 1 [z] := by simp
+      have hbyR : C.NCup (n + 3) (b::y::R) := by
+        apply hyR.extend_left sby <;> try assumption
+        simp
+      have hz : C.NCup 1 [z] := by simp
       exists _, _, _, _, _, hPb, hbyR, hz; rw [eq_R]
       refine' ⟨_, _, _⟩
       rw [eq_R] at yR_in_S; simp at Px_in_S yR_in_S; simp; tauto
@@ -104,35 +98,31 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
     use x, b, y, z; constructor
     constructor; assumption; constructor; apply le_of_lt; assumption; assumption
     tauto
-  · have hPby : C.ncup (n + 3) (P' ++ [a] ++ [b] ++ [y]) :=
+  · have hPby : C.NCup (n + 3) (P' ++ [a] ++ [b] ++ [y]) :=
       by
       apply hPb.extend_right sby <;> try assumption
       simp <;> simp at Px_in_S <;> tauto; simp
     have P_nnil : P' ++ [a] ≠ [] := by simp
     rcases List.takeHead P_nnil with ⟨w, P_, eq_P_⟩
     rw [eq_P_] at hPby
-    have wy_laced : C.has_laced (n + 3) S w y :=
+    have wy_laced : C.HasLaced (n + 3) S w y :=
       by
-      have hw : C.ncup 1 [w] := by simp
+      have hw : C.NCup 1 [w] := by simp
       exists _, _, _, _, _, hw, hPby, hyR
       refine' ⟨_, _, _⟩
       rw [eq_P_] at Px_in_S; simp at yR_in_S Px_in_S; simp; tauto
       rw [Nat.add_comm]; simp
     use w, x, y, z; constructor; constructor
-    rw [eq_P_] at hPx; apply hPx.head'_lt_last' w x <;> simp
+    rw [eq_P_] at hPx; apply hPx.head?_lt_getLast? w x <;> simp
     constructor; exact le_of_lt x_lt_y; assumption; tauto
 
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ././././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Config.join_n2_n3_n2_tt (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n : ℕ} (x y : α)
     {P : List α} (hPx : C.NCup (n + 2) (P ++ [x])) (Px_in_S : (P ++ [x]).In S) {Q : List α}
     (hxQy : C.NCup (n + 3) ((x::Q) ++ [y])) (xQy_in_S : ((x::Q) ++ [y]).In S) {R : List α}
     (hyR : C.NCup (n + 2) (y::R)) (yR_in_S : (y::R).In S) (label : C.Label S)
     (sxy : label.Slope x y) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s :=
   by
-  have Mirrored_goal : ∃ s r q p, C.Mirror.has_interweaved_laced (n + 3) S.Mirror s r q p :=
+  have Mirrored_goal : ∃ s r q p, C.Mirror.HasInterweavedLaced (n + 3) S.Mirror s r q p :=
     by
     rw [← Mirror.ncup] at hPx hxQy hyR; simp at hPx hxQy hyR
     rw [← Mirror.hasNCap] at cap4_free
@@ -140,12 +130,12 @@ theorem Config.join_n2_n3_n2_tt (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
     simp [-List.cons_in, -List.append_in] at Px_in_S xQy_in_S yR_in_S
     have syx := sxy; rw [← Mirror_slope] at syx
     apply
-        C.Mirror.join_n2_n3_n2_ff _ _ (to_dual y) (to_dual x) hyR _ hxQy _ hPx _ label.Mirror _ <;>
+        C.Mirror.join_n2_n3_n2_ff _ _ (toDual y) (toDual x) hyR _ hxQy _ hPx _ label.Mirror _ <;>
       assumption
   simp at Mirrored_goal
   rcases Mirrored_goal with ⟨s, r, q, p, h⟩
   rw [Mirror.hasInterweavedLaced] at h
-  use p, q, r, s; exact h
+  use p, q, r, s
 
 theorem Config.join_n2_n3_n2 (S : Finset α) {n : ℕ} (cap4_free : ¬C.HasNCap 4 S)
     (cup_free : ¬C.HasNCup (n + 4) S) {cx : List α} (cx_ncup : C.NCup (n + 2) cx)
@@ -161,6 +151,6 @@ theorem Config.join_n2_n3_n2 (S : Finset α) {n : ℕ} (cap4_free : ¬C.HasNCap 
   rcases cy_ncup.cons_head_tail with ⟨y, R, eq_R, R_ncup⟩
   subst eq_R; simp at hycy; subst hycy
   have label := cap4FreeLabel cap4_free
-  by_cases sxy : label.slope x y
+  by_cases sxy : label.Slope x y
   · apply C.join_n2_n3_n2_tt S <;> try assumption
   · apply C.join_n2_n3_n2_ff S <;> try assumption

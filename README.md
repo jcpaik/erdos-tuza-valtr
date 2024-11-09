@@ -1,5 +1,5 @@
 # Formal verification of a manuscript "On the Erdős-Tuza-Valtr Conjecture" 
-This is a formal verification of the manuscript "On the Erdős-Tuza-Valtr Conjecture" in Lean 3.
+This is a formal verification of the manuscript "On the Erdős-Tuza-Valtr Conjecture" in Lean 4.
 
 ## The theorem
 For any $n \geq 2$, let $E(n)$ be the minimum number with the property that any $E(n)$ points on a plane with no three on a line contains $n$ points 
@@ -32,13 +32,13 @@ Observe that $n < a + b - 3$ in this case, so the case is not a direct consequen
 Our proof also generalizes to a purely combinatorial model of convexity.
 
 ## Formalization
-The folder `src` contains the Lean 3 source files.
-The main theorem $E(n, 4, n) \leq \binom{n-1}{2} + 2$ is stated and verified as `theorem main` in the file `main/main.lean`.
-Note that the cups-caps theroem is also shown in the file `main/cap_cup.lean`.
+The folder `ErdosTuzaValtr` contains the Lean 4 source files.
+The main theorem $E(n, 4, n) \leq \binom{n-1}{2} + 2$ is stated and verified as `theorem main` in the file `Main/Main.lean`.
+Note that the cups-caps theroem is also shown in the file `Main/CapCup.lean`.
 
 For the minimal set of definitions required for stating the main theorem, we refer to the following files. 
-- `config/defs.lean` for the combinatorial model of convexity and 
-- `lib/list/defs.lean` for the definitions related to a list
+- `Config/Defs.lean` for the combinatorial model of convexity and 
+- `Lib/List/Defs.lean` for the definitions related to a list
 
 The rest are only required for the proof of the main theorem. 
-The directories `config`, `etv`, and `main` loosely corresponds to Section 2, Section 3 & 4, and Section 5 of the manuscript respectively.
+The directories `Config`, `Etv`, and `Main` loosely corresponds to Section 2, Section 3 & 4, and Section 5 of the manuscript respectively.

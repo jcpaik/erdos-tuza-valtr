@@ -1,6 +1,6 @@
 import Mathlib.Order.Basic
-import Mathlib.Project.Lib.List.Default
-import Mathlib.Project.Etv.Default
+import ErdosTuzaValtr.Lib.List.Default
+import ErdosTuzaValtr.Etv.Default
 import ErdosTuzaValtr.Main.Lemmas.JoinN2N2
 
 #align_import ErdosTuzaValtr.Main.lemmas.interweaved_laced_ngon
